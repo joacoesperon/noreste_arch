@@ -16,34 +16,44 @@ export type Project = {
   slug: string;
   title: string;
   m2: number;
-  status: "Construido" | "Proyecto";
+  status: "Construido" | "Proyecto" | "En obra";
   year: number;
   location: string;
   credits: ProjectCredits;
   exteriorImages: string[];
   interiorImages: string[];
   coverImage?: string;
+  visible?: boolean; // Nuevo campo para ocultar/mostrar
 };
 
 // Leer proyectos desde el JSON
 export function getProjects(): Project[] {
-  const filePath = path.join(process.cwd(), 'content', 'projects.json');
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const data = JSON.parse(fileContents);
-  return data.projects;
+  try {
+    const filePath = path.join(process.cwd(), 'content', 'projects.json');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const data = JSON.parse(fileContents);
+    return data.projects;
+  } catch (e) {
+    console.error("Error reading projects.json:", e);
+    return [];
+  }
 }
 
-// Obtener proyectos ordenados por año (descendente)
+// Obtener proyectos visibles (para la web pública)
+export function getVisibleProjects(): Project[] {
+  return getProjects().filter(p => p.visible !== false);
+}
+
+// Obtener proyectos ordenados por año (solo visibles)
 export function getProjectsSortedByYear(): Project[] {
-  const projects = getProjects();
+  const projects = getVisibleProjects();
   return projects.sort((a, b) => b.year - a.year);
 }
 
-// Obtener proyectos en orden pseudo-aleatorio consistente
+// Obtener proyectos en orden pseudo-aleatorio consistente (solo visibles)
 export function getProjectsShuffled(): Project[] {
-  const projects = getProjects();
+  const projects = getVisibleProjects();
   
-  // Usamos una función hash simple basada en los slugs para generar orden consistente
   const hashString = (str: string): number => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -54,10 +64,8 @@ export function getProjectsShuffled(): Project[] {
     return Math.abs(hash);
   };
 
-  // Crear seed basado en todos los slugs concatenados
   const seed = hashString(projects.map(p => p.slug).join(''));
   
-  // Shuffle determinístico usando el seed
   const shuffled = [...projects];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = (seed + i * 31) % (i + 1);
@@ -73,7 +81,7 @@ export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find(p => p.slug === slug);
 }
 
-// Obtener proyecto anterior y siguiente (para navegación circular)
+// Obtener proyecto anterior y siguiente (circular, solo visibles)
 export function getAdjacentProjects(slug: string): { prev: Project | null; next: Project | null } {
   const projects = getProjectsSortedByYear();
   const currentIndex = projects.findIndex(p => p.slug === slug);
@@ -91,15 +99,19 @@ export function getAdjacentProjects(slug: string): { prev: Project | null; next:
 
 // Obtener la imagen de portada de un proyecto
 export function getProjectCoverImage(project: Project): string {
-  // Primero intentamos usar cover.jpg, si no existe usamos la primera imagen exterior
   const basePath = `/projects/${project.slug}`;
   
+  // Si el proyecto tiene una coverImage específica definida en el JSON, usar esa
+  if (project.coverImage) {
+    return `${basePath}/exterior/${project.coverImage}`;
+  }
+
   // Por defecto usamos la primera imagen exterior como cover
-  if (project.exteriorImages.length > 0) {
+  if (project.exteriorImages && project.exteriorImages.length > 0) {
     return `${basePath}/exterior/${project.exteriorImages[0]}`;
   }
   
-  // Fallback a imagen placeholder
+  // Fallback a imagen de arquitectura genérica
   return 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80';
 }
 
@@ -109,14 +121,18 @@ export function getProjectImages(project: Project): { src: string; type: 'exteri
   const images: { src: string; type: 'exterior' | 'interior' }[] = [];
   
   // Primero exterior
-  project.exteriorImages.forEach(img => {
-    images.push({ src: `${basePath}/exterior/${img}`, type: 'exterior' });
-  });
+  if (project.exteriorImages) {
+    project.exteriorImages.forEach(img => {
+      images.push({ src: `${basePath}/exterior/${img}`, type: 'exterior' });
+    });
+  }
   
   // Luego interior
-  project.interiorImages.forEach(img => {
-    images.push({ src: `${basePath}/interior/${img}`, type: 'interior' });
-  });
+  if (project.interiorImages) {
+    project.interiorImages.forEach(img => {
+      images.push({ src: `${basePath}/interior/${img}`, type: 'interior' });
+    });
+  }
   
   return images;
 }

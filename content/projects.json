@@ -10,17 +10,34 @@
       "credits": {
         "proyecto": "Noreste Arquitectura",
         "equipo": "Catalina Andersch",
-        "obra": null,
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "obra": "Pepe Obras S.L",
+        "paisajismo": "Pinos Studio",
+        "interiorismo": "",
+        "instalaciones": "Carlitos bala",
+        "estructura": "Clara Esperon",
+        "fotografias": "Belen Capello"
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg"
+      ],
+      "visible": true
     },
-
     {
       "slug": "club-buchardo-nuñez",
       "title": "Club Náutico Buchardo Núñez",
@@ -38,10 +55,24 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg"
+      ]
     },
-
     {
       "slug": "triunvirato",
       "title": "Casa en Villa Urquiza",
@@ -53,16 +84,33 @@
         "proyecto": "Noreste Arquitectura",
         "equipo": "Catalina Andersch",
         "obra": "Noreste Arquitectura",
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg"
+      ],
+      "visible": true
     },
-
     {
       "slug": "vidt",
       "title": "Vidt",
@@ -81,9 +129,13 @@
         "fotografias": null
       },
       "exteriorImages": [],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg"]
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg"
+      ]
     },
-
     {
       "slug": "vivienda-la-tacuara",
       "title": "La Tacuara",
@@ -101,10 +153,24 @@
         "estructura": "Ing. Claudio Lara",
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg"
+      ]
     },
-
     {
       "slug": "casa-belen-maria",
       "title": "Casa Belén María",
@@ -122,10 +188,21 @@
         "estructura": "Noreste Arquitectura",
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg"
+      ]
     },
-
     {
       "slug": "modulo-ff",
       "title": "La Tacuara 02",
@@ -143,10 +220,26 @@
         "estructura": "Noreste Arquitectura",
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg"
+      ]
     },
-
     {
       "slug": "hipico-la-leyenda",
       "title": "Hípico La Leyenda",
@@ -164,10 +257,41 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg","11.jpg","12.jpg","13.jpg","14.jpg","15.jpg","16.jpg","17.jpg","18.jpg","19.jpg","20.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg",
+        "11.jpg",
+        "12.jpg",
+        "13.jpg",
+        "14.jpg",
+        "15.jpg",
+        "16.jpg",
+        "17.jpg",
+        "18.jpg",
+        "19.jpg",
+        "20.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg"
+      ]
     },
-
     {
       "slug": "el-metejon",
       "title": "Sector Ecuestre El Metejón",
@@ -185,10 +309,20 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg"],
-      "interiorImages": ["01.jpg","02.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg"
+      ]
     },
-
     {
       "slug": "caballerizas",
       "title": "Caballerizas",
@@ -206,10 +340,41 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg","11.jpg","12.jpg","13.jpg","14.jpg","15.jpg","16.jpg","17.jpg","18.jpg","19.jpg","20.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg",
+        "11.jpg",
+        "12.jpg",
+        "13.jpg",
+        "14.jpg",
+        "15.jpg",
+        "16.jpg",
+        "17.jpg",
+        "18.jpg",
+        "19.jpg",
+        "20.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg"
+      ]
     },
-
     {
       "slug": "reforma-vedia",
       "title": "Vedia",
@@ -227,10 +392,15 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg"]
+      "exteriorImages": [
+        "01.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg"
+      ]
     },
-
     {
       "slug": "caballerizas-poroto",
       "title": "Caballerizas La Dolfina",
@@ -248,10 +418,19 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg"
+      ]
     },
-
     {
       "slug": "la-martona",
       "title": "La Martona",
@@ -269,10 +448,31 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg","10.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg",
+        "10.jpg"
+      ]
     },
-
     {
       "slug": "puesto-el-mate",
       "title": "El Mate",
@@ -290,30 +490,53 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg"],
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg"
+      ],
       "interiorImages": []
     },
-
     {
       "slug": "casa-mia",
-      "title": "La Martona 02",
+      "title": "La Martona 02234",
       "m2": 140,
       "status": "Construido",
       "year": 2025,
       "location": "Cañuelas, Provincia de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Josefina Gardey + Noreste Arquitectura",
-        "equipo": null,
-        "obra": null,
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "equipo": "",
+        "obra": "",
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg"],
-      "interiorImages": ["01.jpg","02.jpg","03.jpg","04.jpg","05.jpg","06.jpg","07.jpg","08.jpg","09.jpg"]
+      "exteriorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg"
+      ],
+      "interiorImages": [
+        "01.jpg",
+        "02.jpg",
+        "03.jpg",
+        "04.jpg",
+        "05.jpg",
+        "06.jpg",
+        "07.jpg",
+        "08.jpg",
+        "09.jpg"
+      ],
+      "visible": true
     }
-
   ]
 }
