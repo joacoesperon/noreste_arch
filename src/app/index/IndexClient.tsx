@@ -7,7 +7,7 @@ import Link from "next/link";
 type ProjectForIndex = {
   slug: string;
   title: string;
-  status: "Construido" | "Proyecto";
+  status: "Construido" | "Proyecto" | "En obra";
   year: number;
   image: string;
 };
