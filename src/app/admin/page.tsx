@@ -117,7 +117,7 @@ export default function AdminPage() {
       status: project.status,
       year: project.year,
       location: project.location,
-      visible: project.visible !== false,
+      visible: (project as any).visible !== false,
       credits: {
         proyecto: project.credits?.proyecto || "",
         equipo: project.credits?.equipo || "",
@@ -435,8 +435,8 @@ export default function AdminPage() {
               {projects.map((project) => (
                 <div key={project.slug} className="flex flex-col md:flex-row md:items-center justify-between py-6 gap-4">
                   <div className="flex flex-col">
-                    <span className={`text-lg lowercase font-medium ${project.visible === false ? 'text-[#C4C4C4] line-through' : 'text-black'}`}>
-                      {project.title} {project.visible === false && '(oculto)'}
+                    <span className={`text-lg lowercase font-medium ${(project as any).visible === false ? 'text-[#C4C4C4] line-through' : 'text-black'}`}>
+                      {project.title} {(project as any).visible === false && '(oculto)'}
                     </span>
                     <div className="flex gap-4 mt-1 text-xs text-[#C4C4C4]">
                       <span>{project.year}</span>
