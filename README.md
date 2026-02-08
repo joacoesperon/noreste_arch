@@ -1,4 +1,4 @@
-# norestearq
+# norestearch
 
 > Estudio de Arquitectura — Donde el espacio cobra vida.
 
@@ -17,7 +17,7 @@
 
 ## 🏛️ Descripción
 
-**norestearq** es la página web oficial de un estudio de arquitectura contemporáneo que busca transmitir los valores fundamentales de su filosofía de diseño:
+**norestearch** es la página web oficial de un estudio de arquitectura contemporáneo que busca transmitir los valores fundamentales de su filosofía de diseño:
 
 - **Minimalismo**: Menos es más. Cada elemento tiene un propósito.
 - **Elegancia**: Líneas limpias, espacios amplios, sofisticación visual.
@@ -346,7 +346,7 @@ async function getBlurDataUrl(src: string) {
 ## 📁 Estructura del Proyecto
 
 ```
-norestearq/
+norestearch/
 ├── public/
 │   ├── images/
 │   │   ├── projects/          # Imágenes de proyectos (optimizadas)
@@ -392,10 +392,10 @@ norestearq/
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/norestearq/website.git
+git clone https://github.com/joacoesperon/noreste_arch
 
 # Navegar al directorio
-cd norestearq
+cd norestearch
 
 # Instalar dependencias
 npm install
@@ -431,7 +431,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 
 <div align="center">
   <p>
-    <strong>norestearq</strong> · Arquitectura Contemporánea
+    <strong>norestearch</strong> · Arquitectura Contemporánea
   </p>
   <p>
     <sub>Diseñado y desarrollado con precisión arquitectónica.</sub>

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import type { Project } from "@/lib/projects";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import Link from "next/link";
-import Image from "next/image";
+import Masonry from "react-masonry-css";
 
 type ProjectImage = {
   src: string;
@@ -21,11 +21,9 @@ type Props = {
 
 export default function ProjectClient({ project, images, prevProject, nextProject }: Props) {
   const [showCredits, setShowCredits] = useState(false);
-  const galleryRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Fancybox and Masonry
+  // Initialize Fancybox
   useEffect(() => {
-    // Fancybox
     Fancybox.bind('[data-fancybox="gallery"]', {
       Hash: false,
       Thumbs: {
@@ -33,33 +31,19 @@ export default function ProjectClient({ project, images, prevProject, nextProjec
       },
     } as any);
 
-    // Masonry
-    let msnry: any;
-    if (galleryRef.current) {
-      import("imagesloaded").then((imagesLoaded) => {
-        import("masonry-layout").then((Masonry) => {
-          if (galleryRef.current) {
-            imagesLoaded.default(galleryRef.current, () => {
-              msnry = new Masonry.default(galleryRef.current!, {
-                percentPosition: true,
-                itemSelector: ".portfolio-item",
-                columnWidth: ".portfolio-item",
-                transitionDuration: "0.3s",
-              });
-            });
-          }
-        });
-      });
-    }
-
     return () => {
       Fancybox.destroy();
-      if (msnry) msnry.destroy();
     };
   }, [project.slug, images]);
 
   const toggleCredits = () => {
     setShowCredits(!showCredits);
+  };
+
+  // Breakpoints para Masonry (igual que tenue: 2 columnas en desktop, 1 en movil si prefieres)
+  const breakpointColumnsObj = {
+    default: 2,
+    768: 1
   };
 
   return (
@@ -107,27 +91,28 @@ export default function ProjectClient({ project, images, prevProject, nextProjec
       {/* Gallery */}
       <section className="section gallery pt-0">
         <div className="container">
-          <div 
-            className="row g-2 g-md-5" 
-            ref={galleryRef}
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
           >
             {images.map((img, index) => (
-              <div key={index} className="col-12 col-md-6 portfolio-item mb-4">
+              <div key={index} className="portfolio-item mb-4">
                 <a 
                   href={img.src} 
                   data-fancybox="gallery" 
-                  className="noloading block relative w-full aspect-auto"
+                  className="noloading block relative w-full h-auto"
                 >
                   <img
                     src={img.src}
                     alt={`${project.title} - ${img.type} ${index + 1}`}
-                    className="img-fluid img-single-project w-full h-auto"
+                    className="img-fluid img-single-project w-full h-auto block"
                     loading={index < 4 ? "eager" : "lazy"}
                   />
                 </a>
               </div>
             ))}
-          </div>
+          </Masonry>
         </div>
       </section>
 

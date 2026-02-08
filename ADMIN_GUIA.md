@@ -4,7 +4,7 @@ Esta guía explica el funcionamiento del panel de administración para mantener 
 
 ## 1. Acceso
 - **URL**: `/admin`
-- **Contraseña**: `norestearq2024`
+- **Contraseña**: `norestearch2026`
 
 ## 2. Gestión de Proyectos
 
@@ -13,7 +13,7 @@ Esta guía explica el funcionamiento del panel de administración para mantener 
    - **Título**: Nombre del proyecto.
    - **Slug**: Se genera automáticamente (es la dirección web del proyecto).
    - **Estado**: Selecciona entre *Proyecto*, *Construido* o *En obra*.
-   - **Ubicación**: Sigue el formato `Localidad, Departamento, País`.
+   - **Ubicación**: Sigue el formato `Municipio, Provincia, País`.
 2. Completa los **Créditos**: Rellena los campos correspondientes (Proyecto, Equipo, Obra, etc.). Si un campo no aplica, déjalo vacío.
 3. **Visibilidad**: Asegúrate de que el checkbox "Visible en web" esté marcado para que aparezca en el índice y home.
 4. **Guardar**: Haz clic en "Crear Proyecto".

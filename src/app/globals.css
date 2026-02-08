@@ -3,10 +3,10 @@
 :root {
   --background: #fff;
   --foreground: #000;
-  --color-text: #000000;
+  --color-text: #C4C4C4;
   --color-text-hover: #808080;
   
-  /* Tailwind v4 mapea estas variables automáticamente si se definen así */
+  /* Mapeo para Tailwind v4 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -23,7 +23,7 @@ html {
 /* Scrollbar con fondo transparente */
 html {
   scrollbar-width: thin;
-  scrollbar-color: #444444 transparent;
+  scrollbar-color: var(--color-text) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -35,17 +35,17 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C4C4C4;
+  background: var(--color-text);
   border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #808080;
+  background: var(--color-text-hover);
 }
 
 body {
-  background: #fff;
-  color: #C4C4C4;
+  background: var(--background);
+  color: var(--color-text);
   font-family: 'Suisse Intl', 'Inter', system-ui, sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -100,7 +100,7 @@ a:hover {
 }
 
 .header.active {
-  background: #fff;
+  background: var(--background);
 }
 
 .header .container {
@@ -119,7 +119,7 @@ a:hover {
   z-index: 22;
   transition: all .35s cubic-bezier(.3,.86,.36,.95);
   text-transform: lowercase;
-  color: #C4C4C4 !important;
+  color: var(--color-text) !important;
   text-decoration: none !important;
   white-space: nowrap;
 }
@@ -127,7 +127,7 @@ a:hover {
 .header .header-title::after {
   content: '';
   display: block;
-  border-bottom: solid 1px #C4C4C4;
+  border-bottom: solid 1px var(--color-text);
   transform: scaleX(0);
   height: 2px;
   opacity: 1;
@@ -154,7 +154,7 @@ a:hover {
   width: 100%;
   height: 2px;
   margin: 3px 0;
-  background: #000;
+  background: var(--foreground);
   transition: 0.3s;
 }
 
@@ -186,7 +186,7 @@ a:hover {
   left: 0;
   width: 100%;
   padding: 20px;
-  background: #fff;
+  background: var(--background);
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -201,14 +201,14 @@ a:hover {
   display: inline-block;
   padding: 10px 0;
   text-transform: lowercase;
-  color: #C4C4C4 !important;
+  color: var(--color-text) !important;
   text-decoration: none !important;
 }
 
 .header .navigation ul li a::after {
   content: '';
   display: block;
-  border-bottom: solid 1px #C4C4C4;
+  border-bottom: solid 1px var(--color-text);
   transform: scaleX(0);
   height: 2px;
   opacity: 1;
@@ -317,15 +317,19 @@ a:hover {
 
 .section.presentation .container {
   max-width: 100%;
-  padding: 0;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .presentation .logo {
   transition: opacity 0.3s ease;
   opacity: 1;
   width: 100%;
-  max-width: 100%;
+  max-width: 1200px; /* O el tamaño que prefieras para el logo */
   padding: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .presentation .logo img {
@@ -406,7 +410,7 @@ a:hover {
   margin-bottom: -10vh;
   padding-top: 10px;
   padding-bottom: 15px;
-  color: #C4C4C4 !important;
+  color: var(--color-text) !important;
 }
 
 .home__feed__item:first-child .home__feed__item__label p {
@@ -433,7 +437,7 @@ a:hover {
     bottom: 15px;
     left: 20px;
     opacity: 0;
-    color: #C4C4C4;
+    color: var(--color-text);
   }
 
   .title_current.scroll {
@@ -478,7 +482,7 @@ a:hover {
   width: 100%;
   border-collapse: collapse;
   font-size: clamp(16px, 0.278vw + 0.938rem, 19px);
-  --bs-table-color: #C4C4C4;
+  --bs-table-color: var(--color-text);
 }
 
 .page.projects .thead,
@@ -496,7 +500,7 @@ a:hover {
   display: table-cell;
   padding: 5px 0;
   text-align: left;
-  color: #C4C4C4 !important;
+  color: var(--color-text) !important;
 }
 
 /* Columnas 2 y 3 con white-space nowrap para que no se expandan */
@@ -526,7 +530,7 @@ a:hover {
 }
 
 .page.projects .table a:hover .td {
-  color: #808080 !important;
+  color: var(--color-text-hover) !important;
 }
 
 .page.projects .tbody .spacer {
@@ -618,12 +622,12 @@ a:hover {
 
 .page.contact .content h1,
 .page.contact .content h3 {
-  color: #C4C4C4 !important;
+  color: var(--color-text) !important;
   margin: 0 0 10px 0;
 }
 
 .page.contact .data {
-  color: #C4C4C4;
+  color: var(--color-text);
 }
 
 .page.contact .data p {
@@ -639,11 +643,11 @@ a:hover {
 
 .page.contact .vias a {
   text-decoration: underline !important;
-  color: #C4C4C4 !important;
+  color: var(--color-text) !important;
 }
 
 .page.contact .vias a:hover {
-  color: #808080 !important;
+  color: var(--color-text-hover) !important;
 }
 
 .page.contact .content a.link:hover {
@@ -659,7 +663,7 @@ a:hover {
 
 /* ==========================================================================
    SINGLE PROJECT
-   ========================================================================== */
+   ========================================================================= */
 
 /* SINGLE PROJECT Header */
 .single.projects .content .title h1 {
@@ -681,7 +685,7 @@ a:hover {
 
 .single.projects .accordion button::after {
   content: '+';
-  color: #C4C4C4;
+  color: var(--color-text);
   line-height: 20px;
   font-size: 24px;
   transition: 0.3s cubic-bezier(0.68, 0.17, 0.02, 0.86);
@@ -710,61 +714,54 @@ a:hover {
 }
 
 /* Gallery */
-.single.projects .gallery .g-5 {
-  --bs-gutter-x: 4rem;
-  --bs-gutter-y: 4rem;
+.my-masonry-grid {
+  display: flex;
+  margin-left: -60px; /* Gutter más grande */
+  width: auto;
 }
-
-/* Nav Projects */
-.nav-projects {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: flex-start !important;
-  padding-bottom: 30px;
-  margin-top: 60px;
-  width: 100% !important;
-}
-
-.nav-prev, .nav-next {
+.my-masonry-grid_column {
+  padding-left: 60px; /* Gutter más grande */
+  background-clip: padding-box;
   flex: 1;
 }
 
-.nav-next {
-  text-align: right;
+/* Añadimos asimetría: la segunda columna baja un poco */
+.my-masonry-grid_column:nth-child(2) {
+  margin-top: 100px;
 }
 
-.nav-link {
-  text-decoration: none !important;
-  color: #C4C4C4 !important;
-  transition: color 0.3s;
-  display: inline-block;
-  line-height: 1.2;
-}
-
-.nav-link:hover {
-  color: #808080 !important;
-  text-decoration: underline !important;
-}
-
-.nav-link .project-name {
-  font-size: clamp(16px, 0.278vw + 0.938rem, 19px);
-  text-transform: capitalize;
-}
-
-.nav-link .arrow {
-  font-size: 20px;
-}
-
+/* Style your items */
 .portfolio-item {
-  will-change: transform;
-  margin-bottom: 2rem !important; /* Espacio uniforme entre piezas */
+  margin-bottom: 60px; /* Espacio vertical generoso */
+  transition: transform 0.3s ease-out;
 }
 
-/* Gallery */
+.portfolio-item:hover {
+  /* Un efecto muy sutil de escala para que se sienta "vivo" */
+  transform: scale(1.01);
+}
+
 .single.projects .gallery .img-single-project {
   width: 100%;
   height: auto;
   display: block;
+  /* Quitamos cualquier posible borde o redondeado para máxima limpieza */
+  border-radius: 0; 
+}
+
+@media (max-width: 768px) {
+  .my-masonry-grid {
+    margin-left: -20px;
+  }
+  .my-masonry-grid_column {
+    padding-left: 20px;
+  }
+  .my-masonry-grid_column:nth-child(2) {
+    margin-top: 0; /* En móvil no queremos asimetría */
+  }
+  .portfolio-item {
+    margin-bottom: 20px;
+  }
 }
 
 /* ==========================================================================

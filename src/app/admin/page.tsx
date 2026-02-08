@@ -1,7 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { 
+  DndContext, 
+  closestCenter, 
+  KeyboardSensor, 
+  PointerSensor, 
+  useSensor, 
+  useSensors,
+  DragEndEvent
+} from "@dnd-kit/core";
+import { 
+  arrayMove, 
+  SortableContext, 
+  sortableKeyboardCoordinates, 
+  rectSortingStrategy 
+} from "@dnd-kit/sortable";
 import Header from "@/components/Header";
+import { SortableImage } from "@/components/SortableImage";
 import type { Project, ProjectCredits } from "@/lib/projects";
 
 type ProjectForm = {
@@ -13,6 +29,7 @@ type ProjectForm = {
   location: string;
   credits: ProjectCredits;
   visible: boolean;
+  coverImage?: string;
 };
 
 const emptyForm: ProjectForm = {
@@ -33,10 +50,46 @@ const emptyForm: ProjectForm = {
     fotografias: "",
   },
   visible: true,
+  coverImage: "",
 };
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Sensores para dnd-kit (Mouse, Touch y Teclado)
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // Evita que se dispare el drag al hacer solo un click
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEndExterior = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setCurrentExtImages((items) => {
+        const oldIndex = items.indexOf(active.id as string);
+        const newIndex = items.indexOf(over.id as string);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  const handleDragEndInterior = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setCurrentIntImages((items) => {
+        const oldIndex = items.indexOf(active.id as string);
+        const newIndex = items.indexOf(over.id as string);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -52,6 +105,27 @@ export default function AdminPage() {
   // Para visualizar imágenes existentes en edición
   const [currentExtImages, setCurrentExtImages] = useState<string[]>([]);
   const [currentIntImages, setCurrentIntImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Comprobar si hay una sesión activa al cargar la página
+    const checkSession = async () => {
+      try {
+        const res = await fetch("/api/login/check");
+        if (res.ok) {
+          setIsAuthenticated(true);
+        }
+      } catch (e) {
+        // Ignorar error, simplemente mostrar login
+      }
+    };
+    checkSession();
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/login/logout", { method: "POST" });
+    setIsAuthenticated(false);
+    setForm(emptyForm);
+  };
 
   const loadProjects = async () => {
     try {
@@ -70,13 +144,26 @@ export default function AdminPage() {
     }
   }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "norestearq2024") {
-      setIsAuthenticated(true);
-      setError("");
-    } else {
-      setError("Contraseña incorrecta");
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.authenticated) {
+        setIsAuthenticated(true);
+      } else {
+        setError(data.error || "Contraseña incorrecta");
+      }
+    } catch (e) {
+      setError("Error de conexión");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -118,6 +205,7 @@ export default function AdminPage() {
       year: project.year,
       location: project.location,
       visible: (project as any).visible !== false,
+      coverImage: project.coverImage || "",
       credits: {
         proyecto: project.credits?.proyecto || "",
         equipo: project.credits?.equipo || "",
@@ -224,9 +312,32 @@ export default function AdminPage() {
         setExteriorImages([]);
         setInteriorImages([]);
       } else {
-        // Si editamos, refrescar imágenes actuales
+        // Si editamos, refrescar datos actuales del servidor para asegurar sincronización
         const updatedRes = await fetch(`/api/projects/${editingSlug}`);
         const updatedData = await updatedRes.json();
+        
+        // Actualizar el formulario con los datos frescos del servidor
+        setForm({
+          slug: updatedData.slug,
+          title: updatedData.title,
+          m2: updatedData.m2,
+          status: updatedData.status,
+          year: updatedData.year,
+          location: updatedData.location,
+          visible: updatedData.visible !== false,
+          coverImage: updatedData.coverImage || "",
+          credits: {
+            proyecto: updatedData.credits?.proyecto || "",
+            equipo: updatedData.credits?.equipo || "",
+            obra: updatedData.credits?.obra || "",
+            paisajismo: updatedData.credits?.paisajismo || "",
+            interiorismo: updatedData.credits?.interiorismo || "",
+            instalaciones: updatedData.credits?.instalaciones || "",
+            estructura: updatedData.credits?.estructura || "",
+            fotografias: updatedData.credits?.fotografias || "",
+          },
+        });
+        
         setCurrentExtImages(updatedData.exteriorImages || []);
         setCurrentIntImages(updatedData.interiorImages || []);
         setExteriorImages([]);
@@ -265,8 +376,9 @@ export default function AdminPage() {
               className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#C4C4C4] text-center"
             />
             <button type="submit" className="w-full py-3 border border-[#C4C4C4] text-[#C4C4C4] hover:bg-[#C4C4C4] hover:text-white transition-all cursor-pointer lowercase tracking-widest text-sm">
-              entrar
+              {loading ? "verificando..." : "entrar"}
             </button>
+            {error && <p className="text-red-500 text-xs uppercase tracking-widest mt-4">{error}</p>}
           </form>
         </div>
       </main>
@@ -282,7 +394,7 @@ export default function AdminPage() {
             <h1 className="text-2xl text-black lowercase tracking-widest font-medium">
               {editingSlug ? `editando / ${editingSlug}` : "nuevo proyecto"}
             </h1>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-6 items-center">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input 
                   type="checkbox" 
@@ -292,6 +404,7 @@ export default function AdminPage() {
                 />
                 <span className="text-xs text-[#C4C4C4] uppercase tracking-widest">Visible en web</span>
               </label>
+              
               {editingSlug && (
                 <button onClick={handleCancel} className="text-[#C4C4C4] hover:text-black text-sm lowercase transition-colors">
                   cancelar
@@ -366,23 +479,39 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 {/* Exterior */}
                 <div className="space-y-6">
-                  <h3 className="text-[10px] text-[#C4C4C4] uppercase tracking-[0.2em]">exteriores</h3>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-[10px] text-[#C4C4C4] uppercase tracking-[0.2em]">exteriores</h3>
+                    {form.coverImage && (
+                      <span className="text-[9px] text-black font-medium uppercase tracking-widest bg-gray-100 px-2 py-1 border border-black/10">
+                        portada actual: {form.coverImage}
+                      </span>
+                    )}
+                  </div>
                   
                   {/* Imágenes actuales */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {currentExtImages.map(img => (
-                      <div key={img} className="relative group aspect-square bg-gray-50 border border-[#C4C4C4]/10 overflow-hidden">
-                        <img src={`/projects/${editingSlug}/exterior/${img}`} className="w-full h-full object-cover" />
-                        <button 
-                          type="button"
-                          onClick={() => deleteImage(img, 'exterior')}
-                          className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] uppercase tracking-tighter"
-                        >
-                          eliminar
-                        </button>
+                  <DndContext 
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEndExterior}
+                  >
+                    <SortableContext 
+                      items={currentExtImages}
+                      strategy={rectSortingStrategy}
+                    >
+                      <div className="grid grid-cols-4 gap-2">
+                        {currentExtImages.map((img) => (
+                          <SortableImage 
+                            key={img} 
+                            id={img}
+                            url={`/projects/${editingSlug}/exterior/${img}`}
+                            isCover={form.coverImage === img}
+                            onSetCover={() => setForm({...form, coverImage: img})}
+                            onDelete={() => deleteImage(img, 'exterior')}
+                          />
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </SortableContext>
+                  </DndContext>
 
                   <input type="file" id="ext-upload" multiple accept="image/*" onChange={(e) => setExteriorImages(Array.from(e.target.files || []))} className="hidden" />
                   <label htmlFor="ext-upload" className="block w-full py-3 border border-black text-black text-center cursor-pointer hover:bg-black hover:text-white transition-all lowercase text-xs tracking-widest">
@@ -395,20 +524,29 @@ export default function AdminPage() {
                   <h3 className="text-[10px] text-[#C4C4C4] uppercase tracking-[0.2em]">interiores</h3>
                   
                   {/* Imágenes actuales */}
-                  <div className="grid grid-cols-4 gap-2">
-                    {currentIntImages.map(img => (
-                      <div key={img} className="relative group aspect-square bg-gray-50 border border-[#C4C4C4]/10 overflow-hidden">
-                        <img src={`/projects/${editingSlug}/interior/${img}`} className="w-full h-full object-cover" />
-                        <button 
-                          type="button"
-                          onClick={() => deleteImage(img, 'interior')}
-                          className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] uppercase tracking-tighter"
-                        >
-                          eliminar
-                        </button>
+                  <DndContext 
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEndInterior}
+                  >
+                    <SortableContext 
+                      items={currentIntImages}
+                      strategy={rectSortingStrategy}
+                    >
+                      <div className="grid grid-cols-4 gap-2">
+                        {currentIntImages.map((img) => (
+                          <SortableImage 
+                            key={img} 
+                            id={img}
+                            url={`/projects/${editingSlug}/interior/${img}`}
+                            isCover={false}
+                            onSetCover={() => {}}
+                            onDelete={() => deleteImage(img, 'interior')}
+                          />
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </SortableContext>
+                  </DndContext>
 
                   <input type="file" id="int-upload" multiple accept="image/*" onChange={(e) => setInteriorImages(Array.from(e.target.files || []))} className="hidden" />
                   <label htmlFor="int-upload" className="block w-full py-3 border border-black text-black text-center cursor-pointer hover:bg-black hover:text-white transition-all lowercase text-xs tracking-widest">
@@ -453,6 +591,14 @@ export default function AdminPage() {
             </div>
           </section>
         </div>
+
+        {/* Botón de Salir Fijo abajo a la derecha */}
+        <button 
+          onClick={handleLogout}
+          className="fixed bottom-8 right-8 z-[100] text-[10px] text-red-400 hover:text-red-600 uppercase tracking-widest border border-red-100 bg-white/90 backdrop-blur-sm px-4 py-2 shadow-sm transition-colors rounded-sm hover:border-red-200"
+        >
+          salir del panel
+        </button>
       </main>
     </>
   );

@@ -37,8 +37,8 @@ export default function InfoPage() {
                     <div className="data">
                       <ul className="vias list-unstyled">
                         <li className="email">
-                          <a href="mailto:contacto@norestearq.com" target="_blank">
-                            contacto@norestearq.com
+                          <a href="mailto:contacto@norestearch.com" target="_blank">
+                            contacto@norestearch.com
                           </a>
                         </li>
                         <li className="whatsapp mb-3">
@@ -57,7 +57,7 @@ export default function InfoPage() {
 
                       <div className="socialmedia">
                         <ul className="list-unstyled">
-                          <li>@norestearq</li>
+                          <li>@norestearch</li>
                         </ul>
                       </div>
                     </div>
