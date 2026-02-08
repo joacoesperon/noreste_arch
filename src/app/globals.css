@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Fuentes de Tenue */
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('https://tenue.uy/wp-content/themes/tenue/assets/fonts/SuisseIntl-Regular.woff2') format('woff2');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Suisse Intl';
+    src: url('https://tenue.uy/wp-content/themes/tenue/assets/fonts/SuisseIntl-Book.woff2') format('woff2');
+    font-weight: 500;
+}
+
 :root {
   --background: #fff;
   --foreground: #000;
@@ -9,7 +22,7 @@
   /* Mapeo para Tailwind v4 */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Suisse Intl', 'Inter', system-ui, sans-serif;
 }
 
 /* ==========================================================================

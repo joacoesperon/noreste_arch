@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import HomeFeedTailwind from "@/components/HomeFeedTailwind";
 import { getProjectsShuffled, getProjectCoverImage } from "@/lib/projects";
 
-export default function Home() {
+export default function HomeTailwindPage() {
   const projects = getProjectsShuffled();
   
   // Preparar datos para el feed

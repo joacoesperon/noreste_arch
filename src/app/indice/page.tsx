@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getProjectsSortedByYear, getProjectCoverImage } from "@/lib/projects";
-import IndexClient from "./IndexClient";
+import IndexTailwind from "./IndexTailwind";
 
 export default function IndexPage() {
   const projects = getProjectsSortedByYear();
@@ -19,10 +19,10 @@ export default function IndexPage() {
     <>
       <Header />
       <main className="main clearfix wrapper">
-        <div className="page projects">
-          <section className="section feed content pt-3 pb-0">
-            <div className="container">
-              <IndexClient projects={projectsForClient} />
+        <div className="page projects pt-[94px]">
+          <section className="py-0">
+            <div className="container mx-auto px-4 max-w-[1600px]">
+              <IndexTailwind projects={projectsForClient} />
             </div>
           </section>
         </div>

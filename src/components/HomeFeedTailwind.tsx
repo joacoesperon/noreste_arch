@@ -17,7 +17,7 @@ type Props = {
   logoImage: string;
 };
 
-export default function HomeFeed({ projects, logoImage }: Props) {
+export default function HomeFeedTailwind({ projects, logoImage }: Props) {
   const feedItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const titleCurrentRef = useRef<HTMLSpanElement>(null);
   const presentationLogoRef = useRef<HTMLDivElement>(null);
@@ -35,13 +35,11 @@ export default function HomeFeed({ projects, logoImage }: Props) {
 
     const feedScrub = 1000;
 
-    // Función para obtener el elemento actual del feed
     const getCurrentFeedScrollElement = () => {
-      const scrollPosition = scroller.scrollTop; // Usar scrollTop del contenedor
+      const scrollPosition = scroller.scrollTop;
       let currentItemIndex = 0;
 
       feedItems.forEach((item, index) => {
-        // Calcular top relativo al scroller
         const itemTop = item.offsetTop;
         const itemHeight = item.offsetHeight;
 
@@ -61,7 +59,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
       }
     };
 
-    // Función para actualizar el título en scroll (móvil)
     const updateTitleOnScroll = (item: HTMLAnchorElement) => {
       if (titleSpan) {
         const labelElement = item.querySelector('.home__feed__item__label');
@@ -74,7 +71,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
     const createIndexScrollTrigger = () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-      // IMPORTANTE: Definir el scroller explícitamente como en Tenue
       ScrollTrigger.defaults({
         scroller: ".home-scroll"
       });
@@ -85,7 +81,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
           scrollTrigger: {
             trigger: ".presentation-spacer",
             start: "top top",
-            end: "center top", // Tenue: 'center top'
+            end: "center top",
             scrub: 0.5,
             scroller: ".home-scroll",
           },
@@ -99,7 +95,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
       }, context => {
         const { desktop: isDesktop, tablet: isTablet, mobile: isMobile } = context.conditions || {};
         
-        // VALORES EXACTOS DE TENUE
         let scale = 0.15;
         let yPercentDesktop = 31.75;
         let animationDurationDesktop = 0.185;
@@ -128,12 +123,11 @@ export default function HomeFeed({ projects, logoImage }: Props) {
 
           if (!imageElement) return;
 
-          // Reset transformations
           gsap.set(imageElement, { clearProps: "all" });
 
           const timeline = gsap.timeline({
             scrollTrigger: {
-              scroller: ".home-scroll", // Redundante pero seguro
+              scroller: ".home-scroll",
               trigger: item,
               start: startDesktop,
               end: endDesktop,
@@ -147,12 +141,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
             }
           });
 
-          // Animación de Escala: 0.15 -> 1 -> 0.15 (aunque Tenue parece hacer solo zoom in y luego zoom out en el siguiente item)
-          // Tenue code: 
-          // .from(imageElement, { scale: scale, duration: 0.5 }, "0")
-          // .to(imageElement, { scale: scale, duration: 0.5 }, "0.5")
-          // Esto significa: Empieza en 0.15 (from), llega a natural en 0.5 timeline, y va a 0.15 (to) al final.
-          
           timeline.from(imageElement, {
             scale: scale,
             ease: "linear",
@@ -166,7 +154,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
           }, "0.5");
 
           if (isMobile) {
-            // Lógica Móvil Exacta de Tenue
             timeline.fromTo(imgElement,
               { yPercent: -85 },
               { yPercent: -28.5, duration: 1 / 6, ease: "linear" },
@@ -188,9 +175,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
               1 - 1 / 6
             );
           } else {
-            // Lógica Desktop Exacta de Tenue
             if (index !== 0 && labelElement) {
-              // Animar la altura del label para que acompañe el zoom
               timeline.from(labelElement, {
                 height: scale * 100 + "%",
                 ease: "linear",
@@ -232,7 +217,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
 
     createIndexScrollTrigger();
 
-    // Scroll events para título y logo
     const handleScroll = () => {
       const scrollTop = scroller.scrollTop;
       
@@ -267,42 +251,43 @@ export default function HomeFeed({ projects, logoImage }: Props) {
   }, [projects]);
 
   return (
-    // CLASE CLAVE: home-scroll
     <div className="page home home-scroll" ref={pageRef}>
-      <div className="presentation-spacer"></div>
+      <div className="presentation-spacer h-screen"></div>
       
-      <section className="section presentation">
-        <div className="container">
-          <div className="logo" ref={presentationLogoRef}>
-            <img src={logoImage} alt="noreste arq" className="img-fluid w-100" />
+      <section className="section presentation fixed inset-0 flex items-center justify-center pointer-events-none z-10 p-0">
+        <div className="container mx-auto px-4 max-w-[1600px] flex justify-center">
+          <div className="logo transition-opacity duration-300 opacity-100 w-full max-w-[1200px] p-0 flex justify-center" ref={presentationLogoRef}>
+            <img src={logoImage} alt="noreste arq" className="max-w-full h-auto w-full block" />
           </div>
         </div>
       </section>
 
-      <section className="section projects pt-0">
-        <div className="container">
-          <div className="home__feed">
+      <section className="section projects pt-0 pb-8 md:pb-16 relative">
+        <div className="container mx-auto px-4 max-w-[1600px]">
+          <div className="home__feed flex flex-col pointer-events-none">
             {projects.map((project, index) => (
               <a
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="home__feed__item"
+                className="home__feed__item relative flex items-center justify-center w-full h-[75vh] py-[3px] box-border perspective-[800px] mt-[-20vh] first:mt-[50px]"
                 data-index={index + 1}
                 ref={(el) => { feedItemsRef.current[index] = el; }}
               >
-                <div className="home__feed__item__img">
-                  <picture className="img__to__preload">
+                <div className="home__feed__item__img relative flex items-center h-full cursor-pointer pointer-events-auto will-change-transform">
+                  <picture className="w-full h-full">
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="img img-fluid"
+                      className="h-full w-auto block max-w-full"
                       loading={index < 3 ? "eager" : "lazy"}
                     />
                   </picture>
                 </div>
 
-                <div className="home__feed__item__label">
-                  <p>{project.title}</p>
+                <div className="home__feed__item__label absolute left-0 h-full">
+                  <p className="relative self-start top-0 left-0 mb-[-10vh] pt-[10px] pb-[15px] first:mb-[14.4vh]">
+                    {project.title}
+                  </p>
                 </div>
               </a>
             ))}
@@ -310,7 +295,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
         </div>
       </section>
 
-      <div className="title_current">
+      <div className="title_current fixed bottom-[15px] left-[20px] opacity-0 transition-opacity duration-300 md:hidden pointer-events-none">
         <span ref={titleCurrentRef}></span>
       </div>
     </div>
