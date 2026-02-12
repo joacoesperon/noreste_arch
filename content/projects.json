@@ -1,6 +1,59 @@
 {
   "projects": [
     {
+      "slug": "la-martona",
+      "title": "La Martona",
+      "m2": 200,
+      "status": "Construido",
+      "year": 2025,
+      "location": "Cañuelas, Provincia de Buenos Aires, Argentina",
+      "credits": {
+        "proyecto": "Noreste Arquitectura",
+        "equipo": "Catalina Andersch",
+        "obra": "Noreste Arquitectura",
+        "paisajismo": "",
+        "interiorismo": "Noreste Arquitectura",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
+      },
+      "visible": true,
+      "images": [
+        "P1451010.webp",
+        "P1451048.webp",
+        "P1451553.webp",
+        "P1451542.webp",
+        "P1451558.webp",
+        "P1451055.webp",
+        "P1451036.webp",
+        "P1451050.webp",
+        "P1451536.webp",
+        "P1451540.webp",
+        "P1451495.webp",
+        "P1451479.webp",
+        "P1451505.webp",
+        "P1451469.webp",
+        "P1451450.webp",
+        "P1451432.webp",
+        "P1451419.webp",
+        "P1451216.webp",
+        "P1451370.webp",
+        "P1451311.webp",
+        "P1451303.webp",
+        "P1451288.webp",
+        "P1451278.webp",
+        "P1451261.webp",
+        "P1451155.webp",
+        "P1451184.webp",
+        "P1451174.webp",
+        "P1451124.webp",
+        "P1451072.webp",
+        "P1451112.webp"
+      ],
+      "videos": [],
+      "cover": "VID-20250925-WA0014.mp4"
+    },
+    {
       "slug": "el-nido",
       "title": "El Nido",
       "m2": 327,
@@ -23,30 +76,6 @@
       ],
       "videos": [],
       "cover": "01.jpg"
-    },
-    {
-      "slug": "club-buchardo-nuñez",
-      "title": "Club Náutico Buchardo Núñez",
-      "m2": 12000,
-      "status": "Proyecto",
-      "year": 2025,
-      "location": "Nuñez, Ciudad de Buenos Aires, Argentina",
-      "credits": {
-        "proyecto": "Noreste Arquitectura",
-        "equipo": "Catalina Andersch",
-        "obra": "",
-        "paisajismo": "",
-        "interiorismo": "",
-        "instalaciones": "",
-        "estructura": "",
-        "fotografias": ""
-      },
-      "images": [
-        "01.jpg"
-      ],
-      "videos": [],
-      "cover": "01.jpg",
-      "visible": false
     },
     {
       "slug": "triunvirato",
@@ -73,22 +102,23 @@
       "cover": "01.jpg"
     },
     {
-      "slug": "vidt",
-      "title": "Vidt",
-      "m2": 29,
-      "status": "Proyecto",
+      "slug": "caballerizas-poroto",
+      "title": "Caballerizas La Dolfina",
+      "m2": 140,
+      "status": "Construido",
       "year": 2025,
-      "location": "Recoleta, Ciudad de Buenos Aires, Argentina",
+      "location": "La Dolfina Polo Club, Provincia de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Noreste Arquitectura",
-        "equipo": null,
-        "obra": null,
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "equipo": "Catalina Andersch",
+        "obra": "Noreste Arquitectura",
+        "paisajismo": "",
+        "interiorismo": "Noreste Arquitectura",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
+      "visible": true,
       "images": [
         "01.jpg"
       ],
@@ -142,6 +172,30 @@
       "cover": "01.jpg"
     },
     {
+      "slug": "club-buchardo-nuñez",
+      "title": "Club Náutico Buchardo Núñez",
+      "m2": 12000,
+      "status": "Proyecto",
+      "year": 2025,
+      "location": "Nuñez, Ciudad de Buenos Aires, Argentina",
+      "credits": {
+        "proyecto": "Noreste Arquitectura",
+        "equipo": "Catalina Andersch",
+        "obra": "",
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
+      },
+      "images": [
+        "01.jpg"
+      ],
+      "videos": [],
+      "cover": "01.jpg",
+      "visible": false
+    },
+    {
       "slug": "modulo-ff",
       "title": "La Tacuara 02",
       "m2": 120,
@@ -165,12 +219,12 @@
       "cover": "01.jpg"
     },
     {
-      "slug": "hipico-la-leyenda",
-      "title": "Hípico La Leyenda",
-      "m2": 120000,
-      "status": "En obra",
-      "year": 2026,
-      "location": "Pilar, Provincia de Buenos Aires, Argentina",
+      "slug": "vidt",
+      "title": "Vidt",
+      "m2": 29,
+      "status": "Proyecto",
+      "year": 2025,
+      "location": "Recoleta, Ciudad de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Noreste Arquitectura",
         "equipo": null,
@@ -188,15 +242,15 @@
       "cover": "01.jpg"
     },
     {
-      "slug": "el-metejon",
-      "title": "Sector Ecuestre El Metejón",
-      "m2": 4000,
+      "slug": "hipico-la-leyenda",
+      "title": "Hípico La Leyenda",
+      "m2": 120000,
       "status": "En obra",
-      "year": 2025,
-      "location": "Alejandro Petión, Provincia de Buenos Aires, Argentina",
+      "year": 2026,
+      "location": "Pilar, Provincia de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Noreste Arquitectura",
-        "equipo": "Catalina Andersch",
+        "equipo": null,
         "obra": null,
         "paisajismo": null,
         "interiorismo": null,
@@ -235,6 +289,29 @@
       "cover": "01.jpg"
     },
     {
+      "slug": "el-metejon",
+      "title": "Sector Ecuestre El Metejón",
+      "m2": 4000,
+      "status": "En obra",
+      "year": 2025,
+      "location": "Alejandro Petión, Provincia de Buenos Aires, Argentina",
+      "credits": {
+        "proyecto": "Noreste Arquitectura",
+        "equipo": "Catalina Andersch",
+        "obra": null,
+        "paisajismo": null,
+        "interiorismo": null,
+        "instalaciones": null,
+        "estructura": null,
+        "fotografias": null
+      },
+      "images": [
+        "01.jpg"
+      ],
+      "videos": [],
+      "cover": "01.jpg"
+    },
+    {
       "slug": "reforma-vedia",
       "title": "Vedia",
       "m2": 70,
@@ -257,84 +334,6 @@
       ],
       "videos": [],
       "cover": "01.jpg"
-    },
-    {
-      "slug": "caballerizas-poroto",
-      "title": "Caballerizas La Dolfina",
-      "m2": 140,
-      "status": "Construido",
-      "year": 2025,
-      "location": "La Dolfina Polo Club, Provincia de Buenos Aires, Argentina",
-      "credits": {
-        "proyecto": "Noreste Arquitectura",
-        "equipo": "Catalina Andersch",
-        "obra": "Noreste Arquitectura",
-        "paisajismo": "",
-        "interiorismo": "Noreste Arquitectura",
-        "instalaciones": "",
-        "estructura": "",
-        "fotografias": ""
-      },
-      "visible": true,
-      "images": [
-        "01.jpg"
-      ],
-      "videos": [],
-      "cover": "01.jpg"
-    },
-    {
-      "slug": "la-martona",
-      "title": "La Martona",
-      "m2": 200,
-      "status": "Construido",
-      "year": 2025,
-      "location": "Cañuelas, Provincia de Buenos Aires, Argentina",
-      "credits": {
-        "proyecto": "Noreste Arquitectura",
-        "equipo": "Catalina Andersch",
-        "obra": "Noreste Arquitectura",
-        "paisajismo": "",
-        "interiorismo": "Noreste Arquitectura",
-        "instalaciones": "",
-        "estructura": "",
-        "fotografias": ""
-      },
-      "visible": true,
-      "images": [
-        "P1451010.webp",
-        "P1451048.webp",
-        "P1451553.webp",
-        "P1451542.webp",
-        "P1451558.webp",
-        "P1451055.webp",
-        "P1451036.webp",
-        "P1451050.webp",
-        "P1451536.webp",
-        "P1451540.webp",
-        "P1451495.webp",
-        "P1451479.webp",
-        "P1451505.webp",
-        "P1451469.webp",
-        "P1451450.webp",
-        "P1451432.webp",
-        "P1451419.webp",
-        "P1451407.webp",
-        "P1451370.webp",
-        "P1451311.webp",
-        "P1451303.webp",
-        "P1451288.webp",
-        "P1451278.webp",
-        "P1451261.webp",
-        "P1451216.webp",
-        "P1451184.webp",
-        "P1451174.webp",
-        "P1451155.webp",
-        "P1451124.webp",
-        "P1451112.webp",
-        "P1451072.webp"
-      ],
-      "videos": [],
-      "cover": "P1451010.webp"
     },
     {
       "slug": "puesto-el-mate",

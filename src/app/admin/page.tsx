@@ -14,10 +14,12 @@ import {
   arrayMove, 
   SortableContext, 
   sortableKeyboardCoordinates, 
-  rectSortingStrategy 
+  rectSortingStrategy,
+  verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import Header from "@/components/Header";
 import { SortableImage } from "@/components/SortableImage";
+import { SortableProjectRow } from "@/components/SortableProjectRow";
 import type { Project, ProjectCredits } from "@/lib/projects";
 
 type ProjectForm = {
@@ -78,12 +80,50 @@ export default function AdminPage() {
     }
   };
 
+  const handleDragEndProjects = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = projects.findIndex(p => p.slug === active.id);
+      const newIndex = projects.findIndex(p => p.slug === over.id);
+      
+      const newOrder = arrayMove(projects, oldIndex, newIndex);
+      setProjects(newOrder);
+      setOrderChanged(true);
+    }
+  };
+
+  const saveNewOrder = async () => {
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
+      const res = await fetch("/api/projects", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projects: projects }), // Enviar el orden tal cual se ve
+      });
+      if (res.ok) {
+        setSuccess("Orden actualizado correctamente");
+        setOrderChanged(false);
+        loadProjects();
+      } else {
+        const data = await res.json();
+        throw new Error(data.error || "Error al guardar el orden");
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo guardar el nuevo orden");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   
   const [projects, setProjects] = useState<Project[]>([]);
+  const [orderChanged, setOrderChanged] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   
   const [form, setForm] = useState<ProjectForm>(emptyForm);
@@ -115,7 +155,7 @@ export default function AdminPage() {
     try {
       const res = await fetch("/api/projects");
       const data = await res.json();
-      setProjects(data.projects ? [...data.projects].reverse() : []);
+      setProjects(data.projects || []); // Ya no invertimos al cargar
     } catch (e) {
       console.error("Error loading projects:", e);
     }
@@ -321,17 +361,17 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center p-6">
-        <div className="w-full max-w-sm text-center">
-          <h1 className="text-xl text-[#C4C4C4] mb-8 lowercase tracking-widest">admin</h1>
+        <div className="w-full max-sm text-center">
+          <h1 className="text-xl text-[var(--color-text)] mb-8 lowercase tracking-widest">admin</h1>
           <form onSubmit={handleLogin} className="space-y-6">
             <input
               type="password"
               value={password}
               placeholder="contraseña"
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] text-center transition-colors"
+              className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] text-center transition-colors"
             />
-            <button type="submit" className="w-full py-3 border border-[#C4C4C4] text-[#C4C4C4] hover:bg-[#C4C4C4] hover:text-white transition-all cursor-pointer lowercase tracking-widest text-sm">
+            <button type="submit" className="w-full py-3 border border-[var(--color-text)] text-[var(--color-text)] hover:bg-[var(--color-text)] hover:text-white transition-all cursor-pointer lowercase tracking-widest text-sm">
               {loading ? "verificando..." : "entrar"}
             </button>
             {error && <p className="text-red-500 text-xs uppercase tracking-widest mt-4">{error}</p>}
@@ -346,7 +386,7 @@ export default function AdminPage() {
       <Header />
       <main className="min-h-screen bg-white pt-32 px-4 md:px-[15%] pb-20">
         <div className="w-full mx-auto">
-          <div className="flex justify-between items-end mb-12 border-b border-[#C4C4C4]/20 pb-4">
+          <div className="flex justify-between items-end mb-12 border-b border-[var(--color-text)]/20 pb-4">
             <h1 className="text-2xl text-black lowercase tracking-widest font-medium">
               {editingSlug ? `editando / ${editingSlug}` : "nuevo proyecto"}
             </h1>
@@ -356,13 +396,13 @@ export default function AdminPage() {
                   type="checkbox" 
                   checked={form.visible} 
                   onChange={(e) => setForm({...form, visible: e.target.checked})}
-                  className="w-4 h-4 accent-[#808080]"
+                  className="w-4 h-4 accent-[var(--color-text-hover)]"
                 />
-                <span className="text-xs text-[#C4C4C4] group-hover:text-[#808080] uppercase tracking-widest transition-colors">Visible en web</span>
+                <span className="text-xs text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] uppercase tracking-widest transition-colors">Visible en web</span>
               </label>
               
               {editingSlug && (
-                <button onClick={handleCancel} className="text-[#C4C4C4] hover:text-black text-sm lowercase transition-colors underline decoration-1 underline-offset-4">
+                <button onClick={handleCancel} className="text-[var(--color-text)] hover:text-black text-sm lowercase transition-colors underline decoration-1 underline-offset-4">
                   cancelar
                 </button>
               )}
@@ -372,28 +412,28 @@ export default function AdminPage() {
           <form onSubmit={handleSubmit} className="space-y-16">
             <section className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10">
               <div className="md:col-span-3">
-                <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-4 border-b border-[#C4C4C4]/10 pb-2">información general</h2>
+                <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-4 border-b border-[var(--color-text)]/10 pb-2">información general</h2>
               </div>
               
               <div className="space-y-1">
-                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">título</label>
-                <input type="text" value={form.title} onChange={handleTitleChange} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
+                <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">título</label>
+                <input type="text" value={form.title} onChange={handleTitleChange} required className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] transition-colors" />
               </div>
               
               <div className="space-y-1">
-                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">slug (url)</label>
+                <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">slug (url)</label>
                 <input 
                   type="text" 
                   value={form.slug} 
                   onChange={(e) => setForm({...form, slug: e.target.value})}
                   disabled={!!editingSlug} 
-                  className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none disabled:opacity-30" 
+                  className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none disabled:opacity-30" 
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">estado</label>
-                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })} className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] cursor-pointer transition-colors">
+                <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">estado</label>
+                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })} className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] cursor-pointer transition-colors">
                   <option value="Proyecto">Proyecto</option>
                   <option value="Construido">Construido</option>
                   <option value="En obra">En obra</option>
@@ -401,44 +441,44 @@ export default function AdminPage() {
               </div>
               
               <div className="space-y-1">
-                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">m2</label>
-                <input type="number" value={form.m2} onChange={(e) => setForm({ ...form, m2: parseInt(e.target.value) || 0 })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
+                <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">m2</label>
+                <input type="number" value={form.m2} onChange={(e) => setForm({ ...form, m2: parseInt(e.target.value) || 0 })} required className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] transition-colors" />
               </div>
               
               <div className="space-y-1">
-                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">año</label>
-                <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) || 2024 })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
+                <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">año</label>
+                <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) || 2024 })} required className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] transition-colors" />
               </div>
               
               <div className="space-y-1">
-                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">ubicación</label>
-                <input type="text" value={form.location} placeholder="Pilar, Provincia de Buenos Aires, Argentina" onChange={(e) => setForm({ ...form, location: e.target.value })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
+                <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">ubicación</label>
+                <input type="text" value={form.location} placeholder="Pilar, Provincia de Buenos Aires, Argentina" onChange={(e) => setForm({ ...form, location: e.target.value })} required className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] transition-colors" />
               </div>
             </section>
             
-            <section className="pt-8 border-t border-[#C4C4C4]/10">
-              <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-[#C4C4C4]/10 pb-2">créditos</h2>
+            <section className="pt-8 border-t border-[var(--color-text)]/10">
+              <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-[var(--color-text)]/10 pb-2">créditos</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-10">
                 {Object.keys(emptyForm.credits).map((key) => (
                   <div key={key} className="space-y-1">
-                    <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">{key}</label>
-                    <input type="text" value={(form.credits as any)[key] || ""} onChange={(e) => handleCreditChange(key as any, e.target.value)} className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
+                    <label className="text-[9px] text-[var(--color-text)] uppercase tracking-widest">{key}</label>
+                    <input type="text" value={(form.credits as any)[key] || ""} onChange={(e) => handleCreditChange(key as any, e.target.value)} className="w-full py-2 border-b border-[var(--color-text)]/30 bg-transparent text-black focus:outline-none focus:border-[var(--color-text-hover)] transition-colors" />
                   </div>
                 ))}
               </div>
             </section>
             
             {/* Gestión de Archivos */}
-            <section className="pt-8 border-t border-[#C4C4C4]/10">
-              <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-[#C4C4C4]/10 pb-2">imágenes y galería</h2>
+            <section className="pt-8 border-t border-[var(--color-text)]/10">
+              <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-[var(--color-text)]/10 pb-2">imágenes y galería</h2>
               
               <div className="space-y-8">
                 {/* Imágenes */}
                 <div className="space-y-6">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-[10px] text-[#C4C4C4] font-medium uppercase tracking-widest">fotos</h3>
+                    <h3 className="text-[10px] text-[var(--color-text)] font-medium uppercase tracking-widest">fotos</h3>
                     {form.cover && (
-                      <span className="text-[8px] text-[#808080] font-medium uppercase tracking-widest bg-gray-50 px-2 py-1 border border-[#C4C4C4]/20">
+                      <span className="text-[8px] text-[var(--color-text-hover)] font-medium uppercase tracking-widest bg-gray-50 px-2 py-1 border border-[var(--color-text)]/20">
                         portada: {form.cover}
                       </span>
                     )}
@@ -462,18 +502,18 @@ export default function AdminPage() {
                   </DndContext>
 
                   <input type="file" id="img-upload" multiple accept="image/*" onChange={(e) => setNewImages(Array.from(e.target.files || []))} className="hidden" />
-                  <label htmlFor="img-upload" className="block w-full py-4 border border-[#C4C4C4] text-[#C4C4C4] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
+                  <label htmlFor="img-upload" className="block w-full py-4 border border-[var(--color-text)] text-[var(--color-text)] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
                     {newImages.length > 0 ? `${newImages.length} fotos nuevas` : "+ agregar fotos"}
                   </label>
                 </div>
 
                 {/* Videos */}
-                <div className="space-y-6 pt-8 border-t border-[#C4C4C4]/5">
-                  <h3 className="text-[10px] text-[#C4C4C4] font-medium uppercase tracking-widest">videos</h3>
+                <div className="space-y-6 pt-8 border-t border-[var(--color-text)]/5">
+                  <h3 className="text-[10px] text-[var(--color-text)] font-medium uppercase tracking-widest">videos</h3>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {currentVideos.map((vid) => (
-                      <div key={vid} className={`relative aspect-video bg-gray-100 group border ${form.cover === vid ? 'border-black ring-2 ring-black/10' : 'border-[#C4C4C4]/20'}`}>
+                      <div key={vid} className={`relative aspect-video bg-gray-100 group border ${form.cover === vid ? 'border-black ring-2 ring-black/10' : 'border-[var(--color-text)]/20'}`}>
                         <video src={`/projects/${editingSlug}/videos/${vid}`} muted className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
                           <button type="button" onClick={() => setForm({...form, cover: vid})} className={`text-[9px] uppercase tracking-tighter px-2 py-1 border ${form.cover === vid ? 'bg-white text-black' : 'text-white border-white'}`}>
@@ -486,7 +526,7 @@ export default function AdminPage() {
                   </div>
 
                   <input type="file" id="vid-upload" multiple accept="video/*" onChange={(e) => setNewVideos(Array.from(e.target.files || []))} className="hidden" />
-                  <label htmlFor="vid-upload" className="block w-full py-4 border border-[#C4C4C4] text-[#C4C4C4] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
+                  <label htmlFor="vid-upload" className="block w-full py-4 border border-[var(--color-text)] text-[var(--color-text)] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
                     {newVideos.length > 0 ? `${newVideos.length} videos nuevos` : "+ agregar videos"}
                   </label>
                 </div>
@@ -504,37 +544,44 @@ export default function AdminPage() {
           </form>
           
           <section className="mt-40 pt-16 border-t border-black">
-            <h2 className="text-black text-sm font-semibold uppercase tracking-[0.3em] mb-12">proyectos actuales</h2>
-            <div className="divide-y divide-[#C4C4C4]/10">
-              {projects.map((project) => (
-                <div key={project.slug} className="flex flex-col md:flex-row md:items-center justify-between py-8 gap-4 group">
-                  <div className="flex flex-col">
-                    <span className={`text-base lowercase tracking-wide transition-colors ${
-                      (project as any).visible === false 
-                        ? 'text-[#C4C4C4] line-through opacity-50' 
-                        : 'text-black group-hover:text-[#808080]'
-                    }`}>
-                      {project.title} {(project as any).visible === false && '(oculto)'}
-                    </span>
-                    <div className="flex gap-4 mt-1 text-[10px] text-[#C4C4C4] uppercase tracking-widest">
-                      <span>{project.year}</span>
-                      <span>{project.status}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-8">
-                    <button onClick={() => handleEdit(project)} className="text-[10px] text-[#C4C4C4] hover:text-black transition-colors uppercase tracking-widest">editar</button>
-                    <button onClick={() => handleDelete(project.slug)} disabled={loading} className="text-[10px] text-red-300 hover:text-red-500 transition-colors uppercase tracking-widest disabled:opacity-30">eliminar</button>
-                    <a href={`/projects/${project.slug}`} target="_blank" className="text-[10px] text-[#C4C4C4] hover:text-black transition-colors uppercase tracking-widest">ver →</a>
-                  </div>
-                </div>
-              ))}
+            <div className="flex justify-between items-center mb-12">
+              <h2 className="text-black text-sm font-semibold uppercase tracking-[0.3em]">proyectos actuales</h2>
+              <span className="text-[9px] text-[var(--color-text)] uppercase tracking-widest italic">Arrastra el icono ::: para reordenar</span>
             </div>
+
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndProjects}>
+              <SortableContext items={projects.map(p => p.slug)} strategy={verticalListSortingStrategy}>
+                <div className="flex flex-col">
+                  {projects.map((project) => (
+                    <SortableProjectRow 
+                      key={project.slug} 
+                      project={project} 
+                      onEdit={handleEdit} 
+                      onDelete={handleDelete} 
+                      loading={loading}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+
+            {orderChanged && (
+              <div className="mt-8 flex justify-center">
+                <button 
+                  onClick={saveNewOrder}
+                  disabled={loading}
+                  className="px-8 py-3 bg-[var(--color-text-hover)] text-white text-[10px] uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl animate-bounce"
+                >
+                  {loading ? "guardando..." : "guardar nuevo orden"}
+                </button>
+              </div>
+            )}
           </section>
         </div>
 
         <button 
           onClick={handleLogout}
-          className="fixed bottom-8 right-8 z-[100] text-[9px] text-[#C4C4C4] hover:text-red-500 uppercase tracking-[0.3em] border border-[#C4C4C4]/20 bg-white/80 backdrop-blur-sm px-6 py-3 transition-all hover:border-red-200"
+          className="fixed bottom-8 right-8 z-[100] text-[9px] text-[var(--color-text)] hover:text-red-500 uppercase tracking-[0.3em] border border-[var(--color-text)]/20 bg-white/80 backdrop-blur-sm px-6 py-3 transition-all hover:border-red-200"
         >
           salir del panel
         </button>

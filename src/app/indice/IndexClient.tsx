@@ -24,15 +24,26 @@ export default function IndexClient({ projects }: Props) {
   const handleMouseEnter = (imageUrl: string) => {
     setIsFading(false);
     
-    // Preload to check orientation
-    const img = new window.Image();
-    img.onload = () => {
-      setIsVertical(img.height > img.width);
-      setActiveImage(imageUrl);
-      setIsFading(true);
-    };
-    img.src = imageUrl;
+    // Check if it's a video
+    const isVideo = imageUrl.toLowerCase().endsWith('.mp4') || imageUrl.toLowerCase().endsWith('.webm');
+
+    if (isVideo) {
+        setIsVertical(false); // Default to false or handle video aspect ratio if needed
+        setActiveImage(imageUrl);
+        setIsFading(true);
+    } else {
+        // Preload to check orientation
+        const img = new window.Image();
+        img.onload = () => {
+          setIsVertical(img.height > img.width);
+          setActiveImage(imageUrl);
+          setIsFading(true);
+        };
+        img.src = imageUrl;
+    }
   };
+
+  const isVideoActive = activeImage.toLowerCase().endsWith('.mp4') || activeImage.toLowerCase().endsWith('.webm');
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-170px)]">
@@ -47,9 +58,9 @@ export default function IndexClient({ projects }: Props) {
                 className="flex items-center py-[5px] group transition-colors"
                 onMouseEnter={() => handleMouseEnter(project.image)}
               >
-                <div className="w-[60%] text-[#C4C4C4] group-hover:text-[#808080] transition-colors">{project.title}</div>
-                <div className="w-[20%] text-center whitespace-nowrap text-[#C4C4C4] group-hover:text-[#808080] transition-colors">{project.status}</div>
-                <div className="w-[20%] text-center whitespace-nowrap text-[#C4C4C4] group-hover:text-[#808080] transition-colors">{project.year}</div>
+                <div className="w-[60%] text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">{project.title}</div>
+                <div className="w-[20%] text-center whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">{project.status}</div>
+                <div className="w-[20%] text-center whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">{project.year}</div>
               </Link>
             ))}
             {/* Espaciadores de Tenue */}
@@ -64,14 +75,25 @@ export default function IndexClient({ projects }: Props) {
         <div className="sticky top-[0px] w-full h-[calc(100vh-170px)] overflow-hidden">
           {activeImage && (
             <div className={`relative w-full h-full transition-opacity duration-500 ${isFading ? "opacity-100" : "opacity-0"}`}>
-              <Image
-                src={activeImage}
-                alt="Project thumbnail"
-                fill
-                className={`object-contain object-top ${isVertical ? 'max-h-[calc(100vh-170px)]' : ''}`}
-                sizes="50vw"
-                priority
-              />
+              {isVideoActive ? (
+                <video
+                    src={activeImage}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-contain object-top"
+                />
+              ) : (
+                <Image
+                    src={activeImage}
+                    alt="Project thumbnail"
+                    fill
+                    className={`object-contain object-top ${isVertical ? 'max-h-[calc(100vh-170px)]' : ''}`}
+                    sizes="50vw"
+                    priority
+                />
+              )}
             </div>
           )}
         </div>

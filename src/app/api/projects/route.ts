@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { clearProjectsCache } from '@/lib/projects';
 
 const PROJECTS_FILE = path.join(process.cwd(), 'content', 'projects.json');
 
@@ -39,9 +40,36 @@ export async function POST(request: NextRequest) {
     // Guardar
     await fs.writeFile(PROJECTS_FILE, JSON.stringify({ projects }, null, 2), 'utf-8');
     
+    // Limpiar cache para que los cambios se vean reflejados
+    clearProjectsCache();
+    
     return NextResponse.json({ success: true, project: newProject });
   } catch (error) {
     console.error('Error creating project:', error);
     return NextResponse.json({ error: 'Error al crear proyecto' }, { status: 500 });
+  }
+}
+
+// PUT - Actualizar el orden de todos los proyectos
+export async function PUT(request: NextRequest) {
+  try {
+    const { projects } = await request.json();
+    
+    if (!Array.isArray(projects)) {
+      return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
+    }
+
+    console.log("💾 Guardando nuevo orden de proyectos en JSON...");
+    
+    await fs.writeFile(PROJECTS_FILE, JSON.stringify({ projects }, null, 2), 'utf-8');
+    
+    // Limpiar cache
+    clearProjectsCache();
+    console.log("✅ Cache de proyectos limpiada.");
+    
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error updating projects order:', error);
+    return NextResponse.json({ error: 'Error al actualizar el orden' }, { status: 500 });
   }
 }

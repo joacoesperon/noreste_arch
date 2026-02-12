@@ -28,6 +28,9 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Bloquear scroll del root solo en esta página para evitar doble scroll con el contenedor .home-scroll
+    document.documentElement.style.overflow = "hidden";
+
     const ctx = gsap.context(() => {
       const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
       const scroller = scrollerRef.current;
@@ -103,11 +106,11 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
           else presentationLogo.classList.remove('scroll');
         }
 
-        // Timer para detectar parada de scroll (1 segundo)
+        // Timer para detectar parada de scroll (0.5 segundos)
         if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           checkAndPlayVideos();
-        }, 1000);
+        }, 500);
       };
 
       scroller.addEventListener('scroll', handleScroll);
@@ -213,6 +216,7 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
       window.addEventListener('resize', createIndexScrollTrigger);
 
       return () => {
+        document.documentElement.style.overflow = "auto";
         scroller.removeEventListener('scroll', handleScroll);
         scroller.removeEventListener('scroll', getCurrentFeedScrollElement);
         window.removeEventListener('resize', createIndexScrollTrigger);
@@ -249,7 +253,7 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
                     className="home__feed__item"
                     ref={(el) => { itemsRef.current[index] = el; }}
                   >
-                    <div className="home__feed__item__img relative overflow-hidden bg-gray-50">
+                    <div className="home__feed__item__img relative overflow-hidden">
                       {isVideo ? (
                         <video
                           ref={(el) => { videoRefs.current[index] = el; }}
@@ -257,11 +261,12 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
                           muted
                           loop
                           playsInline
-                          poster="" // Opcional: podrías pasar una imagen de póster
-                          className="absolute inset-0 w-full h-full object-cover"
+                          preload="auto"
+                          poster="" 
+                          className="w-auto max-w-full h-full block object-cover z-10"
                         />
                       ) : (
-                        <img src={project.image} alt={project.title} loading={index < 3 ? "eager" : "lazy"} />
+                        <img src={project.image} alt={project.title} loading={index < 3 ? "eager" : "lazy"} className="relative z-10" />
                       )}
                     </div>
 

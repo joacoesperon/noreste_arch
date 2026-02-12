@@ -1,11 +1,12 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HomeFeed from "@/components/HomeFeed";
 import HomeFeedVideo from "@/components/HomeFeedVideo";
-import { getProjectsShuffled, getProjectCoverImage } from "@/lib/projects";
+import { getVisibleProjects, getProjectCoverImage } from "@/lib/projects";
+
+export const dynamic = 'force-dynamic';
 
 export default function Home() {
-  const projects = getProjectsShuffled();
+  const projects = getVisibleProjects();
   
   // Preparar datos para el feed
   const projectsForFeed = projects.map(p => ({

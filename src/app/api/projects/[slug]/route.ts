@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { clearProjectsCache } from '@/lib/projects';
 
 const PROJECTS_FILE = path.join(process.cwd(), 'content', 'projects.json');
 
@@ -45,6 +46,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     
     await fs.writeFile(PROJECTS_FILE, JSON.stringify({ projects }, null, 2), 'utf-8');
     
+    // Limpiar cache
+    clearProjectsCache();
+    
     return NextResponse.json({ success: true, project: projects[index] });
   } catch (error) {
     console.error('Error updating project:', error);
@@ -70,6 +74,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     
     // Guardar
     await fs.writeFile(PROJECTS_FILE, JSON.stringify({ projects }, null, 2), 'utf-8');
+    
+    // Limpiar cache
+    clearProjectsCache();
     
     // Opcionalmente eliminar carpeta de imágenes
     const projectImagesDir = path.join(process.cwd(), 'public', 'projects', slug);

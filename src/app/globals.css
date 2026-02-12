@@ -3,8 +3,8 @@
 :root {
   --background: #fff;
   --foreground: #000;
-  --color-text: #C4C4C4;
-  --color-text-hover: #808080;
+  --color-text: #4d4d4d;
+  --color-text-hover: #2c2c2c;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 

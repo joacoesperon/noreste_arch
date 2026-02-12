@@ -33,7 +33,7 @@ export function SortableImage({ id, url, isCover, onSetCover, onDelete }: Sortab
       {...attributes}
       {...listeners}
       className={`relative group aspect-square border overflow-hidden bg-gray-50 touch-none ${
-        isCover ? "border-black ring-2 ring-black/10" : "border-[#C4C4C4]/20"
+        isCover ? "border-black ring-2 ring-black/10" : "border-[var(--color-text)]/20"
       }`}
     >
       <img

@@ -26,17 +26,32 @@ export type Project = {
   visible?: boolean;
 };
 
+// Variable global para cachear los proyectos en memoria (persiste en next dev)
+const globalForProjects = globalThis as unknown as {
+  projectsCache: Project[] | null;
+};
+
 // Leer proyectos desde el JSON
 export function getProjects(): Project[] {
+  if (globalForProjects.projectsCache) {
+    return globalForProjects.projectsCache;
+  }
+
   try {
     const filePath = path.join(process.cwd(), 'content', 'projects.json');
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const data = JSON.parse(fileContents);
+    globalForProjects.projectsCache = data.projects;
     return data.projects;
   } catch (e) {
     console.error("Error reading projects.json:", e);
     return [];
   }
+}
+
+// Función para limpiar cache (útil para el admin cuando actualiza datos)
+export function clearProjectsCache() {
+  globalForProjects.projectsCache = null;
 }
 
 // Obtener proyectos visibles (para la web pública)
@@ -101,22 +116,26 @@ export function getAdjacentProjects(slug: string): { prev: Project | null; next:
 export function getProjectCoverImage(project: Project): string {
   const basePath = `/projects/${project.slug}`;
   
-  // 1. Si hay una portada (cover) definida
-  if (project.cover) {
-    // Si es un video (termina en mp4, etc), intentamos usar la primera imagen como poster o el video mismo si el componente lo soporta
-    // Pero para esta función que devuelve un string (usado en <img>), devolvemos el path
-    if (project.videos?.includes(project.cover)) {
-      return `${basePath}/videos/${project.cover}`;
-    }
-    return `${basePath}/images/${project.cover}`;
+  // 1. Intentar usar la portada definida si es válida
+  if (project.cover && project.cover.trim() !== "") {
+    const isVideo = project.videos?.includes(project.cover);
+    const isImage = project.images?.includes(project.cover);
+
+    if (isVideo) return `${basePath}/videos/${project.cover}`;
+    if (isImage) return `${basePath}/images/${project.cover}`;
   }
 
-  // 2. Fallback a la primera imagen
+  // 2. Si no hay portada válida, usar la primera imagen de la galería
   if (project.images && project.images.length > 0) {
     return `${basePath}/images/${project.images[0]}`;
   }
+
+  // 3. Si no hay imágenes, usar el primer video
+  if (project.videos && project.videos.length > 0) {
+    return `${basePath}/videos/${project.videos[0]}`;
+  }
   
-  // Fallback a imagen de arquitectura genérica
+  // 4. Fallback final
   return 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80';
 }
 

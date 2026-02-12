@@ -128,7 +128,7 @@ html{
 }
 
 body {
-	color: #C4C4C4;
+	color: var(--color-text);
 	font-size: 16px;
 	font-weight: 400;
 	font-family: 'Suisse Intl', sans-serif;
@@ -534,7 +534,7 @@ input[type="radio"] ~ label{
 .header .navigation ul li a:after{
 	content: '';
 	display: block;
-    border-bottom: solid 1px #C4C4C4;
+    border-bottom: solid 1px var(--color-text);
     transform: scaleX(0);
     height: 2px;
     opacity: 1;
@@ -840,7 +840,7 @@ input[type="radio"] ~ label{
     width: 100%;
     border-collapse: collapse;
     font-size: clamp(16px, 0.278vw + 0.938rem, 19px);
-    --bs-table-color: #C4C4C4;
+    --bs-table-color: var(--color-text);
 }
 
 .page.projects .thead, .tbody {
@@ -870,7 +870,7 @@ input[type="radio"] ~ label{
 	position: relative;
 }
 .page.projects .table a:hover{
-	--bs-table-color: #808080;
+	--bs-table-color: var(--color-text-hover);
 }
 /*.page.projects .tbody a:before {
 	content: '';
@@ -883,7 +883,7 @@ input[type="radio"] ~ label{
 }
 .page.projects .tbody a:hover:before {
    width: 95%;
-   background:  #808080;
+   background:  var(--color-text-hover);
 }*/
 
 .page.projects .thumbnail img {
@@ -948,7 +948,7 @@ input[type="radio"] ~ label{
 }
 .single.projects .accordion button:after {
     content: '+';
-    color: #C4C4C4;
+    color: var(--color-text);
     line-height: 20px;
     transition: 0.3s cubic-bezier(0.68, 0.17, 0.02, 0.86);
 }

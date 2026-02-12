@@ -25,7 +25,7 @@ export default function Header() {
           {/* Menu Izquierdo - 35% ancho */}
           <ul className="flex justify-start w-[35%] list-none p-0 m-0">
             <li>
-              <Link href="/indice" className={`text-[#C4C4C4] hover:text-[#808080] text-[clamp(16px,0.278vw+0.938rem,19px)] lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-[#C4C4C4] after:h-[1px] after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/indice" ? 'after:scale-x-100' : 'after:scale-x-0'}`}>
+              <Link href="/indice" className={`text-[var(--color-text)] hover:text-[var(--color-text-hover)] text-[clamp(16px,0.278vw+0.938rem,19px)] lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-[var(--color-text)] after:h-[1px] after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/indice" ? 'after:scale-x-100' : 'after:scale-x-0'}`}>
                 index
               </Link>
             </li>
@@ -34,16 +34,16 @@ export default function Header() {
           {/* Logo - Centrado con la técnica exacta de Tenue */}
           <Link 
             href="/" 
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-width-[220px] text-center text-[#C4C4C4] text-[clamp(16px,0.278vw+0.938rem,19px)] lowercase tracking-normal font-sans z-[22] transition-all duration-350 hover:text-[#808080] group"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 min-width-[220px] text-center text-[var(--color-text)] text-[clamp(16px,0.278vw+0.938rem,19px)] lowercase tracking-normal font-sans z-[22] transition-all duration-350 hover:text-[var(--color-text-hover)] group"
           >
             noreste arch
-            <span className="block border-b border-[#C4C4C4] h-[1px] w-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right group-hover:origin-left"></span>
+            <span className="block border-b border-[var(--color-text)] h-[1px] w-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right group-hover:origin-left"></span>
           </Link>
 
           {/* Menu Derecho - 35% ancho */}
           <ul className="flex justify-end w-[35%] list-none p-0 m-0">
             <li>
-              <Link href="/info" className={`text-[#C4C4C4] hover:text-[#808080] text-[clamp(16px,0.278vw+0.938rem,19px)] lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-[#C4C4C4] after:h-[1px] after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/info" ? 'after:scale-x-100' : 'after:scale-x-0'}`}>
+              <Link href="/info" className={`text-[var(--color-text)] hover:text-[var(--color-text-hover)] text-[clamp(16px,0.278vw+0.938rem,19px)] lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-[var(--color-text)] after:h-[1px] after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/info" ? 'after:scale-x-100' : 'after:scale-x-0'}`}>
                 info
               </Link>
             </li>
