@@ -23,11 +23,6 @@
 # misc
 .DS_Store
 *.pem
-tenue.uy-*
-ADMIN_GUIA.md
-DESARROLLO_Y_DEPLOY.md
-GEMINI.md
-todo.md
 
 # debug
 npm-debug.log*

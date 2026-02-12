@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "noreste arq - Estudio de arquitectura y diseño",
-  description: "Estudio de arquitectura y diseño con base en Punta del Este.",
+  title: "noreste arch - Estudio de arquitectura y diseño",
+  description: "Estudio de arquitectura y diseño con base en Buenos Aires.",
 };
 
 export default function RootLayout({

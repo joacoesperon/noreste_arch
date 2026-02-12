@@ -30,7 +30,7 @@ export default async function ProjectPage({ params }: Props) {
   }
 
   const { prev, next } = getAdjacentProjects(slug);
-  const images = getProjectImages(project);
+  const media = getProjectImages(project);
 
   return (
     <>
@@ -39,7 +39,7 @@ export default async function ProjectPage({ params }: Props) {
         <div className="single projects">
           <ProjectClient 
             project={project} 
-            images={images}
+            media={media}
             prevProject={prev}
             nextProject={next}
           />

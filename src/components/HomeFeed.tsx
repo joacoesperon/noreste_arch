@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,300 +19,254 @@ type Props = {
 };
 
 export default function HomeFeed({ projects, logoImage }: Props) {
-  const feedItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
-  const titleCurrentRef = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const titleSpanRef = useRef<HTMLSpanElement>(null);
   const presentationLogoRef = useRef<HTMLDivElement>(null);
-  const pageRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const feedItems = feedItemsRef.current.filter(Boolean) as HTMLAnchorElement[];
-    const titleSpan = titleCurrentRef.current;
-    const presentationLogo = presentationLogoRef.current;
-    const titleCurrent = document.querySelector('.title_current');
-    const page = pageRef.current;
-    const scroller = document.querySelector('.home-scroll');
+    // We scope everything to the container to ensure cleanup
+    const ctx = gsap.context(() => {
+      const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
+      const scroller = scrollerRef.current;
+      const titleSpan = titleSpanRef.current;
+      const presentationLogo = presentationLogoRef.current;
 
-    if (!page || feedItems.length === 0 || !scroller) return;
+      if (!scroller || feedItems.length === 0) return;
 
-    const feedScrub = 1000;
+      const feedScrub = 1000;
 
-    // Función para obtener el elemento actual del feed
-    const getCurrentFeedScrollElement = () => {
-      const scrollPosition = scroller.scrollTop; // Usar scrollTop del contenedor
-      let currentItemIndex = 0;
-
-      feedItems.forEach((item, index) => {
-        // Calcular top relativo al scroller
-        const itemTop = item.offsetTop;
-        const itemHeight = item.offsetHeight;
-
-        if (scrollPosition >= itemTop && scrollPosition < itemTop + itemHeight) {
-          currentItemIndex = index;
-        }
-      });
-
-      if (titleSpan) {
-        const currentItem = feedItems[currentItemIndex];
-        if (currentItem) {
-          const labelElement = currentItem.querySelector(".home__feed__item__label p");
-          if (labelElement) {
-            titleSpan.textContent = labelElement.textContent;
-          }
-        }
-      }
-    };
-
-    // Función para actualizar el título en scroll (móvil)
-    const updateTitleOnScroll = (item: HTMLAnchorElement) => {
-      if (titleSpan) {
-        const labelElement = item.querySelector('.home__feed__item__label');
-        if (labelElement) {
-          titleSpan.textContent = labelElement.textContent;
-        }
-      }
-    };
-
-    const createIndexScrollTrigger = () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-
-      // IMPORTANTE: Definir el scroller explícitamente como en Tenue
-      ScrollTrigger.defaults({
-        scroller: ".home-scroll"
-      });
-
-      if (presentationLogo) {
-        gsap.to(presentationLogo, {
-          opacity: 0,
-          scrollTrigger: {
-            trigger: ".presentation-spacer",
-            start: "top top",
-            end: "center top", // Tenue: 'center top'
-            scrub: 0.5,
-            scroller: ".home-scroll",
-          },
-        });
-      }
-
-      gsap.matchMedia().add({
-        desktop: "(min-aspect-ratio: 1068/798)",
-        tablet: "(max-aspect-ratio: 1068/798)",
-        mobile: "(max-aspect-ratio: 695/924)"
-      }, context => {
-        const { desktop: isDesktop, tablet: isTablet, mobile: isMobile } = context.conditions || {};
-        
-        // VALORES EXACTOS DE TENUE
-        let scale = 0.15;
-        let yPercentDesktop = 31.75;
-        let animationDurationDesktop = 0.185;
-        let startDesktop = "0% 100%";
-        let endDesktop = "100% 0%";
-        let scrubValue: boolean | number = true;
-
-        if (isTablet) {
-          yPercentDesktop = 41;
-          animationDurationDesktop = 0.24;
-          scrubValue = feedScrub / 1000;
-        }
-
-        if (isMobile) {
-          yPercentDesktop = 56.5;
-          animationDurationDesktop = 0.3334;
-          startDesktop = "0% 125%";
-          endDesktop = "100% -25%";
-          scrubValue = feedScrub / 1000;
-        }
+      // --- 1. Title Update Logic (Mobile) ---
+      const getCurrentFeedScrollElement = function() {
+        const scrollPosition = scroller.scrollTop;
+        let currentItemIndex = 0;
 
         feedItems.forEach((item, index) => {
-          const imageElement = item.querySelector(".home__feed__item__img") as HTMLElement;
-          const labelElement = item.querySelector(".home__feed__item__label") as HTMLElement;
-          const imgElement = item.querySelector(".home__feed__item__img") as HTMLElement;
+          const itemTop = item.offsetTop; 
+          const itemHeight = item.offsetHeight;
 
-          if (!imageElement) return;
-
-          // Reset transformations
-          gsap.set(imageElement, { clearProps: "all" });
-
-          const timeline = gsap.timeline({
-            scrollTrigger: {
-              scroller: ".home-scroll", // Redundante pero seguro
-              trigger: item,
-              start: startDesktop,
-              end: endDesktop,
-              scrub: scrubValue,
-              ease: "none",
-              onUpdate: () => {
-                if (isMobile) {
-                  updateTitleOnScroll(item);
-                }
-              }
-            }
-          });
-
-          // Animación de Escala: 0.15 -> 1 -> 0.15 (aunque Tenue parece hacer solo zoom in y luego zoom out en el siguiente item)
-          // Tenue code: 
-          // .from(imageElement, { scale: scale, duration: 0.5 }, "0")
-          // .to(imageElement, { scale: scale, duration: 0.5 }, "0.5")
-          // Esto significa: Empieza en 0.15 (from), llega a natural en 0.5 timeline, y va a 0.15 (to) al final.
-          
-          timeline.from(imageElement, {
-            scale: scale,
-            ease: "linear",
-            duration: 0.5
-          }, "0");
-
-          timeline.to(imageElement, {
-            scale: scale,
-            ease: "linear",
-            duration: 0.5
-          }, "0.5");
-
-          if (isMobile) {
-            // Lógica Móvil Exacta de Tenue
-            timeline.fromTo(imgElement,
-              { yPercent: -85 },
-              { yPercent: -28.5, duration: 1 / 6, ease: "linear" },
-              0
-            );
-            timeline.fromTo(imgElement,
-              { yPercent: -28.5 },
-              { yPercent: 0, duration: 1 / 6, ease: "linear" },
-              1 / 6
-            );
-            timeline.fromTo(imgElement,
-              { yPercent: 0 },
-              { yPercent: 28.5, duration: 1 / 6, ease: "linear" },
-              1 - 1 / 3
-            );
-            timeline.fromTo(imgElement,
-              { yPercent: 28.5 },
-              { yPercent: 85, duration: 1 / 6, ease: "linear" },
-              1 - 1 / 6
-            );
-          } else {
-            // Lógica Desktop Exacta de Tenue
-            if (index !== 0 && labelElement) {
-              // Animar la altura del label para que acompañe el zoom
-              timeline.from(labelElement, {
-                height: scale * 100 + "%",
-                ease: "linear",
-                duration: 0.5
-              }, "0");
-              timeline.to(labelElement, {
-                height: scale * 100 + "%",
-                ease: "linear",
-                duration: 0.5
-              }, "0.5");
-            }
-
-            timeline.fromTo(imgElement,
-              { yPercent: -yPercentDesktop },
-              { yPercent: 0, duration: animationDurationDesktop, ease: "linear" },
-              0
-            );
-            timeline.fromTo(imgElement,
-              { yPercent: 0 },
-              { yPercent: yPercentDesktop, duration: animationDurationDesktop, ease: "linear" },
-              1 - animationDurationDesktop
-            );
+          if (scrollPosition >= itemTop && scrollPosition < itemTop + itemHeight) {
+            currentItemIndex = index;
           }
         });
 
-        setTimeout(() => {
-          getCurrentFeedScrollElement();
-        }, 0);
-
-        scroller.addEventListener('scroll', getCurrentFeedScrollElement);
-
-        return () => {
-          scroller.removeEventListener('scroll', getCurrentFeedScrollElement);
-        };
-      });
-
-      ScrollTrigger.refresh();
-    };
-
-    createIndexScrollTrigger();
-
-    // Scroll events para título y logo
-    const handleScroll = () => {
-      const scrollTop = scroller.scrollTop;
-      
-      if (titleCurrent) {
-        if (scrollTop > 0) {
-          titleCurrent.classList.add('scroll');
-        } else {
-          titleCurrent.classList.remove('scroll');
+        if (titleSpan) {
+          const currentItem = feedItems[currentItemIndex];
+          if (currentItem) {
+            const labelText = currentItem.querySelector(".home__feed__item__label p")?.textContent;
+            if (labelText) titleSpan.textContent = labelText;
+          }
         }
+      };
+
+      const updateTitleOnScroll = (item: Element) => {
+        if (!titleSpan) return;
+        const newTitle = item.querySelector('.home__feed__item__label')?.textContent;
+        if (newTitle) titleSpan.textContent = newTitle;
+      };
+
+      // --- 2. Main ScrollTrigger Logic ---
+      function createIndexScrollTrigger() {
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+        ScrollTrigger.defaults({ scroller: scroller });
+
+        gsap.matchMedia().add({
+            desktop: "(min-aspect-ratio: 1068/798)",
+            tablet: "(max-aspect-ratio: 1068/798)",
+            mobile: "(max-aspect-ratio: 695/924)"
+        }, context => {
+            const { desktop: isDesktop, tablet: isTablet, mobile: isMobile } = context.conditions || {};
+            
+            let scale = 0.15,
+                yPercentDesktop = 31.75,
+                animationDurationDesktop = 0.185,
+                startDesktop = "0% 100%",
+                endDesktop = "100% 0%",
+                scrubValue: boolean | number = true;
+
+            if (isTablet) {
+                yPercentDesktop = 41;
+                animationDurationDesktop = 0.24;
+                scrubValue = feedScrub / 1000;
+            }
+
+            if (isMobile) {
+                yPercentDesktop = 56.5;
+                animationDurationDesktop = 0.3334;
+                startDesktop = "0% 125%";
+                endDesktop = "100% -25%";
+                scrubValue = feedScrub / 1000;
+            }
+
+            feedItems.forEach((item, index) => {
+                const imageElement = item.querySelector(".home__feed__item__img");
+                const labelElement = item.querySelector(".home__feed__item__label");
+                
+                // CRITICAL FIX: Ensure elements exist before animating
+                if (!imageElement || !item) return;
+
+                // Reset transformations
+                gsap.set(imageElement, { clearProps: "all" });
+
+                const timeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: item, // Using the ref element directly
+                        start: startDesktop,
+                        end: endDesktop,
+                        scrub: scrubValue,
+                        ease: "none",
+                        onUpdate: () => {
+                            if (isMobile) {
+                                updateTitleOnScroll(item);
+                            }
+                        }
+                    }
+                });
+
+                // Scale Animation
+                timeline.from(imageElement, {
+                    scale: scale,
+                    ease: "linear",
+                    duration: 0.5
+                }, "0").to(imageElement, {
+                    scale: scale,
+                    ease: "linear",
+                    duration: 0.5
+                }, "0.5");
+
+                if (isMobile) {
+                    // Mobile Parallax Steps
+                    timeline.fromTo(imageElement, { yPercent: -85 }, { yPercent: -28.5, duration: 1/6, ease: "linear" }, 0);
+                    timeline.fromTo(imageElement, { yPercent: -28.5 }, { yPercent: 0, duration: 1/6, ease: "linear" }, 1/6);
+                    timeline.fromTo(imageElement, { yPercent: 0 }, { yPercent: 28.5, duration: 1/6, ease: "linear" }, 1 - 1/3);
+                    timeline.fromTo(imageElement, { yPercent: 28.5 }, { yPercent: 85, duration: 1/6, ease: "linear" }, 1 - 1/6);
+                } else {
+                    // Desktop Label Animation
+                    if (index !== 0 && labelElement) {
+                        timeline.from(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0");
+                        timeline.to(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0.5");
+                    }
+                    
+                    // Desktop Parallax
+                    timeline.fromTo(imageElement, { yPercent: -yPercentDesktop }, { yPercent: 0, duration: animationDurationDesktop, ease: "linear" }, 0);
+                    timeline.fromTo(imageElement, { yPercent: 0 }, { yPercent: yPercentDesktop, duration: animationDurationDesktop, ease: "linear" }, 1 - animationDurationDesktop);
+                }
+            });
+
+            // Initial Title Set
+            setTimeout(() => { getCurrentFeedScrollElement(); }, 0);
+            scroller.addEventListener('scroll', getCurrentFeedScrollElement);
+            
+            return () => {
+                scroller.removeEventListener('scroll', getCurrentFeedScrollElement);
+            };
+        });
+
+        // Presentation (Logo) Animation
+        if (presentationLogo) {
+              gsap.to(presentationLogo, {
+                opacity: 0,
+                scrollTrigger: {
+                  trigger: ".presentation-spacer",
+                  start: "top top",
+                  end: "center top",
+                  scrub: 0.5,
+                }
+              });
+        }
+
+        ScrollTrigger.refresh();
       }
 
-      if (presentationLogo && scrollTop > 200) {
-        presentationLogo.classList.add('scroll');
-      } else {
-        presentationLogo?.classList.remove('scroll');
-      }
-    };
+      // --- 3. Scroll Event Listeners for Classes ---
+      const handleScroll = () => {
+        const scrollTop = scroller.scrollTop;
+        const titleCurrent = document.querySelector(".title_current");
+        
+        if (titleCurrent) {
+            if (scrollTop > 0) titleCurrent.classList.add('scroll');
+            else titleCurrent.classList.remove('scroll');
+        }
 
-    scroller.addEventListener('scroll', handleScroll);
-
-    const handleResize = () => {
+        if (presentationLogo) {
+            if (scrollTop > 200) presentationLogo.classList.add('scroll');
+            else presentationLogo.classList.remove('scroll');
+        }
+      };
+      
+      scroller.addEventListener('scroll', handleScroll);
+      
+      // Initialize
       createIndexScrollTrigger();
-    };
 
-    window.addEventListener('resize', handleResize);
+      // Resize Handler
+      const handleResize = () => createIndexScrollTrigger();
+      window.addEventListener('resize', handleResize);
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      scroller.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [projects]);
+      // Cleanup function for useEffect
+      return () => {
+          scroller.removeEventListener('scroll', handleScroll);
+          window.removeEventListener('resize', handleResize);
+      };
+
+    }, containerRef); // END GSAP CONTEXT
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    // CLASE CLAVE: home-scroll
-    <div className="page home home-scroll" ref={pageRef}>
+    // Outer Wrapper
+    <div ref={containerRef} className="page-wrapper">
+      <div ref={scrollerRef} className="page home home-scroll">
+      
+      {/* Spacer for Presentation */}
       <div className="presentation-spacer"></div>
       
+      {/* Presentation Section (Logo) */}
       <section className="section presentation">
-        <div className="container">
-          <div className="logo" ref={presentationLogoRef}>
-            <img src={logoImage} alt="noreste arq" className="img-fluid w-100" />
-          </div>
+        <div className="container mx-auto px-4 max-w-[1600px]">
+            <div ref={presentationLogoRef} className="logo w-full flex justify-center">
+                <img src={logoImage} alt="Logo" className="w-full h-auto block max-w-[1200px]" />
+            </div>
         </div>
       </section>
 
+      {/* Projects Feed */}
       <section className="section projects pt-0">
-        <div className="container">
-          <div className="home__feed">
-            {projects.map((project, index) => (
-              <a
-                key={project.slug}
-                href={`/projects/${project.slug}`}
-                className="home__feed__item"
-                data-index={index + 1}
-                ref={(el) => { feedItemsRef.current[index] = el; }}
-              >
-                <div className="home__feed__item__img">
-                  <picture className="img__to__preload">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="img img-fluid"
-                      loading={index < 3 ? "eager" : "lazy"}
-                    />
-                  </picture>
-                </div>
+        <div className="container mx-auto px-4 max-w-[1600px]">
+            <div className="home__feed">
+                {projects.map((project, index) => (
+                    <Link 
+                        href={`/projects/${project.slug}`}
+                        key={project.slug}
+                        className="home__feed__item"
+                        data-index={index + 1}
+                        ref={(el) => { itemsRef.current[index] = el; }}
+                    >
+                        <div className="home__feed__item__img">
+                            <img 
+                                src={project.image} 
+                                alt={project.title} 
+                                loading={index < 3 ? "eager" : "lazy"}
+                            />
+                        </div>
 
-                <div className="home__feed__item__label">
-                  <p>{project.title}</p>
-                </div>
-              </a>
-            ))}
-          </div>
+                        <div className="home__feed__item__label">
+                            <p>{project.title}</p>
+                        </div>
+                    </Link>
+                ))}
+            </div>
         </div>
       </section>
 
+      {/* Mobile Title */}
       <div className="title_current">
-        <span ref={titleCurrentRef}></span>
+        <span ref={titleSpanRef} id="titleSpan"></span>
+      </div>
+
       </div>
     </div>
   );

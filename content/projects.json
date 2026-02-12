@@ -17,26 +17,12 @@
         "estructura": "Clara Esperon",
         "fotografias": "Belen Capello"
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg"
+      "visible": true,
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg"
-      ],
-      "visible": true
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "club-buchardo-nuñez",
@@ -48,30 +34,19 @@
       "credits": {
         "proyecto": "Noreste Arquitectura",
         "equipo": "Catalina Andersch",
-        "obra": null,
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "obra": "",
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg",
-        "10.jpg"
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg",
+      "visible": false
     },
     {
       "slug": "triunvirato",
@@ -90,26 +65,12 @@
         "estructura": "",
         "fotografias": ""
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg"
+      "visible": true,
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg"
-      ],
-      "visible": true
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "vidt",
@@ -128,13 +89,11 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": [],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg"
-      ]
+      "images": [
+        "01.jpg"
+      ],
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "vivienda-la-tacuara",
@@ -153,23 +112,11 @@
         "estructura": "Ing. Claudio Lara",
         "fotografias": null
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg"
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg",
-        "10.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "casa-belen-maria",
@@ -188,20 +135,11 @@
         "estructura": "Noreste Arquitectura",
         "fotografias": null
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg"
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "modulo-ff",
@@ -220,25 +158,11 @@
         "estructura": "Noreste Arquitectura",
         "fotografias": null
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg"
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "hipico-la-leyenda",
@@ -257,40 +181,11 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg",
-        "10.jpg",
-        "11.jpg",
-        "12.jpg",
-        "13.jpg",
-        "14.jpg",
-        "15.jpg",
-        "16.jpg",
-        "17.jpg",
-        "18.jpg",
-        "19.jpg",
-        "20.jpg"
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg",
-        "10.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "el-metejon",
@@ -309,19 +204,11 @@
         "estructura": null,
         "fotografias": null
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg"
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "caballerizas",
@@ -332,48 +219,20 @@
       "location": "La Dolfina Polo Club, Provincia de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Josefina Gardey + Noreste Arquitectura",
-        "equipo": null,
-        "obra": null,
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "equipo": "",
+        "obra": "",
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg",
-        "10.jpg",
-        "11.jpg",
-        "12.jpg",
-        "13.jpg",
-        "14.jpg",
-        "15.jpg",
-        "16.jpg",
-        "17.jpg",
-        "18.jpg",
-        "19.jpg",
-        "20.jpg"
+      "visible": true,
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg",
-        "10.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "reforma-vedia",
@@ -384,22 +243,20 @@
       "location": "Saavedra, Ciudad de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Noreste Arquitectura",
-        "equipo": null,
+        "equipo": "",
         "obra": "Noreste Arquitectura",
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": [
+      "visible": true,
+      "images": [
         "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "caballerizas-poroto",
@@ -412,24 +269,18 @@
         "proyecto": "Noreste Arquitectura",
         "equipo": "Catalina Andersch",
         "obra": "Noreste Arquitectura",
-        "paisajismo": null,
+        "paisajismo": "",
         "interiorismo": "Noreste Arquitectura",
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg"
+      "visible": true,
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg"
-      ]
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "la-martona",
@@ -448,22 +299,21 @@
         "estructura": "",
         "fotografias": ""
       },
-      "exteriorImages": [
-        "P1451036.webp",
-        "P1451558.webp",
-        "P1451055.webp",
-        "P1451553.webp",
+      "visible": true,
+      "images": [
         "P1451010.webp",
         "P1451048.webp",
+        "P1451553.webp",
         "P1451542.webp",
+        "P1451558.webp",
+        "P1451055.webp",
+        "P1451036.webp",
         "P1451050.webp",
         "P1451536.webp",
         "P1451540.webp",
         "P1451495.webp",
         "P1451479.webp",
-        "P1451505.webp"
-      ],
-      "interiorImages": [
+        "P1451505.webp",
         "P1451469.webp",
         "P1451450.webp",
         "P1451432.webp",
@@ -483,8 +333,8 @@
         "P1451112.webp",
         "P1451072.webp"
       ],
-      "visible": true,
-      "coverImage": "P1451558.webp"
+      "videos": [],
+      "cover": "P1451010.webp"
     },
     {
       "slug": "puesto-el-mate",
@@ -495,23 +345,20 @@
       "location": "San Antonio de Areco, Provincia de Buenos Aires, Argentina",
       "credits": {
         "proyecto": "Noreste Arquitectura",
-        "equipo": null,
-        "obra": null,
-        "paisajismo": null,
-        "interiorismo": null,
-        "instalaciones": null,
-        "estructura": null,
-        "fotografias": null
+        "equipo": "",
+        "obra": "",
+        "paisajismo": "",
+        "interiorismo": "",
+        "instalaciones": "",
+        "estructura": "",
+        "fotografias": ""
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg"
+      "visible": true,
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": []
+      "videos": [],
+      "cover": "01.jpg"
     },
     {
       "slug": "casa-mia",
@@ -530,26 +377,12 @@
         "estructura": "",
         "fotografias": ""
       },
-      "exteriorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg"
+      "visible": true,
+      "images": [
+        "01.jpg"
       ],
-      "interiorImages": [
-        "01.jpg",
-        "02.jpg",
-        "03.jpg",
-        "04.jpg",
-        "05.jpg",
-        "06.jpg",
-        "07.jpg",
-        "08.jpg",
-        "09.jpg"
-      ],
-      "visible": true
+      "videos": [],
+      "cover": "01.jpg"
     }
   ]
 }

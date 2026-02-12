@@ -20,10 +20,10 @@ export type Project = {
   year: number;
   location: string;
   credits: ProjectCredits;
-  exteriorImages: string[];
-  interiorImages: string[];
-  coverImage?: string;
-  visible?: boolean; // Nuevo campo para ocultar/mostrar
+  images: string[];
+  videos?: string[];
+  cover?: string; // Can be an image filename or video filename
+  visible?: boolean;
 };
 
 // Leer proyectos desde el JSON
@@ -101,38 +101,43 @@ export function getAdjacentProjects(slug: string): { prev: Project | null; next:
 export function getProjectCoverImage(project: Project): string {
   const basePath = `/projects/${project.slug}`;
   
-  // Si el proyecto tiene una coverImage específica definida en el JSON, usar esa
-  if (project.coverImage) {
-    return `${basePath}/exterior/${project.coverImage}`;
+  // 1. Si hay una portada (cover) definida
+  if (project.cover) {
+    // Si es un video (termina en mp4, etc), intentamos usar la primera imagen como poster o el video mismo si el componente lo soporta
+    // Pero para esta función que devuelve un string (usado en <img>), devolvemos el path
+    if (project.videos?.includes(project.cover)) {
+      return `${basePath}/videos/${project.cover}`;
+    }
+    return `${basePath}/images/${project.cover}`;
   }
 
-  // Por defecto usamos la primera imagen exterior como cover
-  if (project.exteriorImages && project.exteriorImages.length > 0) {
-    return `${basePath}/exterior/${project.exteriorImages[0]}`;
+  // 2. Fallback a la primera imagen
+  if (project.images && project.images.length > 0) {
+    return `${basePath}/images/${project.images[0]}`;
   }
   
   // Fallback a imagen de arquitectura genérica
   return 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80';
 }
 
-// Obtener todas las imágenes de un proyecto (exterior primero, luego interior)
-export function getProjectImages(project: Project): { src: string; type: 'exterior' | 'interior' }[] {
+// Obtener todas las imágenes de un proyecto
+export function getProjectImages(project: Project): { src: string; type: 'image' | 'video' }[] {
   const basePath = `/projects/${project.slug}`;
-  const images: { src: string; type: 'exterior' | 'interior' }[] = [];
+  const gallery: { src: string; type: 'image' | 'video' }[] = [];
   
-  // Primero exterior
-  if (project.exteriorImages) {
-    project.exteriorImages.forEach(img => {
-      images.push({ src: `${basePath}/exterior/${img}`, type: 'exterior' });
+  // Imágenes
+  if (project.images) {
+    project.images.forEach(img => {
+      gallery.push({ src: `${basePath}/images/${img}`, type: 'image' });
     });
   }
   
-  // Luego interior
-  if (project.interiorImages) {
-    project.interiorImages.forEach(img => {
-      images.push({ src: `${basePath}/interior/${img}`, type: 'interior' });
+  // Videos
+  if (project.videos) {
+    project.videos.forEach(vid => {
+      gallery.push({ src: `${basePath}/videos/${vid}`, type: 'video' });
     });
   }
   
-  return images;
+  return gallery;
 }

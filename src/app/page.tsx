@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HomeFeedTailwind from "@/components/HomeFeedTailwind";
+import HomeFeed from "@/components/HomeFeed";
+import HomeFeedVideo from "@/components/HomeFeedVideo";
 import { getProjectsShuffled, getProjectCoverImage } from "@/lib/projects";
 
 export default function Home() {
@@ -20,7 +21,7 @@ export default function Home() {
     <>
       <Header />
       <main className="main clearfix wrapper">
-        <HomeFeedTailwind projects={projectsForFeed} logoImage={logoImage} />
+        <HomeFeedVideo projects={projectsForFeed} logoImage={logoImage} />
       </main>
       <Footer />
     </>

@@ -35,39 +35,41 @@ export default function IndexClient({ projects }: Props) {
   };
 
   return (
-    <div className="row feed-projects">
-      <div className="col-12 col-md-6">
-        <div className="table">
-          <div className="tbody">
+    <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-170px)]">
+      {/* Columna Tabla Proyectos: 50% */}
+      <div className="w-full md:w-1/2 pr-4">
+        <div className="w-full text-[clamp(16px,0.278vw+0.938rem,19px)]">
+          <div className="flex flex-col">
             {projects.map((project) => (
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="tr"
+                className="flex items-center py-[5px] group transition-colors"
                 onMouseEnter={() => handleMouseEnter(project.image)}
-                onMouseLeave={() => setIsFading(false)}
               >
-                <div className="td">{project.title}</div>
-                <div className="td">{project.status}</div>
-                <div className="td">{project.year}</div>
+                <div className="w-[60%] text-[#C4C4C4] group-hover:text-[#808080] transition-colors">{project.title}</div>
+                <div className="w-[20%] text-center whitespace-nowrap text-[#C4C4C4] group-hover:text-[#808080] transition-colors">{project.status}</div>
+                <div className="w-[20%] text-center whitespace-nowrap text-[#C4C4C4] group-hover:text-[#808080] transition-colors">{project.year}</div>
               </Link>
             ))}
-            <div className="spacer"></div>
-            <div className="spacer"></div>
+            {/* Espaciadores de Tenue */}
+            <div className="h-10"></div>
+            <div className="h-10"></div>
           </div>
         </div>
       </div>
       
-      <div className="col-12 col-md-6 d-none d-md-block text-end">
-        <div className={`thumbnail ${isVertical ? "is-vertical" : ""}`}>
+      {/* Columna Imagen Thumbnail: 50% exacto, sin padding extra para llegar al centro */}
+      <div className="hidden md:block md:w-1/2 relative">
+        <div className="sticky top-[0px] w-full h-[calc(100vh-170px)] overflow-hidden">
           {activeImage && (
             <div className={`relative w-full h-full transition-opacity duration-500 ${isFading ? "opacity-100" : "opacity-0"}`}>
               <Image
                 src={activeImage}
                 alt="Project thumbnail"
                 fill
-                className="object-contain"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                className={`object-contain object-top ${isVertical ? 'max-h-[calc(100vh-170px)]' : ''}`}
+                sizes="50vw"
                 priority
               />
             </div>

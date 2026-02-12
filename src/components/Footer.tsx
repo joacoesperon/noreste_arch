@@ -1,8 +1,8 @@
 export default function Footer() {
   return (
-    <footer className="footer">
-      <section className="widgets">
-        <div className="container">
+    <footer>
+      <section className="py-4">
+        <div className="mx-auto px-4 md:px-8 max-w-[1600px]">
         </div>
       </section>
     </footer>

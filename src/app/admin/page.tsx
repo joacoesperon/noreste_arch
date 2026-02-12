@@ -29,7 +29,7 @@ type ProjectForm = {
   location: string;
   credits: ProjectCredits;
   visible: boolean;
-  coverImage?: string;
+  cover?: string;
 };
 
 const emptyForm: ProjectForm = {
@@ -50,17 +50,16 @@ const emptyForm: ProjectForm = {
     fotografias: "",
   },
   visible: true,
-  coverImage: "",
+  cover: "",
 };
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  // Sensores para dnd-kit (Mouse, Touch y Teclado)
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // Evita que se dispare el drag al hacer solo un click
+        distance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -68,21 +67,10 @@ export default function AdminPage() {
     })
   );
 
-  const handleDragEndExterior = (event: DragEndEvent) => {
+  const handleDragEndImages = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      setCurrentExtImages((items) => {
-        const oldIndex = items.indexOf(active.id as string);
-        const newIndex = items.indexOf(over.id as string);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
-
-  const handleDragEndInterior = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      setCurrentIntImages((items) => {
+      setCurrentImages((items) => {
         const oldIndex = items.indexOf(active.id as string);
         const newIndex = items.indexOf(over.id as string);
         return arrayMove(items, oldIndex, newIndex);
@@ -99,24 +87,20 @@ export default function AdminPage() {
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   
   const [form, setForm] = useState<ProjectForm>(emptyForm);
-  const [exteriorImages, setExteriorImages] = useState<File[]>([]);
-  const [interiorImages, setInteriorImages] = useState<File[]>([]);
+  const [newImages, setNewImages] = useState<File[]>([]);
+  const [newVideos, setNewVideos] = useState<File[]>([]);
   
-  // Para visualizar imágenes existentes en edición
-  const [currentExtImages, setCurrentExtImages] = useState<string[]>([]);
-  const [currentIntImages, setCurrentIntImages] = useState<string[]>([]);
+  const [currentImages, setCurrentImages] = useState<string[]>([]);
+  const [currentVideos, setCurrentVideos] = useState<string[]>([]);
 
   useEffect(() => {
-    // Comprobar si hay una sesión activa al cargar la página
     const checkSession = async () => {
       try {
         const res = await fetch("/api/login/check");
         if (res.ok) {
           setIsAuthenticated(true);
         }
-      } catch (e) {
-        // Ignorar error, simplemente mostrar login
-      }
+      } catch (e) {}
     };
     checkSession();
   }, []);
@@ -131,7 +115,6 @@ export default function AdminPage() {
     try {
       const res = await fetch("/api/projects");
       const data = await res.json();
-      // Revertir el orden para que los nuevos salgan arriba
       setProjects(data.projects ? [...data.projects].reverse() : []);
     } catch (e) {
       console.error("Error loading projects:", e);
@@ -205,7 +188,7 @@ export default function AdminPage() {
       year: project.year,
       location: project.location,
       visible: (project as any).visible !== false,
-      coverImage: project.coverImage || "",
+      cover: project.cover || "",
       credits: {
         proyecto: project.credits?.proyecto || "",
         equipo: project.credits?.equipo || "",
@@ -217,30 +200,30 @@ export default function AdminPage() {
         fotografias: project.credits?.fotografias || "",
       },
     });
-    setCurrentExtImages(project.exteriorImages || []);
-    setCurrentIntImages(project.interiorImages || []);
-    setExteriorImages([]);
-    setInteriorImages([]);
+    setCurrentImages(project.images || []);
+    setCurrentVideos(project.videos || []);
+    setNewImages([]);
+    setNewVideos([]);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const deleteImage = async (filename: string, type: 'exterior' | 'interior') => {
-    if (!editingSlug || !confirm(`¿Eliminar imagen ${filename}?`)) return;
+  const deleteFile = async (filename: string, type: 'images' | 'videos') => {
+    if (!editingSlug || !confirm(`¿Eliminar archivo ${filename}?`)) return;
     
     try {
       const res = await fetch(`/api/projects/${editingSlug}/images?filename=${filename}&type=${type}`, {
         method: 'DELETE'
       });
       if (res.ok) {
-        if (type === 'exterior') {
-          setCurrentExtImages(prev => prev.filter(img => img !== filename));
+        if (type === 'images') {
+          setCurrentImages(prev => prev.filter(img => img !== filename));
         } else {
-          setCurrentIntImages(prev => prev.filter(img => img !== filename));
+          setCurrentVideos(prev => prev.filter(vid => vid !== filename));
         }
-        loadProjects(); // Recargar para sincronizar lista inferior
+        loadProjects();
       }
     } catch (e) {
-      setError("Error al eliminar imagen");
+      setError("Error al eliminar archivo");
     }
   };
 
@@ -264,12 +247,10 @@ export default function AdminPage() {
     setSuccess("");
     
     try {
-      const existingProject = projects.find(p => p.slug === (editingSlug || form.slug));
-      
       const projectData = {
         ...form,
-        exteriorImages: currentExtImages,
-        interiorImages: currentIntImages,
+        images: currentImages,
+        videos: currentVideos,
       };
 
       let res;
@@ -292,56 +273,31 @@ export default function AdminPage() {
         throw new Error(data.error || "Error al guardar");
       }
 
-      // Subir imágenes nuevas si hay
-      if (exteriorImages.length > 0) {
+      if (newImages.length > 0) {
         const formData = new FormData();
-        exteriorImages.forEach(img => formData.append("images", img));
-        await fetch(`/api/projects/${form.slug}/images?type=exterior`, { method: "POST", body: formData });
+        newImages.forEach(img => formData.append("images", img));
+        await fetch(`/api/projects/${form.slug}/images?type=images`, { method: "POST", body: formData });
       }
-      if (interiorImages.length > 0) {
+      
+      if (newVideos.length > 0) {
         const formData = new FormData();
-        interiorImages.forEach(img => formData.append("images", img));
-        await fetch(`/api/projects/${form.slug}/images?type=interior`, { method: "POST", body: formData });
+        newVideos.forEach(vid => formData.append("videos", vid));
+        await fetch(`/api/projects/${form.slug}/images?type=videos`, { method: "POST", body: formData });
       }
       
       setSuccess(editingSlug ? "Proyecto actualizado correctamente" : "Proyecto creado correctamente");
       
-      // Limpiar después de éxito si no estamos editando (o si queremos resetear)
       if (!editingSlug) {
         setForm(emptyForm);
-        setExteriorImages([]);
-        setInteriorImages([]);
+        setNewImages([]);
+        setNewVideos([]);
       } else {
-        // Si editamos, refrescar datos actuales del servidor para asegurar sincronización
         const updatedRes = await fetch(`/api/projects/${editingSlug}`);
         const updatedData = await updatedRes.json();
-        
-        // Actualizar el formulario con los datos frescos del servidor
-        setForm({
-          slug: updatedData.slug,
-          title: updatedData.title,
-          m2: updatedData.m2,
-          status: updatedData.status,
-          year: updatedData.year,
-          location: updatedData.location,
-          visible: updatedData.visible !== false,
-          coverImage: updatedData.coverImage || "",
-          credits: {
-            proyecto: updatedData.credits?.proyecto || "",
-            equipo: updatedData.credits?.equipo || "",
-            obra: updatedData.credits?.obra || "",
-            paisajismo: updatedData.credits?.paisajismo || "",
-            interiorismo: updatedData.credits?.interiorismo || "",
-            instalaciones: updatedData.credits?.instalaciones || "",
-            estructura: updatedData.credits?.estructura || "",
-            fotografias: updatedData.credits?.fotografias || "",
-          },
-        });
-        
-        setCurrentExtImages(updatedData.exteriorImages || []);
-        setCurrentIntImages(updatedData.interiorImages || []);
-        setExteriorImages([]);
-        setInteriorImages([]);
+        setCurrentImages(updatedData.images || []);
+        setCurrentVideos(updatedData.videos || []);
+        setNewImages([]);
+        setNewVideos([]);
       }
       
       loadProjects();
@@ -353,10 +309,10 @@ export default function AdminPage() {
 
   const handleCancel = () => {
     setForm(emptyForm);
-    setExteriorImages([]);
-    setInteriorImages([]);
-    setCurrentExtImages([]);
-    setCurrentIntImages([]);
+    setNewImages([]);
+    setNewVideos([]);
+    setCurrentImages([]);
+    setCurrentVideos([]);
     setEditingSlug(null);
     setError("");
     setSuccess("");
@@ -366,14 +322,14 @@ export default function AdminPage() {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="w-full max-w-sm text-center">
-          <h1 className="text-xl text-[#C4C4C4] mb-8 lowercase tracking-widest">noreste arch admin</h1>
+          <h1 className="text-xl text-[#C4C4C4] mb-8 lowercase tracking-widest">admin</h1>
           <form onSubmit={handleLogin} className="space-y-6">
             <input
               type="password"
               value={password}
               placeholder="contraseña"
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#C4C4C4] text-center"
+              className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] text-center transition-colors"
             />
             <button type="submit" className="w-full py-3 border border-[#C4C4C4] text-[#C4C4C4] hover:bg-[#C4C4C4] hover:text-white transition-all cursor-pointer lowercase tracking-widest text-sm">
               {loading ? "verificando..." : "entrar"}
@@ -388,44 +344,44 @@ export default function AdminPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white pt-32 px-6 pb-20">
-        <div className="max-w-5xl mx-auto">
+      <main className="min-h-screen bg-white pt-32 px-4 md:px-[15%] pb-20">
+        <div className="w-full mx-auto">
           <div className="flex justify-between items-end mb-12 border-b border-[#C4C4C4]/20 pb-4">
             <h1 className="text-2xl text-black lowercase tracking-widest font-medium">
               {editingSlug ? `editando / ${editingSlug}` : "nuevo proyecto"}
             </h1>
             <div className="flex gap-6 items-center">
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 cursor-pointer group">
                 <input 
                   type="checkbox" 
                   checked={form.visible} 
                   onChange={(e) => setForm({...form, visible: e.target.checked})}
-                  className="w-4 h-4 accent-black"
+                  className="w-4 h-4 accent-[#808080]"
                 />
-                <span className="text-xs text-[#C4C4C4] uppercase tracking-widest">Visible en web</span>
+                <span className="text-xs text-[#C4C4C4] group-hover:text-[#808080] uppercase tracking-widest transition-colors">Visible en web</span>
               </label>
               
               {editingSlug && (
-                <button onClick={handleCancel} className="text-[#C4C4C4] hover:text-black text-sm lowercase transition-colors">
+                <button onClick={handleCancel} className="text-[#C4C4C4] hover:text-black text-sm lowercase transition-colors underline decoration-1 underline-offset-4">
                   cancelar
                 </button>
               )}
             </div>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-12">
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-8">
+          <form onSubmit={handleSubmit} className="space-y-16">
+            <section className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-10">
               <div className="md:col-span-3">
-                <h2 className="text-[#C4C4C4] text-xs uppercase tracking-widest mb-4">información general</h2>
+                <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-4 border-b border-[#C4C4C4]/10 pb-2">información general</h2>
               </div>
               
               <div className="space-y-1">
-                <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">título</label>
-                <input type="text" value={form.title} onChange={handleTitleChange} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-black" />
+                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">título</label>
+                <input type="text" value={form.title} onChange={handleTitleChange} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
               </div>
               
               <div className="space-y-1">
-                <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">slug (url)</label>
+                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">slug (url)</label>
                 <input 
                   type="text" 
                   value={form.slug} 
@@ -436,8 +392,8 @@ export default function AdminPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">estado</label>
-                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })} className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-black cursor-pointer">
+                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">estado</label>
+                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })} className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] cursor-pointer transition-colors">
                   <option value="Proyecto">Proyecto</option>
                   <option value="Construido">Construido</option>
                   <option value="En obra">En obra</option>
@@ -445,146 +401,130 @@ export default function AdminPage() {
               </div>
               
               <div className="space-y-1">
-                <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">m2</label>
-                <input type="number" value={form.m2} onChange={(e) => setForm({ ...form, m2: parseInt(e.target.value) || 0 })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-black" />
+                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">m2</label>
+                <input type="number" value={form.m2} onChange={(e) => setForm({ ...form, m2: parseInt(e.target.value) || 0 })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
               </div>
               
               <div className="space-y-1">
-                <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">año</label>
-                <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) || 2024 })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-black" />
+                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">año</label>
+                <input type="number" value={form.year} onChange={(e) => setForm({ ...form, year: parseInt(e.target.value) || 2024 })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
               </div>
               
               <div className="space-y-1">
-                <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">ubicación</label>
-                <input type="text" value={form.location} placeholder="Pilar, Provincia de Buenos Aires, Argentina" onChange={(e) => setForm({ ...form, location: e.target.value })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-black" />
+                <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">ubicación</label>
+                <input type="text" value={form.location} placeholder="Pilar, Provincia de Buenos Aires, Argentina" onChange={(e) => setForm({ ...form, location: e.target.value })} required className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
               </div>
             </section>
             
             <section className="pt-8 border-t border-[#C4C4C4]/10">
-              <h2 className="text-[#C4C4C4] text-xs uppercase tracking-widest mb-8">créditos</h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-8">
+              <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-[#C4C4C4]/10 pb-2">créditos</h2>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-10">
                 {Object.keys(emptyForm.credits).map((key) => (
                   <div key={key} className="space-y-1">
-                    <label className="text-[10px] text-[#C4C4C4] uppercase tracking-widest">{key}</label>
-                    <input type="text" value={(form.credits as any)[key] || ""} onChange={(e) => handleCreditChange(key as any, e.target.value)} className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-black" />
+                    <label className="text-[9px] text-[#C4C4C4] uppercase tracking-widest">{key}</label>
+                    <input type="text" value={(form.credits as any)[key] || ""} onChange={(e) => handleCreditChange(key as any, e.target.value)} className="w-full py-2 border-b border-[#C4C4C4]/30 bg-transparent text-black focus:outline-none focus:border-[#808080] transition-colors" />
                   </div>
                 ))}
               </div>
             </section>
             
-            {/* Gestión de Imágenes */}
+            {/* Gestión de Archivos */}
             <section className="pt-8 border-t border-[#C4C4C4]/10">
-              <h2 className="text-[#C4C4C4] text-xs uppercase tracking-widest mb-4">gestión de imágenes</h2>
+              <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-[#C4C4C4]/10 pb-2">imágenes y galería</h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                {/* Exterior */}
+              <div className="space-y-8">
+                {/* Imágenes */}
                 <div className="space-y-6">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-[10px] text-[#C4C4C4] uppercase tracking-[0.2em]">exteriores</h3>
-                    {form.coverImage && (
-                      <span className="text-[9px] text-black font-medium uppercase tracking-widest bg-gray-100 px-2 py-1 border border-black/10">
-                        portada actual: {form.coverImage}
+                    <h3 className="text-[10px] text-[#C4C4C4] font-medium uppercase tracking-widest">fotos</h3>
+                    {form.cover && (
+                      <span className="text-[8px] text-[#808080] font-medium uppercase tracking-widest bg-gray-50 px-2 py-1 border border-[#C4C4C4]/20">
+                        portada: {form.cover}
                       </span>
                     )}
                   </div>
                   
-                  {/* Imágenes actuales */}
-                  <DndContext 
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleDragEndExterior}
-                  >
-                    <SortableContext 
-                      items={currentExtImages}
-                      strategy={rectSortingStrategy}
-                    >
-                      <div className="grid grid-cols-4 gap-2">
-                        {currentExtImages.map((img) => (
+                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndImages}>
+                    <SortableContext items={currentImages} strategy={rectSortingStrategy}>
+                      <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
+                        {currentImages.map((img) => (
                           <SortableImage 
                             key={img} 
                             id={img}
-                            url={`/projects/${editingSlug}/exterior/${img}`}
-                            isCover={form.coverImage === img}
-                            onSetCover={() => setForm({...form, coverImage: img})}
-                            onDelete={() => deleteImage(img, 'exterior')}
+                            url={`/projects/${editingSlug}/images/${img}`}
+                            isCover={form.cover === img}
+                            onSetCover={() => setForm({...form, cover: img})}
+                            onDelete={() => deleteFile(img, 'images')}
                           />
                         ))}
                       </div>
                     </SortableContext>
                   </DndContext>
 
-                  <input type="file" id="ext-upload" multiple accept="image/*" onChange={(e) => setExteriorImages(Array.from(e.target.files || []))} className="hidden" />
-                  <label htmlFor="ext-upload" className="block w-full py-3 border border-black text-black text-center cursor-pointer hover:bg-black hover:text-white transition-all lowercase text-xs tracking-widest">
-                    {exteriorImages.length > 0 ? `${exteriorImages.length} ext. nuevas` : "+ agregar exteriores"}
+                  <input type="file" id="img-upload" multiple accept="image/*" onChange={(e) => setNewImages(Array.from(e.target.files || []))} className="hidden" />
+                  <label htmlFor="img-upload" className="block w-full py-4 border border-[#C4C4C4] text-[#C4C4C4] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
+                    {newImages.length > 0 ? `${newImages.length} fotos nuevas` : "+ agregar fotos"}
                   </label>
                 </div>
 
-                {/* Interior */}
-                <div className="space-y-6">
-                  <h3 className="text-[10px] text-[#C4C4C4] uppercase tracking-[0.2em]">interiores</h3>
+                {/* Videos */}
+                <div className="space-y-6 pt-8 border-t border-[#C4C4C4]/5">
+                  <h3 className="text-[10px] text-[#C4C4C4] font-medium uppercase tracking-widest">videos</h3>
                   
-                  {/* Imágenes actuales */}
-                  <DndContext 
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleDragEndInterior}
-                  >
-                    <SortableContext 
-                      items={currentIntImages}
-                      strategy={rectSortingStrategy}
-                    >
-                      <div className="grid grid-cols-4 gap-2">
-                        {currentIntImages.map((img) => (
-                          <SortableImage 
-                            key={img} 
-                            id={img}
-                            url={`/projects/${editingSlug}/interior/${img}`}
-                            isCover={false}
-                            onSetCover={() => {}}
-                            onDelete={() => deleteImage(img, 'interior')}
-                          />
-                        ))}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {currentVideos.map((vid) => (
+                      <div key={vid} className={`relative aspect-video bg-gray-100 group border ${form.cover === vid ? 'border-black ring-2 ring-black/10' : 'border-[#C4C4C4]/20'}`}>
+                        <video src={`/projects/${editingSlug}/videos/${vid}`} muted className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                          <button type="button" onClick={() => setForm({...form, cover: vid})} className={`text-[9px] uppercase tracking-tighter px-2 py-1 border ${form.cover === vid ? 'bg-white text-black' : 'text-white border-white'}`}>
+                            {form.cover === vid ? 'portada' : 'usar portada'}
+                          </button>
+                          <button type="button" onClick={() => deleteFile(vid, 'videos')} className="text-[9px] text-red-400 uppercase tracking-tighter">eliminar</button>
+                        </div>
                       </div>
-                    </SortableContext>
-                  </DndContext>
+                    ))}
+                  </div>
 
-                  <input type="file" id="int-upload" multiple accept="image/*" onChange={(e) => setInteriorImages(Array.from(e.target.files || []))} className="hidden" />
-                  <label htmlFor="int-upload" className="block w-full py-3 border border-black text-black text-center cursor-pointer hover:bg-black hover:text-white transition-all lowercase text-xs tracking-widest">
-                    {interiorImages.length > 0 ? `${interiorImages.length} int. nuevas` : "+ agregar interiores"}
+                  <input type="file" id="vid-upload" multiple accept="video/*" onChange={(e) => setNewVideos(Array.from(e.target.files || []))} className="hidden" />
+                  <label htmlFor="vid-upload" className="block w-full py-4 border border-[#C4C4C4] text-[#C4C4C4] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
+                    {newVideos.length > 0 ? `${newVideos.length} videos nuevos` : "+ agregar videos"}
                   </label>
                 </div>
               </div>
             </section>
             
-            <div className="pt-12 space-y-4">
-              <button type="submit" disabled={loading} className="px-12 py-4 bg-black text-white hover:bg-[#333] transition-all cursor-pointer disabled:opacity-30 lowercase tracking-widest text-sm">
+            <div className="pt-12 space-y-6">
+              <button type="submit" disabled={loading} className="px-16 py-4 bg-black text-white hover:bg-[#333] transition-all cursor-pointer disabled:opacity-30 lowercase tracking-[0.2em] text-xs">
                 {loading ? "guardando..." : (editingSlug ? "actualizar proyecto" : "crear proyecto")}
               </button>
               
-              {/* Feedback de éxito/error justo debajo del botón */}
-              {error && <div className="p-4 bg-red-50 text-red-500 text-sm border-l-2 border-red-500">{error}</div>}
-              {success && <div className="p-4 bg-gray-50 text-black text-sm border-l-2 border-black font-medium">{success}</div>}
+              {error && <div className="p-4 text-red-500 text-[10px] uppercase tracking-widest border-l border-red-500 bg-red-50/30">{error}</div>}
+              {success && <div className="p-4 text-black text-[10px] uppercase tracking-widest border-l border-black bg-gray-50 font-medium">{success}</div>}
             </div>
           </form>
           
-          <section className="mt-32 pt-16 border-t border-black">
-            <h2 className="text-black text-xl lowercase tracking-widest mb-12 font-medium">proyectos actuales</h2>
-            <div className="divide-y divide-[#C4C4C4]/20">
+          <section className="mt-40 pt-16 border-t border-black">
+            <h2 className="text-black text-sm font-semibold uppercase tracking-[0.3em] mb-12">proyectos actuales</h2>
+            <div className="divide-y divide-[#C4C4C4]/10">
               {projects.map((project) => (
-                <div key={project.slug} className="flex flex-col md:flex-row md:items-center justify-between py-6 gap-4">
+                <div key={project.slug} className="flex flex-col md:flex-row md:items-center justify-between py-8 gap-4 group">
                   <div className="flex flex-col">
-                    <span className={`text-lg lowercase font-medium ${(project as any).visible === false ? 'text-[#C4C4C4] line-through' : 'text-black'}`}>
+                    <span className={`text-base lowercase tracking-wide transition-colors ${
+                      (project as any).visible === false 
+                        ? 'text-[#C4C4C4] line-through opacity-50' 
+                        : 'text-black group-hover:text-[#808080]'
+                    }`}>
                       {project.title} {(project as any).visible === false && '(oculto)'}
                     </span>
-                    <div className="flex gap-4 mt-1 text-xs text-[#C4C4C4]">
+                    <div className="flex gap-4 mt-1 text-[10px] text-[#C4C4C4] uppercase tracking-widest">
                       <span>{project.year}</span>
                       <span>{project.status}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-8">
-                    <button onClick={() => handleEdit(project)} className="text-xs text-[#C4C4C4] hover:text-black transition-colors uppercase tracking-widest">editar</button>
-                    <button onClick={() => handleDelete(project.slug)} disabled={loading} className="text-xs text-red-300 hover:text-red-500 transition-colors uppercase tracking-widest disabled:opacity-30">eliminar</button>
-                    <a href={`/projects/${project.slug}`} target="_blank" className="text-xs text-[#C4C4C4] hover:text-black transition-colors uppercase tracking-widest">ver →</a>
+                    <button onClick={() => handleEdit(project)} className="text-[10px] text-[#C4C4C4] hover:text-black transition-colors uppercase tracking-widest">editar</button>
+                    <button onClick={() => handleDelete(project.slug)} disabled={loading} className="text-[10px] text-red-300 hover:text-red-500 transition-colors uppercase tracking-widest disabled:opacity-30">eliminar</button>
+                    <a href={`/projects/${project.slug}`} target="_blank" className="text-[10px] text-[#C4C4C4] hover:text-black transition-colors uppercase tracking-widest">ver →</a>
                   </div>
                 </div>
               ))}
@@ -592,10 +532,9 @@ export default function AdminPage() {
           </section>
         </div>
 
-        {/* Botón de Salir Fijo abajo a la derecha */}
         <button 
           onClick={handleLogout}
-          className="fixed bottom-8 right-8 z-[100] text-[10px] text-red-400 hover:text-red-600 uppercase tracking-widest border border-red-100 bg-white/90 backdrop-blur-sm px-4 py-2 shadow-sm transition-colors rounded-sm hover:border-red-200"
+          className="fixed bottom-8 right-8 z-[100] text-[9px] text-[#C4C4C4] hover:text-red-500 uppercase tracking-[0.3em] border border-[#C4C4C4]/20 bg-white/80 backdrop-blur-sm px-6 py-3 transition-all hover:border-red-200"
         >
           salir del panel
         </button>
