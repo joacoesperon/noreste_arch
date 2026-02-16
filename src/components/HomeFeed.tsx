@@ -18,11 +18,10 @@ type Props = {
   logoImage: string;
 };
 
-export default function HomeFeedVideo({ projects, logoImage }: Props) {
+export default function HomeFeed({ projects, logoImage }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const titleSpanRef = useRef<HTMLSpanElement>(null);
   const presentationSectionRef = useRef<HTMLDivElement>(null);
   const logoContainerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -35,7 +34,6 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
     const ctx = gsap.context(() => {
       const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
       const scroller = scrollerRef.current;
-      const titleSpan = titleSpanRef.current;
       const presentationSection = presentationSectionRef.current;
       const logoContainer = logoContainerRef.current;
 
@@ -43,35 +41,7 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
 
       const feedScrub = 1000;
 
-      // --- 1. Lógica de Títulos (Mobile) ---
-      const getCurrentFeedScrollElement = function() {
-        const scrollPosition = scroller.scrollTop;
-        let currentItemIndex = 0;
-
-        feedItems.forEach((item, index) => {
-          const itemTop = item.offsetTop; 
-          const itemHeight = item.offsetHeight;
-          if (scrollPosition >= itemTop && scrollPosition < itemTop + itemHeight) {
-            currentItemIndex = index;
-          }
-        });
-
-        if (titleSpan) {
-          const currentItem = feedItems[currentItemIndex];
-          if (currentItem) {
-            const labelText = currentItem.querySelector(".home__feed__item__label p")?.textContent;
-            if (labelText) titleSpan.textContent = labelText;
-          }
-        }
-      };
-
-      const updateTitleOnScroll = (item: Element) => {
-        if (!titleSpan) return;
-        const newTitle = item.querySelector('.home__feed__item__label')?.textContent;
-        if (newTitle) titleSpan.textContent = newTitle;
-      };
-
-      // --- 2. Lógica de Autoplay Inteligente ---
+      // --- 1. Lógica de Autoplay Inteligente ---
       const checkAndPlayVideos = () => {
         feedItems.forEach((item, index) => {
           const video = videoRefs.current[index];
@@ -96,13 +66,8 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
         // Pausar videos inmediatamente al scrollear para ahorrar recursos
         videoRefs.current.forEach(v => v?.pause());
 
-        // Manejo de clases del header/logo
+        // Manejo de clases del logo
         const scrollTop = scroller.scrollTop;
-        const titleCurrent = document.querySelector(".title_current");
-        if (titleCurrent) {
-          if (scrollTop > 0) titleCurrent.classList.add('scroll');
-          else titleCurrent.classList.remove('scroll');
-        }
         
         // Aplicar clase scroll al contenedor del logo (como en Tenue)
         if (logoContainer) {
@@ -118,9 +83,8 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
       };
 
       scroller.addEventListener('scroll', handleScroll);
-      scroller.addEventListener('scroll', getCurrentFeedScrollElement);
 
-      // --- 3. ScrollTrigger Principal (Copiado de HomeFeed) ---
+      // --- 2. ScrollTrigger Principal ---
       function createIndexScrollTrigger() {
         ScrollTrigger.getAll().forEach(trigger => trigger.kill());
         ScrollTrigger.defaults({ scroller: scroller });
@@ -166,11 +130,7 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
                         trigger: item,
                         start: startPos,
                         end: endPos,
-                        scrub: scrubValue,
-                        ease: "none",
-                        onUpdate: () => {
-                            if (isMobile) updateTitleOnScroll(item);
-                        }
+                        scrub: scrubValue
                     }
                 });
 
@@ -185,12 +145,18 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
                 }, "0.5");
 
                 if (isMobile) {
+                    // Mobile Label Animation (Sync with image scale)
+                    if (labelElement) {
+                        timeline.from(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0");
+                        timeline.to(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0.5");
+                    }
+
                     timeline.fromTo(imageElement, { yPercent: -85 }, { yPercent: -28.5, duration: 1/6, ease: "linear" }, 0);
                     timeline.fromTo(imageElement, { yPercent: -28.5 }, { yPercent: 0, duration: 1/6, ease: "linear" }, 1/6);
                     timeline.fromTo(imageElement, { yPercent: 0 }, { yPercent: 28.5, duration: 1/6, ease: "linear" }, 1 - 1/3);
                     timeline.fromTo(imageElement, { yPercent: 28.5 }, { yPercent: 85, duration: 1/6, ease: "linear" }, 1 - 1/6);
                 } else {
-                    if (index !== 0 && labelElement) {
+                    if (labelElement) {
                         timeline.from(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0");
                         timeline.to(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0.5");
                     }
@@ -198,11 +164,9 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
                     timeline.fromTo(imageElement, { yPercent: 0 }, { yPercent: yPercentVal, duration: animDuration, ease: "linear" }, 1 - animDuration);
                 }
             });
-
-            setTimeout(() => { getCurrentFeedScrollElement(); }, 0);
         });
 
-        // Animación de Presentación (Logo) EXACTA a Tenue
+        // Animación de Presentación (Logo)
         if (presentationSection) {
               gsap.to(presentationSection, {
                 opacity: 0,
@@ -224,7 +188,6 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
       return () => {
         document.documentElement.style.overflow = "auto";
         scroller.removeEventListener('scroll', handleScroll);
-        scroller.removeEventListener('scroll', getCurrentFeedScrollElement);
         window.removeEventListener('resize', createIndexScrollTrigger);
         if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       };
@@ -284,11 +247,9 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
               })}
             </div>
           </div>
+          {/* Spacer final para permitir el escalado completo en móvil */}
+          <div className="h-[20vh] md:hidden"></div>
         </section>
-
-        <div className="title_current">
-          <span ref={titleSpanRef} id="titleSpan"></span>
-        </div>
       </div>
     </div>
   );

@@ -35,22 +35,24 @@ export default function InfoPage() {
                     <div className="text-[var(--color-text)] text-base leading-[1.6]">
                       <ul className="list-none p-0 m-0">
                         <li className="mb-0">
-                          <a href="mailto:tenue@tenue.uy" className="underline hover:text-[var(--color-text-hover)] transition-colors">tenue@tenue.uy</a>
+                          <a href="mailto:norestearch@norestearch.com" className="underline hover:text-[var(--color-text-hover)] transition-colors">norestearch@norestearch.com</a>
                         </li>
                         <li className="mb-3">
-                          <a href="https://wa.me/59893593767" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">
-                            + 598 93 593 767
+                          <a href="https://wa.me/5491150511959" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">
+                            +54 9 11 5051-1959
                           </a>
                         </li>
                         <li className="mb-3">
-                          Paseo de La Barra,<br />
-                          Local 28,<br />
-                          La Barra, Uruguay.
+                          Manuela Pedraza 5302,<br />
+                          Villa Urquiza,<br />
+                          Buenos Aires, Argentina.
                         </li>
                       </ul>
                       <div className="mt-4">
                         <ul className="list-none p-0 m-0">
-                          <li>@tenue_estudio</li>
+                          <li>
+                            <a href="https://www.instagram.com/noreste_arch/" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">@noreste_arch</a>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -64,8 +66,8 @@ export default function InfoPage() {
                       <h3 className="text-[var(--color-text)] text-[clamp(16px,0.278vw+0.938rem,19px)] font-normal m-0">Nosotros</h3>
                     </div>
                     <div className="text-[var(--color-text)] text-base leading-[1.6]">
-                      <p className="mb-4">Es un Estudio de arquitectura y diseño con base en Punta del Este, desde donde desarrollamos proyectos residenciales de diversas escalas.</p>
-                      <p>Luego de varios años de práctica en el ámbito local, el Estudio ha logrado construir un lenguaje propio mediante el uso de la madera como material predominante, tanto desde el punto de vista formal como constructivo.</p>
+                      <p className="mb-4">Estudio de arquitectura y diseño dedicado al desarrollo de proyectos de distintas escalas y programas, con foco en el diseño de espacios y la experiencia de habitar.</p>
+                      <p>La arquitectura surge de una lectura sensible del lugar, integrando contexto, clima y entorno como parte esencial del proyecto.</p>
                     </div>
                   </article>
                 </div>

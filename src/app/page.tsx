@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HomeFeedVideo from "@/components/HomeFeedVideo";
+import HomeFeed from "@/components/HomeFeed";
 import { getVisibleProjects, getProjectCoverImage } from "@/lib/projects";
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +22,7 @@ export default function Home() {
     <>
       <Header />
       <main className="main clearfix wrapper">
-        <HomeFeedVideo projects={projectsForFeed} logoImage={logoImage} />
+        <HomeFeed projects={projectsForFeed} logoImage={logoImage} />
       </main>
       <Footer />
     </>

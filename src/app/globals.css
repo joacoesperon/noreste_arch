@@ -86,7 +86,8 @@ body {
     position: absolute;
     left: 0;
     height: 100%;
-    display: none; /* Hidden on mobile */
+    display: block; /* Always visible */
+    z-index: 100;
 }
 
 .home__feed__item__label p {
@@ -100,63 +101,42 @@ body {
     color: var(--color-text);
 }
 
-/* Title Current (Mobile Only) */
-.title_current {
-    position: fixed;
-    bottom: 15px;
-    left: 20px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    z-index: 50;
-}
-
-.title_current.scroll {
-    opacity: 1;
-}
-
-.title_current span {
-    color: var(--color-text);
-}
-
-/* Presentation Section (Logo) */
+/* Presentation Section (Logo) - UNIFICADO: Siempre centrado */
 .presentation {  
-  height: 100vh; /* 100dvh in reference */
+  height: 100vh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;   /* Centrado vertical */
+  justify-content: center; /* Centrado horizontal */
   pointer-events: none;  
-  padding-bottom: 45px;
-}
-
-.presentation-spacer {
-  height: 0;
+  padding-bottom: 0;
 }
 
 .presentation .logo {
 	transition: all 0.3s ease;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .presentation .logo.scroll {
 	opacity: 0;
 }
 
-/* ==========================================================================
-   MEDIA QUERIES - Reference
-   ========================================================================== */
-
-/* Mobile specific overrides are handled in base styles above. 
-   Now adding Tablet/Desktop overrides. */
-
-@media screen and (min-width: 577px) {
-    .title_current {
-        display: none;
-    }
+/* Asegurar que el logo sea responsivo y nunca se corte */
+.presentation .logo img {
+    max-height: 55vh; 
+    max-width: 90vw;  
+    width: auto;
+    height: auto;
+    margin: 0 auto;
 }
 
-/* Desktop Logic
-*/
+/* ==========================================================================
+   MEDIA QUERIES
+   ========================================================================== */
+
+/* Desktop Logic */
 @media screen and (min-width: 768px) {
-    /* Presentation fixed on desktop */
     .presentation {
         position: fixed;
         top: 0;
@@ -164,7 +144,7 @@ body {
         width: 100%;
         height: 100vh;
         display: flex;
-        align-items: flex-end;
+        align-items: center; /* Mantenemos centrado en desktop */
         pointer-events: none;  
     }
 
@@ -187,5 +167,15 @@ body {
 
     .home__feed__item:first-child .home__feed__item__label p {
         margin-bottom: 14.4vh;
+    }
+}
+
+/* Spacer final para permitir el escalado en móvil */
+.spacer-final {
+    height: 20vh;
+}
+@media screen and (min-width: 768px) {
+    .spacer-final {
+        display: none;
     }
 }

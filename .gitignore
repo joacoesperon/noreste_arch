@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# project specific exclusions
+tenue-*/
+ADMIN_GUIA.md
+DESARROLLO_Y_DEPLOY.md
+GEMINI.md
