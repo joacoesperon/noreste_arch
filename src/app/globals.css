@@ -90,8 +90,7 @@ body {
 }
 
 .home__feed__item__label p {
-    position: sticky;
-    position: -webkit-sticky;
+    position: relative;
     align-self: flex-start;
     top: 0;
     left: 0;

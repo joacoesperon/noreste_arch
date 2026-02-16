@@ -14,43 +14,9 @@
 
 ### Architecture & Data Flow
 - **Projects**: Project metadata is stored in `content/projects.json`.
-- **Images**: Project-specific images are organized in `public/projects/[slug]/` under `exterior/` and `interior/` directories.
+- **Images**: Project-specific images are organized in `public/projects/[slug]/` under `images/` and `interior/` directories.
 - **Admin**: The admin panel uses API routes (`src/app/api/`) to write updates directly to the filesystem (JSON and image uploads).
 - **Deployment Note**: Due to filesystem persistence requirements for the admin panel, a VPS is recommended over serverless platforms like Vercel (unless an external CMS or storage is implemented).
-
----
-
-## Building and Running
-
-### Development
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-The application will be available at `http://localhost:3000`.
-
-### Production
-```bash
-# Generate production build
-npm run build
-
-# Start production server
-npm run start
-```
-
-### Code Quality
-```bash
-# Run ESLint
-npm run lint
-
-# Check Types
-npm run type-check
-```
-
----
 
 ## Development Conventions
 

@@ -1,6 +1,30 @@
 {
   "projects": [
     {
+      "slug": "el-nido",
+      "title": "El Nido",
+      "m2": 327,
+      "status": "Proyecto",
+      "year": 2026,
+      "location": "El Nido, Manantiales, San Carlos, Uruguay",
+      "credits": {
+        "proyecto": "Noreste Arquitectura",
+        "equipo": "Catalina Andersch",
+        "obra": "Pepe Obras S.L",
+        "paisajismo": "Pinos Studio",
+        "interiorismo": "",
+        "instalaciones": "Carlitos bala",
+        "estructura": "Clara Esperon",
+        "fotografias": "Belen Capello"
+      },
+      "visible": true,
+      "images": [
+        "01.jpg"
+      ],
+      "videos": [],
+      "cover": "01.jpg"
+    },
+    {
       "slug": "la-martona",
       "title": "La Martona",
       "m2": 200,
@@ -52,30 +76,6 @@
       ],
       "videos": [],
       "cover": "VID-20250925-WA0014.mp4"
-    },
-    {
-      "slug": "el-nido",
-      "title": "El Nido",
-      "m2": 327,
-      "status": "Proyecto",
-      "year": 2026,
-      "location": "El Nido, Manantiales, San Carlos, Uruguay",
-      "credits": {
-        "proyecto": "Noreste Arquitectura",
-        "equipo": "Catalina Andersch",
-        "obra": "Pepe Obras S.L",
-        "paisajismo": "Pinos Studio",
-        "interiorismo": "",
-        "instalaciones": "Carlitos bala",
-        "estructura": "Clara Esperon",
-        "fotografias": "Belen Capello"
-      },
-      "visible": true,
-      "images": [
-        "01.jpg"
-      ],
-      "videos": [],
-      "cover": "01.jpg"
     },
     {
       "slug": "triunvirato",

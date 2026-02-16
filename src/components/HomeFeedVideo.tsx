@@ -23,7 +23,8 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
   const itemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const titleSpanRef = useRef<HTMLSpanElement>(null);
-  const presentationLogoRef = useRef<HTMLDivElement>(null);
+  const presentationSectionRef = useRef<HTMLDivElement>(null);
+  const logoContainerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -35,7 +36,8 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
       const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
       const scroller = scrollerRef.current;
       const titleSpan = titleSpanRef.current;
-      const presentationLogo = presentationLogoRef.current;
+      const presentationSection = presentationSectionRef.current;
+      const logoContainer = logoContainerRef.current;
 
       if (!scroller || feedItems.length === 0) return;
 
@@ -101,9 +103,11 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
           if (scrollTop > 0) titleCurrent.classList.add('scroll');
           else titleCurrent.classList.remove('scroll');
         }
-        if (presentationLogo) {
-          if (scrollTop > 200) presentationLogo.classList.add('scroll');
-          else presentationLogo.classList.remove('scroll');
+        
+        // Aplicar clase scroll al contenedor del logo (como en Tenue)
+        if (logoContainer) {
+          if (scrollTop > 200) logoContainer.classList.add('scroll');
+          else logoContainer.classList.remove('scroll');
         }
 
         // Timer para detectar parada de scroll (0.5 segundos)
@@ -198,14 +202,16 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
             setTimeout(() => { getCurrentFeedScrollElement(); }, 0);
         });
 
-        if (presentationLogo) {
-              gsap.to(presentationLogo, {
+        // Animación de Presentación (Logo) EXACTA a Tenue
+        if (presentationSection) {
+              gsap.to(presentationSection, {
                 opacity: 0,
                 scrollTrigger: {
                   trigger: ".presentation-spacer",
                   start: "top top",
                   end: "center top",
                   scrub: 0.5,
+                  scroller: scroller,
                 }
               });
         }
@@ -233,9 +239,9 @@ export default function HomeFeedVideo({ projects, logoImage }: Props) {
       <div ref={scrollerRef} className="page home home-scroll">
         <div className="presentation-spacer"></div>
         
-        <section className="section presentation">
+        <section ref={presentationSectionRef} className="section presentation">
           <div className="container mx-auto px-4 max-w-[1600px]">
-            <div ref={presentationLogoRef} className="logo w-full flex justify-center">
+            <div ref={logoContainerRef} className="logo w-full flex justify-center">
               <img src={logoImage} alt="Logo" className="w-full h-auto block max-w-[1200px]" />
             </div>
           </div>

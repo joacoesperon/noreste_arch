@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Project } from "@/lib/projects";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import Link from "next/link";
-import Masonry from "react-masonry-css";
 
 type ProjectMedia = {
   src: string;
@@ -14,15 +13,17 @@ type ProjectMedia = {
 
 type Props = {
   project: Project;
-  media: ProjectMedia[]; // Ahora recibimos media unificada
+  media: ProjectMedia[];
   prevProject: Project | null;
   nextProject: Project | null;
 };
 
 export default function ProjectClient({ project, media, prevProject, nextProject }: Props) {
   const [showCredits, setShowCredits] = useState(false);
+  const masonryGridRef = useRef<HTMLDivElement>(null);
+  const masonryInstance = useRef<any>(null);
 
-  // Initialize Fancybox
+  // Initialize Fancybox and Masonry
   useEffect(() => {
     Fancybox.bind('[data-fancybox="gallery"]', {
       Hash: false,
@@ -31,18 +32,37 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       },
     } as any);
 
+    // Initialize Masonry only on client-side
+    const initMasonry = async () => {
+      const Masonry = (await import("masonry-layout")).default;
+      const imagesLoaded = (await import("imagesloaded")).default;
+
+      if (masonryGridRef.current) {
+        masonryInstance.current = new Masonry(masonryGridRef.current, {
+          itemSelector: ".masonry-item",
+          columnWidth: ".masonry-sizer",
+          percentPosition: true,
+          gutter: 0, // Gutters handled via padding in items
+          transitionDuration: "0.4s",
+        });
+
+        // Layout again after each image loads to prevent overlapping/imbalance
+        imagesLoaded(masonryGridRef.current).on("progress", () => {
+          masonryInstance.current?.layout();
+        });
+      }
+    };
+
+    initMasonry();
+
     return () => {
       Fancybox.destroy();
+      masonryInstance.current?.destroy();
     };
   }, [project.slug, media]);
 
   const toggleCredits = () => {
     setShowCredits(!showCredits);
-  };
-
-  const breakpointColumnsObj = {
-    default: 2,
-    768: 1
   };
 
   return (
@@ -92,48 +112,57 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       {/* Gallery */}
       <section className="pt-0 pb-[30px] md:pb-[60px]">
         <div className="mx-auto px-4 md:px-8 max-w-[1600px]">
-          <Masonry
-            breakpointCols={breakpointColumnsObj}
-            className="flex w-auto -ml-[20px] md:-ml-[60px]"
-            columnClassName="pl-[20px] md:pl-[60px] bg-clip-padding even:mt-0 md:even:mt-[100px]"
-          >
+          {/* Masonry Container */}
+          <div ref={masonryGridRef} className="w-full">
+            {/* Sizer for responsive columns */}
+            <div className="masonry-sizer w-full md:w-1/2"></div>
+            
             {media.map((item, index) => (
-              <div key={index} className="mb-[20px] md:mb-[60px] group transition-transform duration-300 hover:scale-[1.01]">
-                {item.type === "image" ? (
-                  <a 
-                    href={item.src} 
-                    data-fancybox="gallery" 
-                    className="block relative w-full h-auto"
-                  >
-                    <img
-                      src={item.src}
-                      alt={`${project.title} - ${index + 1}`}
-                      className="w-full h-auto block"
-                      loading={index < 4 ? "eager" : "lazy"}
-                    />
-                  </a>
-                ) : (
-                  <div className="relative w-full h-auto overflow-hidden">
-                    <video
-                      src={item.src}
-                      controls
-                      muted={false}
-                      loop
-                      playsInline
-                      className="w-full h-auto block"
-                    />
-                    {/* Hidden link to include video in Fancybox gallery */}
+              <div 
+                key={index} 
+                className="masonry-item w-full md:w-1/2 mb-[20px] md:mb-[60px] px-[0px] md:px-[30px] group transition-transform duration-300 hover:scale-[1.01]"
+              >
+                {/* 
+                  Applying different top margins for a staggered effect 
+                  only if needed, but Masonry will naturally fill gaps.
+                  Removing the 'even:mt-[100px]' to focus on balance.
+                */}
+                <div className="w-full h-auto overflow-hidden">
+                  {item.type === "image" ? (
                     <a 
                       href={item.src} 
                       data-fancybox="gallery" 
-                      className="hidden"
-                      aria-hidden="true"
-                    ></a>
-                  </div>
-                )}
+                      className="block relative w-full h-auto"
+                    >
+                      <img
+                        src={item.src}
+                        alt={`${project.title} - ${index + 1}`}
+                        className="w-full h-auto block"
+                        loading={index < 4 ? "eager" : "lazy"}
+                      />
+                    </a>
+                  ) : (
+                    <div className="relative w-full h-auto overflow-hidden">
+                      <video
+                        src={item.src}
+                        controls
+                        muted={false}
+                        loop
+                        playsInline
+                        className="w-full h-auto block"
+                      />
+                      <a 
+                        href={item.src} 
+                        data-fancybox="gallery" 
+                        className="hidden"
+                        aria-hidden="true"
+                      ></a>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
-          </Masonry>
+          </div>
         </div>
       </section>
 
@@ -162,3 +191,4 @@ export default function ProjectClient({ project, media, prevProject, nextProject
     </div>
   );
 }
+
