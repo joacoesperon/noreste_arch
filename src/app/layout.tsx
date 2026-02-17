@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "noreste arch - Estudio de arquitectura y diseño",
+  title: "noreste arq - Estudio de arquitectura y diseño",
   description: "Estudio de arquitectura y diseño con base en Buenos Aires.",
 };
 

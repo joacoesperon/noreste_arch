@@ -47,20 +47,31 @@ export default function IndexClient({ projects }: Props) {
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-170px)]">
-      {/* Columna Tabla Proyectos: 50% */}
-      <div className="w-full md:w-1/2 pr-4">
-        <div className="w-full text-[clamp(16px,0.278vw+0.938rem,19px)]">
+      {/* Columna Tabla Proyectos: 50% en desktop */}
+      <div className="w-full md:w-1/2 pr-0 md:pr-8">
+        <div className="w-full text-[clamp(15px,0.278vw+0.938rem,19px)]">
           <div className="flex flex-col">
             {projects.map((project) => (
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="flex items-center py-[5px] group transition-colors"
+                className="flex items-baseline py-[6px] md:py-[5px] group transition-colors"
                 onMouseEnter={() => handleMouseEnter(project.image)}
               >
-                <div className="w-[60%] text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">{project.title}</div>
-                <div className="w-[20%] text-center whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">{project.status}</div>
-                <div className="w-[20%] text-center whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">{project.year}</div>
+                {/* Título: Toma todo el espacio disponible */}
+                <div className="flex-1 text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors pr-4">
+                  {project.title}
+                </div>
+                
+                {/* Estado: Ancho estable para que no se pise */}
+                <div className="w-[100px] md:w-[120px] text-center whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors px-2">
+                  {project.status}
+                </div>
+                
+                {/* Año: Pegado a la derecha */}
+                <div className="w-[50px] md:w-[60px] text-right whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">
+                  {project.year}
+                </div>
               </Link>
             ))}
             {/* Espaciadores de Tenue */}
@@ -70,7 +81,7 @@ export default function IndexClient({ projects }: Props) {
         </div>
       </div>
       
-      {/* Columna Imagen Thumbnail: 50% exacto, sin padding extra para llegar al centro */}
+      {/* Columna Imagen Thumbnail: 50% exacto en desktop */}
       <div className="hidden md:block md:w-1/2 relative">
         <div className="sticky top-[0px] w-full h-[calc(100vh-170px)] overflow-hidden">
           {activeImage && (

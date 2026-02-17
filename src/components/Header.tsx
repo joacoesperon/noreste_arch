@@ -28,7 +28,7 @@ export default function Header() {
             href="/" 
             className="header-title absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center text-[var(--color-text)] text-[clamp(15px,0.278vw+0.938rem,19px)] lowercase tracking-normal font-sans z-[22] transition-all duration-350 hover:text-[var(--color-text-hover)] group"
           >
-            noreste arch
+            noreste arq
             <span className="block border-b border-[var(--color-text)] h-[1px] w-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right group-hover:origin-left"></span>
           </Link>
 

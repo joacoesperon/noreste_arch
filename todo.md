@@ -1,4 +1,3 @@
-admin se puede ingresar en vercel? porque el .env.local no esta en github
 movil horizontal arreglar columa 2 del indice 
 implementar boton de accesibilidad como IMPACT
 pasar a serverless

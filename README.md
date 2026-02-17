@@ -1,4 +1,4 @@
-# norestearch
+# norestearq
 
 > Estudio de Arquitectura — Donde el espacio cobra vida.
 
@@ -6,7 +6,7 @@
 
 ## 🏛️ Descripción
 
-**norestearch** es la página web oficial de un estudio de arquitectura contemporáneo que busca transmitir los valores fundamentales de su filosofía de diseño:
+**norestearq** es la página web oficial de un estudio de arquitectura contemporáneo que busca transmitir los valores fundamentales de su filosofía de diseño:
 
 - **Minimalismo**: Menos es más. Cada elemento tiene un propósito.
 - **Elegancia**: Líneas limpias, espacios amplios, sofisticación visual.

@@ -35,7 +35,7 @@ export default function InfoPage() {
                     <div className="text-[var(--color-text)] text-base leading-[1.6]">
                       <ul className="list-none p-0 m-0">
                         <li className="mb-3">
-                          <a href="mailto:norestearch@norestearch.com" className="underline hover:text-[var(--color-text-hover)] transition-colors">norestearch@norestearch.com</a>
+                          <a href="mailto:info@norestearq.com" className="underline hover:text-[var(--color-text-hover)] transition-colors">info@norestearq.com</a>
                         </li>
                         <li className="mb-0">
                           <a href="https://wa.me/5491150511959" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">
@@ -56,7 +56,7 @@ export default function InfoPage() {
                       <div className="mt-4">
                         <ul className="list-none p-0 m-0">
                           <li>
-                            <a href="https://www.instagram.com/noreste_arch/" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">@noreste_arch</a>
+                            <a href="https://www.instagram.com/noreste_arq/" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">@noreste_arq</a>
                           </li>
                         </ul>
                       </div>

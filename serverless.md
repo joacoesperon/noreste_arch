@@ -1,6 +1,6 @@
 # Plan de Migración a Arquitectura Serverless
 
-Este documento detalla la estrategia y los pasos necesarios para migrar **norestearch** de su arquitectura actual basada en VPS (Filesystem) a una arquitectura Serverless de costo $0.
+Este documento detalla la estrategia y los pasos necesarios para migrar **norestearq** de su arquitectura actual basada en VPS (Filesystem) a una arquitectura Serverless de costo $0.
 
 ## 🎯 Objetivo
 Eliminar el costo mensual de hosting (~$72 USD/año) y mejorar la escalabilidad y velocidad del sitio utilizando servicios en la nube con niveles gratuitos generosos.
