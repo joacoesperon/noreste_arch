@@ -44,4 +44,8 @@ next-env.d.ts
 tenue-*/
 ADMIN_GUIA.md
 DESARROLLO_Y_DEPLOY.md
-GEMINI.md
+serverless.md
+todo.md
+.gemini/
+.github/
+gha-creds-*.json

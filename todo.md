@@ -1,7 +1,5 @@
-movil horizontal arreglar columa 2 del indice 
 implementar boton de accesibilidad como IMPACT
 pasar a serverless
-
 
 1. comentar todo el codigo, explicarme , etc
 2.  version con slideshow de homefeed horizontal, como hago para mostrarle las dos versiones a los arquitectos, sin perder la actual
