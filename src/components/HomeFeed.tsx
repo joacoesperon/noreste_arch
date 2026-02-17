@@ -231,7 +231,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
                           loop
                           playsInline
                           preload="auto"
-                          poster="" 
                           className="w-auto max-w-full h-full block object-cover z-10"
                         />
                       ) : (

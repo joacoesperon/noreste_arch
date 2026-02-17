@@ -34,12 +34,17 @@ export default function InfoPage() {
                     </div>
                     <div className="text-[var(--color-text)] text-base leading-[1.6]">
                       <ul className="list-none p-0 m-0">
-                        <li className="mb-0">
+                        <li className="mb-3">
                           <a href="mailto:norestearch@norestearch.com" className="underline hover:text-[var(--color-text-hover)] transition-colors">norestearch@norestearch.com</a>
                         </li>
-                        <li className="mb-3">
+                        <li className="mb-0">
                           <a href="https://wa.me/5491150511959" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">
                             +54 9 11 5051-1959
+                          </a>
+                        </li>
+                        <li className="mb-3">
+                          <a href="https://wa.me/+5492478511254" target="_blank" className="underline hover:text-[var(--color-text-hover)] transition-colors">
+                            +54 9 2478 51-1254
                           </a>
                         </li>
                         <li className="mb-3">

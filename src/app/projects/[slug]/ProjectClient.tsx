@@ -122,11 +122,6 @@ export default function ProjectClient({ project, media, prevProject, nextProject
                 key={index} 
                 className="masonry-item w-full md:w-1/2 mb-[20px] md:mb-[60px] px-[0px] md:px-[30px] group transition-transform duration-300 hover:scale-[1.01]"
               >
-                {/* 
-                  Applying different top margins for a staggered effect 
-                  only if needed, but Masonry will naturally fill gaps.
-                  Removing the 'even:mt-[100px]' to focus on balance.
-                */}
                 <div className="w-full h-auto overflow-hidden">
                   {item.type === "image" ? (
                     <a 
@@ -142,18 +137,19 @@ export default function ProjectClient({ project, media, prevProject, nextProject
                       />
                     </a>
                   ) : (
-                    <div className="relative w-full h-auto overflow-hidden">
+                    <div className="relative w-full h-auto overflow-hidden bg-black">
                       <video
-                        src={item.src}
                         controls
-                        muted={false}
-                        loop
+                        preload="auto"
                         playsInline
+                        src={item.src} 
                         className="w-full h-auto block"
                       />
                       <a 
-                        href={item.src} 
+                        href={item.src}
                         data-fancybox="gallery" 
+                        data-type="html5video"
+                        data-thumb={`${item.src}#t=0.001`}
                         className="hidden"
                         aria-hidden="true"
                       ></a>
@@ -191,4 +187,3 @@ export default function ProjectClient({ project, media, prevProject, nextProject
     </div>
   );
 }
-
