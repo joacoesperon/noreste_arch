@@ -23,6 +23,9 @@ type Props = {
 };
 
 export default function IndexClientRefactored({ projects }: Props) {
+  const PICKER_VISIBLE_COUNT = 4;   // ← cambiá acá para ajustar
+  const PICKER_ITEM_HEIGHT = 60;    // ← cambiá acá para ajustar
+
   const router = useRouter();
   const [activeImage, setActiveImage] = useState(projects[0]?.image || "");
   const [activeSlug, setActiveSlug] = useState(projects[0]?.slug || "");
@@ -30,7 +33,6 @@ export default function IndexClientRefactored({ projects }: Props) {
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
   const wheelTouching = useRef(false);
 
-  // Detectar modo touch vs mouse
   useEffect(() => {
     const checkUI = () => {
       const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
@@ -44,16 +46,11 @@ export default function IndexClientRefactored({ projects }: Props) {
   // Bloquear scroll de página en modo touch
   useEffect(() => {
     if (interactionMode !== "touch") return;
-
     const preventScroll = (e: TouchEvent) => {
-        // Solo prevenimos si no estamos haciendo scroll dentro de algo que lo permita
-        // Pero como aquí queremos pantalla fija, lo bloqueamos.
-        if (e.cancelable) e.preventDefault();
+      if (e.cancelable) e.preventDefault();
     };
-    
     document.body.style.overflow = "hidden";
     document.addEventListener("touchmove", preventScroll, { passive: false });
-
     return () => {
       document.body.style.overflow = "";
       document.removeEventListener("touchmove", preventScroll);
@@ -67,37 +64,26 @@ export default function IndexClientRefactored({ projects }: Props) {
   };
 
   const handleMouseEnter = (imageUrl: string, slug: string) => {
-    if (interactionMode === "mouse") {
-      updateMedia(imageUrl, slug);
-    }
+    if (interactionMode === "mouse") updateMedia(imageUrl, slug);
   };
 
   const handleWheelChange = (slug: string) => {
     wheelTouching.current = true;
     const project = projects.find((p) => p.slug === slug);
-    if (project) {
-      updateMedia(project.image, project.slug);
-    }
-    // Resetear después de un breve delay para no confundir con tap
-    setTimeout(() => {
-      wheelTouching.current = false;
-    }, 300);
+    if (project) updateMedia(project.image, project.slug);
+    setTimeout(() => { wheelTouching.current = false; }, 300);
   };
 
   if (interactionMode === "loading") {
-    return <div className="w-full bg-white" style={{ height: "calc(100vh - 60px)" }} />;
+    return <div className="w-full bg-white" style={{ height: "calc(100svh - 60px)" }} />;
   }
 
   const wheelOptions: WheelPickerOption[] = projects.map((p) => ({
     label: (
       <div className="flex w-full h-full items-center px-4 text-[clamp(13px,0.278vw+0.7rem,16px)]">
         <span className="flex-1 text-left truncate pr-2">{p.title}</span>
-        <span className="w-[70px] text-center opacity-60 text-[10px]">
-          {p.status}
-        </span>
-        <span className="w-[35px] text-right opacity-60 text-[10px]">
-          {p.year}
-        </span>
+        <span className="w-[70px] text-center opacity-60 text-[10px]">{p.status}</span>
+        <span className="w-[35px] text-right opacity-60 text-[10px]">{p.year}</span>
       </div>
     ),
     value: p.slug,
@@ -110,105 +96,148 @@ export default function IndexClientRefactored({ projects }: Props) {
   // ─── MODO TOUCH ────────────────────────────────────────────────────────────
   if (interactionMode === "touch") {
     return (
-      <div
-        className="
-          flex flex-col landscape:flex-row
-          w-full overflow-hidden
-          h-[calc(100svh-60px)]
-          md:landscape:h-[calc(100svh-78px)]
-          fixed inset-0 top-[60px] md:top-[78px]
-        "
-      >
-        {/* --- Wheel Picker --- */}
+      /*
+       * El contenedor fixed cubre toda la pantalla desde top:0.
+       * Usamos padding-top interno para compensar el header en lugar de
+       * cambiar el top del fixed, así podemos hacer responsive con clases.
+       *
+       * PORTRAIT:  flex-col  → picker arriba | imagen abajo
+       * LANDSCAPE: flex-row  → picker izquierda | imagen derecha
+       */
+      <div className="fixed inset-0 overflow-hidden bg-white flex flex-col landscape:flex-row">
+
+        {/*
+         * INNER WRAPPER — controla todos los márgenes y el gap.
+         * Editá estos valores para ajustar el espaciado:
+         *
+         * PORTRAIT:
+         *   pt-[??px]          → espacio entre header y picker        ← AJUSTAR
+         *   pb-[??px]          → espacio entre imagen y borde inferior ← AJUSTAR
+         *   gap-[??px]         → espacio entre picker e imagen         ← AJUSTAR
+         *
+         * LANDSCAPE:
+         *   landscape:pt-[??px]  → espacio superior (compensa header) ← AJUSTAR
+         *   landscape:pb-[??px]  → espacio inferior                   ← AJUSTAR
+         *   landscape:px-[??px]  → márgenes laterales                 ← AJUSTAR
+         *   landscape:gap-[??px] → espacio entre picker e imagen      ← AJUSTAR
+         */}
         <div
           className="
-            w-full landscape:w-1/2
-            h-1/2 landscape:h-full
-            flex items-center justify-center
-            bg-white
+            w-full h-full
+            flex flex-col landscape:flex-row
+            items-stretch
+
+            pt-[15vh]
+            pb-[15vh]
+            gap-[0vh]
+            px-[5vw]
+
+            landscape:pt-[15vh]
+            landscape:pb-[5vh]
+            landscape:px-[2vw]
+            landscape:gap-[0vw]
           "
-          onTouchStart={(e) => {
-            touchStartPos.current = {
-              x: e.touches[0].clientX,
-              y: e.touches[0].clientY,
-            };
-          }}
-          onTouchEnd={(e) => {
-            if (!touchStartPos.current) return;
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const dist = Math.sqrt(
-              Math.pow(endX - touchStartPos.current.x, 2) +
+        >
+
+          {/* ── WHEEL PICKER ──────────────────────────────────────────────── */}
+          {/*
+           * PORTRAIT:  h-1/2 → ocupa la mitad superior
+           * LANDSCAPE: w-1/2, h-full → ocupa la mitad izquierda completa
+           * min-h-0 es esencial para que flex no lo desborde
+           */}
+          <div
+            className="
+              w-full landscape:w-1/2
+              h-1/2 landscape:h-full
+              flex items-center justify-center
+              min-h-0
+              border-2 border-red-500
+            "
+            onTouchStart={(e) => {
+              touchStartPos.current = {
+                x: e.touches[0].clientX,
+                y: e.touches[0].clientY,
+              };
+            }}
+            onTouchEnd={(e) => {
+              if (!touchStartPos.current) return;
+              const endX = e.changedTouches[0].clientX;
+              const endY = e.changedTouches[0].clientY;
+              const dist = Math.sqrt(
+                Math.pow(endX - touchStartPos.current.x, 2) +
                 Math.pow(endY - touchStartPos.current.y, 2)
-            );
-
-            // Solo consideramos tap si no hubo movimiento Y el wheel no giró
-            if (dist < 10 && !wheelTouching.current) {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const clickY = endY - rect.top;
-              const centerY = rect.height / 2;
-              const zoneHeight = 60; 
-
-              if (
-                clickY > centerY - zoneHeight / 2 &&
-                clickY < centerY + zoneHeight / 2
-              ) {
-                if (activeSlug) router.push(`/projects/${activeSlug}`);
+              );
+              if (dist < 10 && !wheelTouching.current) {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickY = endY - rect.top;
+                const centerY = rect.height / 2;
+                // Zona sensible = altura de una opción del picker
+                // Si cambiás optionItemHeight abajo, cambiá este valor también ← AJUSTAR
+                const zoneHeight = 60;
+                if (clickY > centerY - zoneHeight / 2 && clickY < centerY + zoneHeight / 2) {
+                  if (activeSlug) router.push(`/projects/${activeSlug}`);
+                }
               }
-            }
-            touchStartPos.current = null;
-          }}
-        >
-          <WheelPickerWrapper className="w-full h-full border-none bg-transparent">
-            <WheelPicker
-              options={wheelOptions}
-              value={activeSlug}
-              onValueChange={handleWheelChange}
-              optionItemHeight={60}
-              visibleCount={12}
-              classNames={{
-                optionItem: "text-gray-400 transition-colors duration-300",
-                highlightWrapper:
-                  "bg-white border-y border-gray-100 h-[60px] z-10",
-                highlightItem:
-                  "text-[var(--color-text-hover)] font-semibold text-lg z-20 [&_span]:opacity-100",
-              }}
-            />
-          </WheelPickerWrapper>
-        </div>
-
-        {/* --- Imagen / Video --- */}
-        <div
-          className="
-            w-full landscape:w-1/2
-            h-1/2 landscape:h-full
-            relative bg-white
-            flex items-center justify-center
-          "
-        >
-          {activeImage && (
-            <div key={activeImage} className="relative w-full h-full">
-              {isVideoActive ? (
-                <video
-                  src={activeImage}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="w-full h-full object-contain object-center"
+              touchStartPos.current = null;
+            }}
+          >
+            <div style={{ height: `${PICKER_VISIBLE_COUNT * PICKER_ITEM_HEIGHT}px` }} className="w-full border-2 border-red-500">
+              <WheelPickerWrapper className="w-full h-full border-none bg-transparent">
+                <WheelPicker
+                  options={wheelOptions}
+                  value={activeSlug}
+                  onValueChange={handleWheelChange}
+                  optionItemHeight={60}  /* ← AJUSTAR altura de cada fila */
+                  visibleCount={12}       /* ← AJUSTAR cuántas filas se ven */
+                  classNames={{
+                    optionItem: "text-[var(--color-text)] transition-colors duration-300",
+                    highlightWrapper: "bg-white border-y border-gray-100 h-[60px] z-10 ",
+                    highlightItem: "text-[var(--color-text-hover)] font-semibold text-lg z-20 [&_span]:opacity-100",
+                  }}
                 />
-              ) : (
-                <Image
-                  src={activeImage}
-                  alt="Project thumbnail"
-                  fill
-                  className="object-contain object-center"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
-                />
-              )}
+              </WheelPickerWrapper>
             </div>
-          )}
+          </div>
+
+          {/* ── IMAGEN / VIDEO ────────────────────────────────────────────── */}
+          {/*
+           * PORTRAIT:  h-1/2 → ocupa la mitad inferior
+           * LANDSCAPE: w-1/2, h-full → ocupa la mitad derecha completa
+           * relative + absolute inset-0 adentro → Image fill funciona bien
+           */}
+          <div
+            className="
+              w-full landscape:w-1/2
+              h-1/2 landscape:h-full
+              relative
+              min-h-0
+            "
+          >
+            {activeImage && (
+              <div key={activeImage} className="absolute inset-0">
+                {isVideoActive ? (
+                  <video
+                    src={activeImage}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-contain object-center"
+                  />
+                ) : (
+                  <Image
+                    src={activeImage}
+                    alt="Project thumbnail"
+                    fill
+                    className="object-contain object-center"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
+                  />
+                )}
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     );
@@ -216,47 +245,28 @@ export default function IndexClientRefactored({ projects }: Props) {
 
   // ─── MODO MOUSE ────────────────────────────────────────────────────────────
   return (
-    <div
-      className="
-        flex flex-row
-        w-full
-        h-[70vh] min-h-[500px]
-      "
-    >
+    <div className="flex flex-row w-full h-[70vh] min-h-[500px]">
+
       {/* Lista de proyectos con hover */}
       <div className="w-1/2 h-full flex items-start justify-start bg-white z-10 overflow-y-auto custom-scrollbar">
-        <div
-          className="
-            w-full
-            text-[clamp(15px,0.278vw+0.938rem,19px)]
-            pr-8
-            flex flex-col
-          "
-        >
+        <div className="w-full text-[clamp(15px,0.278vw+0.938rem,19px)] pr-8 flex flex-col">
           {projects.map((project) => (
             <Link
               key={project.slug}
               href={`/projects/${project.slug}`}
               className={`
                 flex items-baseline py-[5px] transition-colors duration-200
-                ${
-                  activeSlug === project.slug
-                    ? "text-[var(--color-text-hover)] font-medium"
-                    : "text-gray-400"
+                ${activeSlug === project.slug
+                  ? "text-[var(--color-text-hover)] font-medium"
+                  : "text-gray-400"
                 }
                 hover:text-[var(--color-text-hover)]
               `}
-              onMouseEnter={() =>
-                handleMouseEnter(project.image, project.slug)
-              }
+              onMouseEnter={() => handleMouseEnter(project.image, project.slug)}
             >
               <div className="flex-1 pr-4">{project.title}</div>
-              <div className="w-[120px] text-center whitespace-nowrap px-2">
-                {project.status}
-              </div>
-              <div className="w-[60px] text-right whitespace-nowrap">
-                {project.year}
-              </div>
+              <div className="w-[120px] text-center whitespace-nowrap px-2">{project.status}</div>
+              <div className="w-[60px] text-right whitespace-nowrap">{project.year}</div>
             </Link>
           ))}
         </div>
@@ -270,10 +280,7 @@ export default function IndexClientRefactored({ projects }: Props) {
               {isVideoActive ? (
                 <video
                   src={activeImage}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
+                  autoPlay muted loop playsInline
                   className="w-full h-full object-contain object-top"
                 />
               ) : (
