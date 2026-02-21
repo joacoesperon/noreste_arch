@@ -23,8 +23,6 @@ type Props = {
 };
 
 export default function IndexClientRefactored({ projects }: Props) {
-  const PICKER_VISIBLE_COUNT = 4;   // ← cambiá acá para ajustar
-  const PICKER_ITEM_HEIGHT = 60;    // ← cambiá acá para ajustar
 
   const router = useRouter();
   const [activeImage, setActiveImage] = useState(projects[0]?.image || "");
@@ -32,6 +30,20 @@ export default function IndexClientRefactored({ projects }: Props) {
   const [interactionMode, setInteractionMode] = useState<"mouse" | "touch" | "loading">("loading");
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
   const wheelTouching = useRef(false);
+
+  const [pickerItemHeight, setPickerItemHeight] = useState(60);
+  const PICKER_VISIBLE_COUNT = 8;   // ← cambiá acá para ajustar
+
+  const calcHeight = () => {
+    const headerHeight = window.innerWidth >= 768 ? 78 : 60;
+    const availableHeight = window.innerHeight - headerHeight;
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const pickerZoneHeight = isLandscape ? availableHeight : availableHeight / 2;
+  
+    // El picker debe caber EXACTAMENTE en su zona
+    const height = Math.floor(pickerZoneHeight / PICKER_VISIBLE_COUNT);
+    setPickerItemHeight(height);
+  };
 
   useEffect(() => {
     const checkUI = () => {
@@ -82,8 +94,8 @@ export default function IndexClientRefactored({ projects }: Props) {
     label: (
       <div className="flex w-full h-full items-center px-4 text-[clamp(13px,0.278vw+0.7rem,16px)]">
         <span className="flex-1 text-left truncate pr-2">{p.title}</span>
-        <span className="w-[70px] text-center opacity-60 text-[10px]">{p.status}</span>
-        <span className="w-[35px] text-right opacity-60 text-[10px]">{p.year}</span>
+        <span className="w-[70px] text-center opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.status}</span>
+        <span className="w-[35px] text-right opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.year}</span>
       </div>
     ),
     value: p.slug,
@@ -127,8 +139,8 @@ export default function IndexClientRefactored({ projects }: Props) {
             flex flex-col landscape:flex-row
             items-stretch
 
-            pt-[15vh]
-            pb-[15vh]
+            pt-[10vh]
+            pb-[5vh]
             gap-[0vh]
             px-[5vw]
 
@@ -148,10 +160,9 @@ export default function IndexClientRefactored({ projects }: Props) {
           <div
             className="
               w-full landscape:w-1/2
-              h-1/2 landscape:h-full
+              h-[60vh] landscape:h-full
               flex items-center justify-center
               min-h-0
-              border-2 border-red-500
             "
             onTouchStart={(e) => {
               touchStartPos.current = {
@@ -181,14 +192,14 @@ export default function IndexClientRefactored({ projects }: Props) {
               touchStartPos.current = null;
             }}
           >
-            <div style={{ height: `${PICKER_VISIBLE_COUNT * PICKER_ITEM_HEIGHT}px` }} className="w-full border-2 border-red-500">
               <WheelPickerWrapper className="w-full h-full border-none bg-transparent">
                 <WheelPicker
                   options={wheelOptions}
                   value={activeSlug}
                   onValueChange={handleWheelChange}
-                  optionItemHeight={60}  /* ← AJUSTAR altura de cada fila */
-                  visibleCount={12}       /* ← AJUSTAR cuántas filas se ven */
+                  optionItemHeight={pickerItemHeight}  /* ← AJUSTAR altura de cada fila */
+                  visibleCount={PICKER_VISIBLE_COUNT*4}       /* ← AJUSTAR cuántas filas se ven */
+                  
                   classNames={{
                     optionItem: "text-[var(--color-text)] transition-colors duration-300",
                     highlightWrapper: "bg-white border-y border-gray-100 h-[60px] z-10 ",
@@ -196,7 +207,6 @@ export default function IndexClientRefactored({ projects }: Props) {
                   }}
                 />
               </WheelPickerWrapper>
-            </div>
           </div>
 
           {/* ── IMAGEN / VIDEO ────────────────────────────────────────────── */}
