@@ -1,4 +1,5 @@
-implementar boton de accesibilidad como IMPACT
+poner pagina en construccion
+implementar boton de accesibilidad
 pasar a serverless
 
 1. comentar todo el codigo, explicarme , etc

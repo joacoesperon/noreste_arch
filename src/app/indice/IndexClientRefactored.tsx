@@ -32,17 +32,22 @@ export default function IndexClientRefactored({ projects }: Props) {
   const wheelTouching = useRef(false);
 
   const [pickerItemHeight, setPickerItemHeight] = useState(60);
-  const PICKER_VISIBLE_COUNT = 8;   // ← cambiá acá para ajustar
+  const PICKER_VISIBLE_COUNT = 8; // ← cambiá acá para ajustar (múltiplo de 4)
 
   const pickerRef = useRef<HTMLDivElement>(null);
+
+  // Refs para poder acceder a los valores actuales dentro de los listeners nativos
+  const activeSlugRef = useRef(activeSlug);
+  const pickerItemHeightRef = useRef(pickerItemHeight);
+  useEffect(() => { activeSlugRef.current = activeSlug; }, [activeSlug]);
+  useEffect(() => { pickerItemHeightRef.current = pickerItemHeight; }, [pickerItemHeight]);
 
   const calcHeight = () => {
     const headerHeight = window.innerWidth >= 768 ? 78 : 60;
     const availableHeight = window.innerHeight - headerHeight;
     const isLandscape = window.innerWidth > window.innerHeight;
     const pickerZoneHeight = isLandscape ? availableHeight : availableHeight / 2;
-  
-    // El picker debe caber EXACTAMENTE en su zona
+    // El picker debe caber EXACTAMENTE en su zona ← AJUSTAR dividiendo por PICKER_VISIBLE_COUNT
     const height = Math.floor(pickerZoneHeight / PICKER_VISIBLE_COUNT);
     setPickerItemHeight(height);
   };
@@ -80,6 +85,60 @@ export default function IndexClientRefactored({ projects }: Props) {
       document.removeEventListener("touchmove", preventScroll);
     };
   }, [interactionMode]);
+
+  // ── Listeners nativos en fase CAPTURA para interceptar antes que el picker ──
+  // Se registran una sola vez cuando el picker está montado en modo touch.
+  // capture: true → se ejecutan ANTES que los listeners del picker.
+  useEffect(() => {
+    if (interactionMode !== "touch") return;
+    const container = pickerRef.current;
+    if (!container) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartPos.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStartPos.current) return;
+      const touch = e.changedTouches[0];
+      const dist = Math.sqrt(
+        Math.pow(touch.clientX - touchStartPos.current.x, 2) +
+        Math.pow(touch.clientY - touchStartPos.current.y, 2)
+      );
+
+      if (dist < 10 && !wheelTouching.current) {
+        const rect = container.getBoundingClientRect();
+        const clickY = touch.clientY - rect.top;
+        const centerY = rect.height / 2;
+        // ← AJUSTAR zoneHeight si cambiás optionItemHeight
+        const zoneHeight = pickerItemHeightRef.current;
+
+        if (clickY > centerY - zoneHeight / 2 && clickY < centerY + zoneHeight / 2) {
+          const slug = activeSlugRef.current;
+          if (slug) {
+            // stopImmediatePropagation en fase de captura detiene
+            // los listeners nativos del picker antes de que los procese
+            e.stopImmediatePropagation();
+            router.push(`/projects/${slug}`);
+          }
+        }
+      }
+
+      touchStartPos.current = null;
+    };
+
+    // capture: true es la clave — se ejecuta antes que los listeners del picker
+    container.addEventListener("touchstart", handleTouchStart, { capture: true });
+    container.addEventListener("touchend", handleTouchEnd, { capture: true });
+
+    return () => {
+      container.removeEventListener("touchstart", handleTouchStart, { capture: true });
+      container.removeEventListener("touchend", handleTouchEnd, { capture: true });
+    };
+  }, [interactionMode]); // solo se re-registra si cambia el modo
 
   const updateMedia = (imageUrl: string, slug: string) => {
     if (activeSlug === slug && activeImage === imageUrl) return;
@@ -120,37 +179,12 @@ export default function IndexClientRefactored({ projects }: Props) {
   // ─── MODO TOUCH ────────────────────────────────────────────────────────────
   if (interactionMode === "touch") {
     return (
-      /*
-       * El contenedor fixed cubre toda la pantalla desde top:0.
-       * Usamos padding-top interno para compensar el header en lugar de
-       * cambiar el top del fixed, así podemos hacer responsive con clases.
-       *
-       * PORTRAIT:  flex-col  → picker arriba | imagen abajo
-       * LANDSCAPE: flex-row  → picker izquierda | imagen derecha
-       */
       <div className="fixed inset-0 overflow-hidden bg-white flex flex-col landscape:flex-row">
-
-        {/*
-         * INNER WRAPPER — controla todos los márgenes y el gap.
-         * Editá estos valores para ajustar el espaciado:
-         *
-         * PORTRAIT:
-         *   pt-[??px]          → espacio entre header y picker        ← AJUSTAR
-         *   pb-[??px]          → espacio entre imagen y borde inferior ← AJUSTAR
-         *   gap-[??px]         → espacio entre picker e imagen         ← AJUSTAR
-         *
-         * LANDSCAPE:
-         *   landscape:pt-[??px]  → espacio superior (compensa header) ← AJUSTAR
-         *   landscape:pb-[??px]  → espacio inferior                   ← AJUSTAR
-         *   landscape:px-[??px]  → márgenes laterales                 ← AJUSTAR
-         *   landscape:gap-[??px] → espacio entre picker e imagen      ← AJUSTAR
-         */}
         <div
           className="
             w-full h-full
             flex flex-col landscape:flex-row
             items-stretch
-            border-2 border-red-500
 
             pt-[10vh]
             pb-[5vh]
@@ -163,83 +197,41 @@ export default function IndexClientRefactored({ projects }: Props) {
             landscape:gap-[0vw]
           "
         >
-
-          {/* ── WHEEL PICKER ──────────────────────────────────────────────── */}
-          {/*
-           * PORTRAIT:  h-1/2 → ocupa la mitad superior
-           * LANDSCAPE: w-1/2, h-full → ocupa la mitad izquierda completa
-           * min-h-0 es esencial para que flex no lo desborde
-           */}
+          {/* ── WHEEL PICKER ── */}
           <div
             ref={pickerRef}
             className="
               w-full landscape:w-1/2
-              h-[30vh] landscape:h-full
+              h-[35vh] landscape:h-full
               flex items-center justify-center
               min-h-0
-              border-2 border-red-500
             "
-            onTouchStart={(e) => {
-              touchStartPos.current = {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY,
-              };
-            }}
-            onTouchEnd={(e) => {
-              if (!touchStartPos.current) return;
-              const endX = e.changedTouches[0].clientX;
-              const endY = e.changedTouches[0].clientY;
-              const dist = Math.sqrt(
-                Math.pow(endX - touchStartPos.current.x, 2) +
-                Math.pow(endY - touchStartPos.current.y, 2)
-              );
-              if (dist < 10 && !wheelTouching.current) {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const clickY = endY - rect.top;
-                const centerY = rect.height / 2;
-                // Zona sensible = altura de una opción del picker
-                // Si cambiás optionItemHeight abajo, cambiá este valor también ← AJUSTAR
-                const zoneHeight = pickerItemHeight;
-                if (clickY > centerY - zoneHeight / 2 && clickY < centerY + zoneHeight / 2) {
-                  if (activeSlug) {
-                    e.nativeEvent.stopImmediatePropagation(); // ← esto evita que el picker procese el tap
-                    router.push(`/projects/${activeSlug}`);
-                  }
-                }
-              }
-              touchStartPos.current = null;
-            }}
+            // onTouchStart y onTouchEnd ya no van aquí —
+            // están registrados como listeners nativos en el useEffect de arriba
           >
-              <WheelPickerWrapper className="w-full h-full border-none bg-transparent">
-                <WheelPicker
-                  options={wheelOptions}
-                  value={activeSlug}
-                  onValueChange={handleWheelChange}
-                  optionItemHeight={pickerItemHeight}  /* ← AJUSTAR altura de cada fila */
-                  visibleCount={PICKER_VISIBLE_COUNT*4}       /* ← AJUSTAR cuántas filas se ven */
-                  
-                  classNames={{
-                    optionItem: "text-[var(--color-text)] transition-colors duration-300",
-                    highlightWrapper: "bg-white border-y border-gray-100 h-[60px] z-10 ",
-                    highlightItem: "text-[var(--color-text-hover)] font-semibold text-lg z-20 [&_span]:opacity-100",
-                  }}
-                />
-              </WheelPickerWrapper>
+            <WheelPickerWrapper className="w-full h-full border-none bg-transparent">
+              <WheelPicker
+                options={wheelOptions}
+                value={activeSlug}
+                onValueChange={handleWheelChange}
+                optionItemHeight={pickerItemHeight} /* ← AJUSTAR altura de cada fila */
+                visibleCount={PICKER_VISIBLE_COUNT * 4} /* ← AJUSTAR cuántas filas se ven */
+                classNames={{
+                  optionItem: "text-[var(--color-text)] transition-colors duration-300",
+                  highlightWrapper: "bg-white border-y border-gray-100 h-[60px] z-10",
+                  highlightItem: "text-[var(--color-text-hover)] font-semibold text-lg z-20 [&_span]:opacity-100",
+                }}
+              />
+            </WheelPickerWrapper>
           </div>
 
-          {/* ── IMAGEN / VIDEO ────────────────────────────────────────────── */}
-          {/*
-           * PORTRAIT:  h-1/2 → ocupa la mitad inferior
-           * LANDSCAPE: w-1/2, h-full → ocupa la mitad derecha completa
-           * relative + absolute inset-0 adentro → Image fill funciona bien
-           */}
+          {/* ── IMAGEN / VIDEO ── */}
           <div
             className="
               w-full landscape:w-1/2
-              h-[50vh] landscape:h-full
+              h-[45vh] landscape:h-full
               relative
               min-h-0
-              border-2 border-red-500
             "
           >
             {activeImage && (
@@ -266,7 +258,6 @@ export default function IndexClientRefactored({ projects }: Props) {
               </div>
             )}
           </div>
-
         </div>
       </div>
     );
