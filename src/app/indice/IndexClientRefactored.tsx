@@ -34,6 +34,8 @@ export default function IndexClientRefactored({ projects }: Props) {
   const [pickerItemHeight, setPickerItemHeight] = useState(60);
   const PICKER_VISIBLE_COUNT = 8;   // ← cambiá acá para ajustar
 
+  const pickerRef = useRef<HTMLDivElement>(null);
+
   const calcHeight = () => {
     const headerHeight = window.innerWidth >= 768 ? 78 : 60;
     const availableHeight = window.innerHeight - headerHeight;
@@ -44,6 +46,16 @@ export default function IndexClientRefactored({ projects }: Props) {
     const height = Math.floor(pickerZoneHeight / PICKER_VISIBLE_COUNT);
     setPickerItemHeight(height);
   };
+
+  useEffect(() => {
+    calcHeight();
+    window.addEventListener("resize", calcHeight);
+    window.addEventListener("orientationchange", calcHeight);
+    return () => {
+      window.removeEventListener("resize", calcHeight);
+      window.removeEventListener("orientationchange", calcHeight);
+    };
+  }, []);
 
   useEffect(() => {
     const checkUI = () => {
@@ -138,10 +150,11 @@ export default function IndexClientRefactored({ projects }: Props) {
             w-full h-full
             flex flex-col landscape:flex-row
             items-stretch
+            border-2 border-red-500
 
             pt-[10vh]
             pb-[5vh]
-            gap-[0vh]
+            gap-[5vh]
             px-[5vw]
 
             landscape:pt-[15vh]
@@ -158,11 +171,13 @@ export default function IndexClientRefactored({ projects }: Props) {
            * min-h-0 es esencial para que flex no lo desborde
            */}
           <div
+            ref={pickerRef}
             className="
               w-full landscape:w-1/2
-              h-[60vh] landscape:h-full
+              h-[30vh] landscape:h-full
               flex items-center justify-center
               min-h-0
+              border-2 border-red-500
             "
             onTouchStart={(e) => {
               touchStartPos.current = {
@@ -184,9 +199,12 @@ export default function IndexClientRefactored({ projects }: Props) {
                 const centerY = rect.height / 2;
                 // Zona sensible = altura de una opción del picker
                 // Si cambiás optionItemHeight abajo, cambiá este valor también ← AJUSTAR
-                const zoneHeight = 60;
+                const zoneHeight = pickerItemHeight;
                 if (clickY > centerY - zoneHeight / 2 && clickY < centerY + zoneHeight / 2) {
-                  if (activeSlug) router.push(`/projects/${activeSlug}`);
+                  if (activeSlug) {
+                    e.nativeEvent.stopImmediatePropagation(); // ← esto evita que el picker procese el tap
+                    router.push(`/projects/${activeSlug}`);
+                  }
                 }
               }
               touchStartPos.current = null;
@@ -218,9 +236,10 @@ export default function IndexClientRefactored({ projects }: Props) {
           <div
             className="
               w-full landscape:w-1/2
-              h-1/2 landscape:h-full
+              h-[50vh] landscape:h-full
               relative
               min-h-0
+              border-2 border-red-500
             "
           >
             {activeImage && (
