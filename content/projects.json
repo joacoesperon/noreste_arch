@@ -53,7 +53,7 @@
       "videos": [
         "333954_medium.mp4"
       ],
-      "cover": "333954_medium.mp4"
+      "cover": "P1451558.webp"
     },
     {
       "slug": "el-nido",
@@ -72,7 +72,7 @@
         "estructura": "Clara Esperon",
         "fotografias": "Belen Capello"
       },
-      "visible": true,
+      "visible": false,
       "images": [
         "01.jpg"
       ],
@@ -96,7 +96,7 @@
         "estructura": "",
         "fotografias": ""
       },
-      "visible": true,
+      "visible": false,
       "images": [
         "01.jpg"
       ],
@@ -120,7 +120,7 @@
         "estructura": "",
         "fotografias": ""
       },
-      "visible": true,
+      "visible": false,
       "images": [
         "01.jpg"
       ],
@@ -142,13 +142,14 @@
         "interiorismo": "Noreste Arquitectura",
         "instalaciones": "Noreste Arquitectura",
         "estructura": "Ing. Claudio Lara",
-        "fotografias": null
+        "fotografias": ""
       },
       "images": [
         "01.jpg"
       ],
       "videos": [],
-      "cover": "01.jpg"
+      "cover": "01.jpg",
+      "visible": false
     },
     {
       "slug": "casa-belen-maria",
@@ -165,13 +166,14 @@
         "interiorismo": "Noreste Arquitectura",
         "instalaciones": "Noreste Arquitectura",
         "estructura": "Noreste Arquitectura",
-        "fotografias": null
+        "fotografias": ""
       },
       "images": [
         "01.jpg"
       ],
       "videos": [],
-      "cover": "01.jpg"
+      "cover": "01.jpg",
+      "visible": false
     },
     {
       "slug": "club-buchardo-nuñez",
