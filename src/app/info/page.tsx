@@ -48,8 +48,6 @@ export default function InfoPage() {
                           </a>
                         </li>
                         <li className="mb-3">
-                          Manuela Pedraza 5302,<br />
-                          Villa Urquiza,<br />
                           Buenos Aires, Argentina.
                         </li>
                       </ul>

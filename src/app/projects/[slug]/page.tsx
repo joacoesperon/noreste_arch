@@ -11,7 +11,7 @@ import ProjectClient from "./ProjectClient";
 
 // Generar rutas estáticas para todos los proyectos
 export async function generateStaticParams() {
-  const projects = getProjects();
+  const projects = await getProjects();
   return projects.map((project) => ({
     slug: project.slug,
   }));
@@ -23,13 +23,13 @@ type Props = {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();
   }
 
-  const { prev, next } = getAdjacentProjects(slug);
+  const { prev, next } = await getAdjacentProjects(slug);
   const media = getProjectImages(project);
 
   return (

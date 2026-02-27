@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
+import { uploadToCloudinary, deleteFromCloudinary } from '@/lib/cloudinary';
 
 type RouteParams = { params: Promise<{ slug: string }> };
 
-const PROJECTS_FILE = path.join(process.cwd(), 'content', 'projects.json');
-
-// POST - Subir archivos (imágenes o videos)
+// POST - Subir archivos directamente a Cloudinary y guardar URL en Supabase
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const { slug } = await params;
@@ -14,79 +12,93 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const type = searchParams.get('type') || 'images'; // 'images' o 'videos'
     
     const formData = await request.formData();
-    const projectDir = path.join(process.cwd(), 'public', 'projects', slug, type);
-    
-    await fs.mkdir(projectDir, { recursive: true });
-    
-    const uploadedFiles: string[] = [];
+    const uploadedUrls: string[] = [];
     
     for (const [key, value] of formData.entries()) {
       if (value instanceof File) {
-        const buffer = Buffer.from(await value.arrayBuffer());
-        const filename = value.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const filepath = path.join(projectDir, filename);
+        // Convertir File a base64 para subir a Cloudinary
+        const arrayBuffer = await value.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64File = `data:${value.type};base64,${buffer.toString('base64')}`;
         
-        await fs.writeFile(filepath, buffer);
-        uploadedFiles.push(filename);
+        // Subir a la carpeta del proyecto en Cloudinary
+        const result = await uploadToCloudinary(base64File, slug);
+        uploadedUrls.push(result.url);
       }
     }
 
-    // Actualizar JSON
-    const data = await fs.readFile(PROJECTS_FILE, 'utf-8');
-    const { projects } = JSON.parse(data);
+    // 1. Obtener proyecto actual de Supabase
+    const { data: project, error: fetchError } = await supabase
+      .from('projects')
+      .select('images, videos')
+      .eq('slug', slug)
+      .single();
+
+    if (fetchError || !project) throw new Error('Proyecto no encontrado');
+
+    // 2. Actualizar el array correspondiente (imágenes o videos)
+    const field = type === 'videos' ? 'videos' : 'images';
+    const existingFiles = project[field] || [];
+    const updatedFiles = [...existingFiles, ...uploadedUrls];
+
+    const { error: updateError } = await supabase
+      .from('projects')
+      .update({ [field]: updatedFiles })
+      .eq('slug', slug);
+
+    if (updateError) throw updateError;
     
-    const index = projects.findIndex((p: any) => p.slug === slug);
-    if (index !== -1) {
-      const field = type === 'videos' ? 'videos' : 'images';
-      const existingFiles = projects[index][field] || [];
-      const combinedFiles = Array.from(new Set([...existingFiles, ...uploadedFiles]));
-      projects[index][field] = combinedFiles;
-      await fs.writeFile(PROJECTS_FILE, JSON.stringify({ projects }, null, 2), 'utf-8');
-    }
-    
-    return NextResponse.json({ success: true, files: uploadedFiles });
-  } catch (error) {
-    return NextResponse.json({ error: 'Error al subir archivos' }, { status: 500 });
+    return NextResponse.json({ success: true, files: uploadedUrls });
+  } catch (error: any) {
+    console.error('Error uploading files:', error);
+    return NextResponse.json({ error: error.message || 'Error al subir archivos' }, { status: 500 });
   }
 }
 
-// DELETE - Eliminar un archivo
+// DELETE - Eliminar un archivo de Cloudinary y de Supabase
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { slug } = await params;
     const { searchParams } = new URL(request.url);
-    const filename = searchParams.get('filename');
+    const fileUrl = searchParams.get('filename'); // Ahora recibimos la URL completa
     const type = searchParams.get('type') || 'images';
 
-    if (!filename) return NextResponse.json({ error: 'Nombre de archivo requerido' }, { status: 400 });
+    if (!fileUrl) return NextResponse.json({ error: 'URL de archivo requerida' }, { status: 400 });
 
-    // 1. Eliminar archivo físico
-    const filepath = path.join(process.cwd(), 'public', 'projects', slug, type, filename);
-    try {
-      await fs.unlink(filepath);
-    } catch (e) {
-      console.warn("Archivo no encontrado en disco");
-    }
+    // 1. Extraer public_id de la URL para borrar en Cloudinary
+    // Formato típico: .../noreste-arq/slug/public_id.jpg
+    const parts = fileUrl.split('/');
+    const lastPart = parts[parts.length - 1];
+    const folderPart = parts[parts.length - 2];
+    const rootPart = parts[parts.length - 3];
+    const publicId = `${rootPart}/${folderPart}/${lastPart.split('.')[0]}`;
 
-    // 2. Actualizar JSON
-    const data = await fs.readFile(PROJECTS_FILE, 'utf-8');
-    const { projects } = JSON.parse(data);
-    
-    const index = projects.findIndex((p: any) => p.slug === slug);
-    if (index !== -1) {
+    await deleteFromCloudinary(publicId);
+
+    // 2. Actualizar Supabase
+    const { data: project } = await supabase
+      .from('projects')
+      .select('images, videos, cover')
+      .eq('slug', slug)
+      .single();
+
+    if (project) {
       const field = type === 'videos' ? 'videos' : 'images';
-      projects[index][field] = (projects[index][field] || []).filter((f: string) => f !== filename);
+      const updatedFiles = (project[field] || []).filter((f: string) => f !== fileUrl);
       
-      // Si el archivo borrado era la portada, resetear cover
-      if (projects[index].cover === filename) {
-        projects[index].cover = projects[index].images[0] || '';
+      const updateData: any = { [field]: updatedFiles };
+      
+      // Si era la portada, resetear
+      if (project.cover === fileUrl) {
+        updateData.cover = updatedFiles[0] || '';
       }
       
-      await fs.writeFile(PROJECTS_FILE, JSON.stringify({ projects }, null, 2), 'utf-8');
+      await supabase.from('projects').update(updateData).eq('slug', slug);
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('Error deleting file:', error);
     return NextResponse.json({ error: 'Error al eliminar archivo' }, { status: 500 });
   }
 }

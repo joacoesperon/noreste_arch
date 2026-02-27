@@ -1,11 +1,10 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getProjectsSortedByYear, getProjectCoverImage } from "@/lib/projects";
-import IndexClient from "./IndexClient";
 import IndexClientRefactored from "./IndexClientRefactored";
 
-export default function IndexPage() {
-  const projects = getProjectsSortedByYear();
+export default async function IndexPage() {
+  const projects = await getProjectsSortedByYear();
   
   // Preparar datos para el cliente
   const projectsForClient = projects.map(p => ({

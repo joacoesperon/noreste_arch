@@ -491,7 +491,7 @@ export default function AdminPage() {
                           <SortableImage 
                             key={img} 
                             id={img}
-                            url={`/projects/${editingSlug}/images/${img}`}
+                            url={img}
                             isCover={form.cover === img}
                             onSetCover={() => setForm({...form, cover: img})}
                             onDelete={() => deleteFile(img, 'images')}
@@ -501,7 +501,17 @@ export default function AdminPage() {
                     </SortableContext>
                   </DndContext>
 
-                  <input type="file" id="img-upload" multiple accept="image/*" onChange={(e) => setNewImages(Array.from(e.target.files || []))} className="hidden" />
+                  <input 
+                    type="file" 
+                    id="img-upload" 
+                    multiple 
+                    accept="image/*" 
+                    onChange={(e) => {
+                      setNewImages(Array.from(e.target.files || []));
+                      e.target.value = ""; // Resetear valor para permitir re-subir el mismo archivo
+                    }} 
+                    className="hidden" 
+                  />
                   <label htmlFor="img-upload" className="block w-full py-4 border border-[var(--color-text)] text-[var(--color-text)] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
                     {newImages.length > 0 ? `${newImages.length} fotos nuevas` : "+ agregar fotos"}
                   </label>
@@ -514,7 +524,7 @@ export default function AdminPage() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {currentVideos.map((vid) => (
                       <div key={vid} className={`relative aspect-video bg-gray-100 group border ${form.cover === vid ? 'border-black ring-2 ring-black/10' : 'border-[var(--color-text)]/20'}`}>
-                        <video src={`/projects/${editingSlug}/videos/${vid}`} muted className="w-full h-full object-cover" />
+                        <video src={vid} muted className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
                           <button type="button" onClick={() => setForm({...form, cover: vid})} className={`text-[9px] uppercase tracking-tighter px-2 py-1 border ${form.cover === vid ? 'bg-white text-black' : 'text-white border-white'}`}>
                             {form.cover === vid ? 'portada' : 'usar portada'}
@@ -525,7 +535,17 @@ export default function AdminPage() {
                     ))}
                   </div>
 
-                  <input type="file" id="vid-upload" multiple accept="video/*" onChange={(e) => setNewVideos(Array.from(e.target.files || []))} className="hidden" />
+                  <input 
+                    type="file" 
+                    id="vid-upload" 
+                    multiple 
+                    accept="video/*" 
+                    onChange={(e) => {
+                      setNewVideos(Array.from(e.target.files || []));
+                      e.target.value = ""; // Resetear valor
+                    }} 
+                    className="hidden" 
+                  />
                   <label htmlFor="vid-upload" className="block w-full py-4 border border-[var(--color-text)] text-[var(--color-text)] text-center cursor-pointer hover:bg-black hover:text-white hover:border-black transition-all lowercase text-xs tracking-[0.2em]">
                     {newVideos.length > 0 ? `${newVideos.length} videos nuevos` : "+ agregar videos"}
                   </label>

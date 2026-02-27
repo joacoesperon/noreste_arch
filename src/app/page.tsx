@@ -5,8 +5,8 @@ import { getVisibleProjects, getProjectCoverImage } from "@/lib/projects";
 
 export const dynamic = 'force-dynamic';
 
-export default function Home() {
-  const projects = getVisibleProjects();
+export default async function Home() {
+  const projects = await getVisibleProjects();
   
   // Preparar datos para el feed
   const projectsForFeed = projects.map(p => ({
