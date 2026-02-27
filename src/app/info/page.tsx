@@ -13,7 +13,7 @@ export default function InfoPage() {
             {/* Imagen Principal */}
             <div className="w-full mb-12">
               <Image 
-                src="/projects/la-martona/images/P1451010.webp"
+                src="https://res.cloudinary.com/dzggtfeue/image/upload/noreste-arq/la-martona/ysiouhhsnmmgdxghiut1"
                 alt="Info"
                 width={1920}
                 height={1080}
