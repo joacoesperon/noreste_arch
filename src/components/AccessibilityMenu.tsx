@@ -122,24 +122,21 @@ export default function AccessibilityMenu() {
         aria-label="Opciones de accesibilidad"
         aria-expanded={open}
         className="
-          fixed bottom-6 left-6 z-[1000]
+          fixed bottom-6 left-6 z-1000
           w-10 h-10
           flex items-center justify-center
           rounded-full
-          bg-[var(--background)]
-          text-[var(--color-text)]
+          bg-(--background)
+          text-(--color-text)
           shadow-[0_2px_10px_rgba(0,0,0,0.1)]
-          border border-[var(--color-text)]/10
+          border border-(--color-text)/10
           transition-all duration-300
           hover:scale-110 hover:shadow-[0_4px_15px_rgba(0,0,0,0.15)]
           active:scale-95
         "
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="4" r="1.5" />
-          <path d="M12 7v7" />
-          <path d="M8 10l4 1 4-1" />
-          <path d="M10 21l2-4 2 4" />
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+          <path d="M428.5-755.5Q407-777 407-807t21.5-51.5Q450-880 480-880t51.5 21.5Q553-837 553-807t-21.5 51.5Q510-734 480-734t-51.5-21.5ZM373-80v-533q-68-5-131.5-14T120-650l15-60q85 20 169 28.5t176 8.5q92 0 176-8.5T825-710l15 60q-58 14-121.5 23T587-613v533h-60v-260h-94v260h-60Z"/>
         </svg>
         {isModified && (
           <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-black rounded-full border-2 border-white" />
@@ -149,22 +146,22 @@ export default function AccessibilityMenu() {
       {/* ── Panel Moderno ── */}
       {open && (
         <>
-          <div className="fixed inset-0 z-[999] bg-black/5 backdrop-blur-[1px]" onClick={() => setOpen(false)} />
+          <div className="fixed inset-0 z-999 bg-black/5 backdrop-blur-[1px]" onClick={() => setOpen(false)} />
           <div
             role="dialog"
             className="
-              fixed bottom-20 left-6 z-[1000]
+              fixed bottom-20 left-6 z-1000
               w-[320px] max-h-[80vh] overflow-y-auto
-              bg-[var(--background)]
-              border border-[var(--color-text)]/20
+              bg-(--background)
+              border border-(--color-text)/20
               shadow-[0_10px_30px_rgba(0,0,0,0.1)]
               p-6
               flex flex-col gap-6
               animate-in fade-in slide-in-from-bottom-4 duration-300
             "
           >
-            <div className="flex items-center justify-between flex-wrap gap-y-2 border-b border-[var(--color-text)]/10 pb-4">
-              <h2 className="text-[0.625rem] uppercase tracking-[0.15em] font-medium text-[var(--color-text)]/60">
+            <div className="flex items-center justify-between flex-wrap gap-y-2 border-b border-(--color-text)/10 pb-4">
+              <h2 className="text-[0.625rem] uppercase tracking-[0.15em] font-medium text-(--color-text)/60">
                 Accesibilidad
               </h2>
               <button onClick={reset} className="text-[0.56rem] uppercase tracking-wider hover:underline opacity-40 hover:opacity-100 py-1 px-2 -mr-2">
@@ -175,7 +172,7 @@ export default function AccessibilityMenu() {
             {/* Tamaño de Texto */}
             <div className="space-y-3">
               <span className="text-[0.75rem] font-medium">Tamaño de interfaz</span>
-              <div className="flex gap-1 bg-[var(--color-text)]/5 p-1 rounded-sm">
+              <div className="flex gap-1 bg-(--color-text)/5 p-1 rounded-sm">
                 {(["normal", "large", "xlarge"] as const).map((size) => (
                   <button
                     key={size}
@@ -183,8 +180,8 @@ export default function AccessibilityMenu() {
                     className={`
                       flex-1 py-1.5 text-[0.625rem] uppercase transition-all
                       ${state.fontSize === size 
-                        ? "bg-[var(--background)] shadow-sm text-[var(--color-text)]" 
-                        : "text-[var(--color-text)]/40 hover:text-[var(--color-text)]"}
+                        ? "bg-(--background) shadow-sm text-(--color-text)" 
+                        : "text-(--color-text)/40 hover:text-(--color-text)"}
                     `}
                   >
                     {size === "normal" ? "A" : size === "large" ? "A+" : "A++"}
@@ -222,7 +219,7 @@ export default function AccessibilityMenu() {
               />
             </div>
             
-            <p className="text-[0.56rem] text-[var(--color-text)]/30 text-center mt-2 italic">
+            <p className="text-[0.56rem] text-(--color-text)/30 text-center mt-2 italic">
               Ajustes guardados automáticamente
             </p>
           </div>
@@ -235,14 +232,14 @@ export default function AccessibilityMenu() {
 function A11yToggle({ label, active, onToggle }: { label: string; active: boolean; onToggle: () => void }) {
   return (
     <div className="flex items-center justify-between group cursor-pointer" onClick={onToggle}>
-      <span className="text-[0.75rem] text-[var(--color-text)]/80 group-hover:text-[var(--color-text)] transition-colors">{label}</span>
+      <span className="text-[0.75rem] text-(--color-text)/80 group-hover:text-(--color-text) transition-colors">{label}</span>
       <div className={`
         relative w-8 h-4 rounded-full transition-all duration-300 border
-        ${active ? "bg-black border-black" : "bg-transparent border-[var(--color-text)]/20"}
+        ${active ? "bg-black border-black" : "bg-transparent border-(--color-text)/20"}
       `}>
         <div className={`
           absolute top-0.5 w-2.5 h-2.5 rounded-full transition-all duration-300
-          ${active ? "translate-x-[16px] bg-white" : "translate-x-0 bg-[var(--color-text)]/20"}
+          ${active ? "translate-x-4 bg-white" : "translate-x-0 bg-(--color-text)/20"}
         `} 
         style={{ left: '2px' }}
         />

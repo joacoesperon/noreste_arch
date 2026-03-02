@@ -165,8 +165,8 @@ export default function IndexClientRefactored({ projects }: Props) {
     label: (
       <div className="flex w-full h-full items-center px-4 text-[clamp(13px,0.278vw+0.7rem,16px)]">
         <span className="flex-1 text-left truncate pr-2">{p.title}</span>
-        <span className="w-[70px] text-center opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.status}</span>
-        <span className="w-[35px] text-right opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.year}</span>
+        <span className="w-[6em] text-center opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.status}</span>
+        <span className="w-[3em] text-right opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.year}</span>
       </div>
     ),
     value: p.slug,
@@ -194,7 +194,7 @@ export default function IndexClientRefactored({ projects }: Props) {
             landscape:pt-[15vh]
             landscape:pb-[5vh]
             landscape:px-[2vw]
-            landscape:gap-[0vw]
+            landscape:gap-0
           "
         >
           {/* ── WHEEL PICKER ── */}
@@ -265,7 +265,7 @@ export default function IndexClientRefactored({ projects }: Props) {
 
   // ─── MODO MOUSE ────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-row w-full h-[70vh] min-h-[500px]">
+    <div className="flex flex-row w-full h-[70vh] min-h-125">
 
       {/* Lista de proyectos con hover */}
       <div className="w-1/2 h-full flex items-start justify-start bg-white z-10 overflow-y-auto custom-scrollbar">
@@ -275,18 +275,18 @@ export default function IndexClientRefactored({ projects }: Props) {
               key={project.slug}
               href={`/projects/${project.slug}`}
               className={`
-                flex items-baseline py-[5px] transition-colors duration-200
+                flex items-baseline py-1.25 transition-colors duration-200
                 ${activeSlug === project.slug
-                  ? "text-[var(--color-text-hover)] font-medium"
+                  ? "text-(--color-text-hover) font-medium"
                   : "text-gray-400"
                 }
-                hover:text-[var(--color-text-hover)]
+                hover:text-(--color-text-hover)
               `}
               onMouseEnter={() => handleMouseEnter(project.image, project.slug)}
             >
               <div className="flex-1 pr-4">{project.title}</div>
-              <div className="w-[120px] text-center whitespace-nowrap px-2">{project.status}</div>
-              <div className="w-[60px] text-right whitespace-nowrap">{project.year}</div>
+              <div className="w-[8em] text-center whitespace-nowrap px-2">{project.status}</div>
+              <div className="w-[4em] text-right whitespace-nowrap">{project.year}</div>
             </Link>
           ))}
         </div>

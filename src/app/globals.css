@@ -198,6 +198,31 @@ body {
    ACCESIBILIDAD 
    ========================================================================== */
 
+/* ── Estilos para Galería en Modo Reduced Motion (Versión A) ── */
+.home-reduced-item-wrapper {
+    display: block !important;
+    width: 90vw !important;
+    min-width: 90vw !important;
+    max-width: 90vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+@media (min-width: 768px) {
+    .home-reduced-item-wrapper {
+        width: 60vw !important;
+        min-width: 60vw !important;
+        max-width: 60vw !important;
+    }
+}
+
+.home-reduced-img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
 /* ── Tamaño de texto ── */
 [data-a11y-font="large"] body {
   font-size: calc(var(--a11y-scale-large) * 1rem);

@@ -55,21 +55,21 @@ export default function IndexClient({ projects }: Props) {
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="flex items-baseline py-[6px] md:py-[5px] group transition-colors"
+                className="flex items-baseline py-1.5 md:py-1.25 group transition-colors"
                 onMouseEnter={() => handleMouseEnter(project.image)}
               >
                 {/* Título: Toma todo el espacio disponible */}
-                <div className="flex-1 text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors pr-4">
+                <div className="flex-1 text-(--color-text) group-hover:text-(--color-text-hover) transition-colors pr-4">
                   {project.title}
                 </div>
                 
-                {/* Estado: Ancho estable para que no se pise */}
-                <div className="w-[100px] md:w-[120px] text-center whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors px-2">
+                {/* Estado: Ancho estable para que no se pise, usando em para escalar con la fuente */}
+                <div className="w-[7em] md:w-[8em] text-center whitespace-nowrap text-(--color-text) group-hover:text-(--color-text-hover) transition-colors px-2">
                   {project.status}
                 </div>
                 
-                {/* Año: Pegado a la derecha */}
-                <div className="w-[50px] md:w-[60px] text-right whitespace-nowrap text-[var(--color-text)] group-hover:text-[var(--color-text-hover)] transition-colors">
+                {/* Año: Pegado a la derecha, usando em para escalar con la fuente */}
+                <div className="w-[3.5em] md:w-[4em] text-right whitespace-nowrap text-(--color-text) group-hover:text-(--color-text-hover) transition-colors">
                   {project.year}
                 </div>
               </Link>
@@ -83,7 +83,7 @@ export default function IndexClient({ projects }: Props) {
       
       {/* Columna Imagen Thumbnail: 50% exacto en desktop */}
       <div className="hidden md:block md:w-1/2 relative">
-        <div className="sticky top-[0px] w-full h-[calc(100vh-170px)] overflow-hidden">
+        <div className="sticky top-0 w-full h-[calc(100vh-170px)] overflow-hidden">
           {activeImage && (
             <div className={`relative w-full h-full transition-opacity duration-500 ${isFading ? "opacity-100" : "opacity-0"}`}>
               {isVideoActive ? (

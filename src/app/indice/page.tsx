@@ -19,8 +19,8 @@ export default async function IndexPage() {
   return (
     <>
       <Header />
-      <main className=  "w-full min-h-[80vh] pt-[94px] pb-12">
-        <div className="mx-auto px-4 md:px-8 max-w-[1600px]">
+      <main className=  "w-full min-h-[80vh] pt-23.5 pb-12">
+        <div className="mx-auto px-4 md:px-8 max-w-400">
           <IndexClient projects={projectsForClient} />
         </div>
       </main>

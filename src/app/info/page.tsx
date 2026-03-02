@@ -10,7 +10,7 @@ export default function InfoPage() {
         - Por defecto (Mobile/Portrait): relative, alto automático y scroll habilitado.
         - lg:landscape: Solo en pantallas grandes HORIZONTALES se bloquea a pantalla completa.
       */}
-      <main className="relative h-auto overflow-y-auto pt-[60px] lg:landscape:absolute lg:landscape:inset-0 lg:landscape:top-[78px] lg:landscape:overflow-hidden lg:landscape:pt-0 lg:landscape:pb-10">
+      <main className="relative h-auto overflow-y-auto pt-15 lg:landscape:absolute lg:landscape:inset-0 lg:landscape:top-19.5 lg:landscape:overflow-hidden lg:landscape:pt-0 lg:landscape:pb-10">
         
         {/* section: Una sola columna por defecto, dos columnas solo en LG + Landscape */}
         <section className="min-h-full lg:landscape:h-full grid grid-cols-1 lg:landscape:grid-cols-2">
@@ -31,7 +31,7 @@ export default function InfoPage() {
                   <ul className="list-none p-0 m-0 space-y-1 md:space-y-3">
                     <li className="pb-2 md:pb-4 font-medium text-[clamp(14px,1.1vw,16px)]">
                       Arq. Juan Esperon <br />
-                      Arq. Federica Gardey
+                      Arq. Josefina Gardey
                     </li>
                     <li>
                       <a href="mailto:info@norestearq.com" className="underline underline-offset-2 hover:text-(--color-text-hover) transition-colors">
@@ -63,7 +63,7 @@ export default function InfoPage() {
                     Nosotros
                   </h3>
                 </div>
-                <div className="text-(--color-text) text-[clamp(13px,1vw,15px)] leading-[1.8] max-w-[500px]">
+                <div className="text-(--color-text) text-[clamp(13px,1vw,15px)] leading-[1.8] max-w-125">
                   <p className="mb-4">
                     Estudio de arquitectura y diseño dedicado al desarrollo de proyectos de distintas escalas y programas, con foco en el diseño de espacios y la experiencia de habitar.
                   </p>

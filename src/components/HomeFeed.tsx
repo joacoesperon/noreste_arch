@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
@@ -19,6 +19,7 @@ type Props = {
 };
 
 export default function HomeFeed({ projects, logoImage }: Props) {
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -27,35 +28,70 @@ export default function HomeFeed({ projects, logoImage }: Props) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 1. Detectar cambio en accesibilidad
   useEffect(() => {
-    // Bloquear scroll del root solo en esta página para evitar doble scroll con el contenedor .home-scroll
+    const checkMotion = () => {
+      const motion = document.documentElement.getAttribute("data-a11y-motion");
+      setIsReducedMotion(motion === "reduced");
+    };
+
+    checkMotion();
+
+    const observer = new MutationObserver(checkMotion);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-a11y-motion"]
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // 2. Lógica para el modo NORMAL (GSAP) y Presentación (Logo)
+  useEffect(() => {
+    // Bloquear scroll del root solo en esta página
     document.documentElement.style.overflow = "hidden";
 
     const ctx = gsap.context(() => {
-      const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
       const scroller = scrollerRef.current;
       const presentationSection = presentationSectionRef.current;
       const logoContainer = logoContainerRef.current;
 
-      if (!scroller || feedItems.length === 0) return;
+      if (!scroller) return;
+
+      // Animación de Presentación (Logo) - COMÚN A AMBAS VERSIONES
+      if (presentationSection) {
+        gsap.to(presentationSection, { 
+          opacity: 0, 
+          scrollTrigger: { 
+            trigger: ".presentation-spacer", 
+            start: "top top", 
+            end: "center top", 
+            scrub: 0.5, 
+            scroller: scroller 
+          } 
+        });
+      }
+
+      // Si es movimiento reducido, abortamos la lógica de los proyectos individuales
+      if (isReducedMotion) {
+        ScrollTrigger.refresh();
+        return;
+      }
+
+      const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
+      if (feedItems.length === 0) return;
 
       const feedScrub = 1000;
 
-      // --- 1. Lógica de Autoplay Inteligente ---
       const checkAndPlayVideos = () => {
         feedItems.forEach((item, index) => {
           const video = videoRefs.current[index];
           if (!video) return;
-
           const imageWrapper = item.querySelector(".home__feed__item__img");
           if (!imageWrapper) return;
-
-          // Leemos la escala actual animada por GSAP
           const currentScale = gsap.getProperty(imageWrapper, "scale") as number;
-
-          // Si la escala es >= 0.8, está lo suficientemente centrado para arrancar
           if (currentScale >= 0.8) {
-            video.play().catch(() => {}); // Catch por si el navegador bloquea el play
+            video.play().catch(() => {});
           } else {
             video.pause();
           }
@@ -63,19 +99,12 @@ export default function HomeFeed({ projects, logoImage }: Props) {
       };
 
       const handleScroll = () => {
-        // Pausar videos inmediatamente al scrollear para ahorrar recursos
         videoRefs.current.forEach(v => v?.pause());
-
-        // Manejo de clases del logo
         const scrollTop = scroller.scrollTop;
-        
-        // Aplicar clase scroll al contenedor del logo (como en Tenue)
         if (logoContainer) {
           if (scrollTop > 200) logoContainer.classList.add('scroll');
           else logoContainer.classList.remove('scroll');
         }
-
-        // Timer para detectar parada de scroll (0.5 segundos)
         if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           checkAndPlayVideos();
@@ -84,9 +113,14 @@ export default function HomeFeed({ projects, logoImage }: Props) {
 
       scroller.addEventListener('scroll', handleScroll);
 
-      // --- 2. ScrollTrigger Principal ---
       function createIndexScrollTrigger() {
         ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        
+        // Re-crear animación de presentación
+        if (presentationSection) {
+          gsap.to(presentationSection, { opacity: 0, scrollTrigger: { trigger: ".presentation-spacer", start: "top top", end: "center top", scrub: 0.5, scroller: scroller } });
+        }
+
         ScrollTrigger.defaults({ scroller: scroller });
 
         gsap.matchMedia().add({
@@ -95,62 +129,22 @@ export default function HomeFeed({ projects, logoImage }: Props) {
             mobile: "(max-aspect-ratio: 695/924)"
         }, context => {
             const { desktop: isDesktop, tablet: isTablet, mobile: isMobile } = context.conditions || {};
-            
-            let scale = 0.15,
-                yPercentVal = 31.75,
-                animDuration = 0.185,
-                startPos = "0% 100%",
-                endPos = "100% 0%",
-                scrubValue: boolean | number = true;
+            let scale = 0.15, yPercentVal = 31.75, animDuration = 0.185, startPos = "0% 100%", endPos = "100% 0%", scrubValue: boolean | number = true;
+            if (isTablet) { yPercentVal = 41; animDuration = 0.24; scrubValue = feedScrub / 1000; }
+            if (isMobile) { yPercentVal = 56.5; animDuration = 0.3334; startPos = "0% 125%"; endPos = "100% -25%"; scrubValue = feedScrub / 1000; }
 
-            if (isTablet) {
-                yPercentVal = 41;
-                animDuration = 0.24;
-                scrubValue = feedScrub / 1000;
-            }
-
-            if (isMobile) {
-                yPercentVal = 56.5;
-                animDuration = 0.3334;
-                startPos = "0% 125%";
-                endPos = "100% -25%";
-                scrubValue = feedScrub / 1000;
-            }
-
-            feedItems.forEach((item, index) => {
+            feedItems.forEach((item) => {
                 const imageElement = item.querySelector(".home__feed__item__img");
                 const labelElement = item.querySelector(".home__feed__item__label");
-                
                 if (!imageElement || !item) return;
-
                 gsap.set(imageElement, { clearProps: "all" });
-
-                const timeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: item,
-                        start: startPos,
-                        end: endPos,
-                        scrub: scrubValue
-                    }
-                });
-
-                timeline.from(imageElement, {
-                    scale: scale,
-                    ease: "linear",
-                    duration: 0.5
-                }, "0").to(imageElement, {
-                    scale: scale,
-                    ease: "linear",
-                    duration: 0.5
-                }, "0.5");
-
+                const timeline = gsap.timeline({ scrollTrigger: { trigger: item, start: startPos, end: endPos, scrub: scrubValue } });
+                timeline.from(imageElement, { scale: scale, ease: "linear", duration: 0.5 }, "0").to(imageElement, { scale: scale, ease: "linear", duration: 0.5 }, "0.5");
                 if (isMobile) {
-                    // Mobile Label Animation (Sync with image scale)
                     if (labelElement) {
                         timeline.from(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0");
                         timeline.to(labelElement, { height: `${scale * 100}%`, ease: "linear", duration: 0.5 }, "0.5");
                     }
-
                     timeline.fromTo(imageElement, { yPercent: -85 }, { yPercent: -28.5, duration: 1/6, ease: "linear" }, 0);
                     timeline.fromTo(imageElement, { yPercent: -28.5 }, { yPercent: 0, duration: 1/6, ease: "linear" }, 1/6);
                     timeline.fromTo(imageElement, { yPercent: 0 }, { yPercent: 28.5, duration: 1/6, ease: "linear" }, 1 - 1/3);
@@ -166,19 +160,6 @@ export default function HomeFeed({ projects, logoImage }: Props) {
             });
         });
 
-        // Animación de Presentación (Logo)
-        if (presentationSection) {
-              gsap.to(presentationSection, {
-                opacity: 0,
-                scrollTrigger: {
-                  trigger: ".presentation-spacer",
-                  start: "top top",
-                  end: "center top",
-                  scrub: 0.5,
-                  scroller: scroller,
-                }
-              });
-        }
         ScrollTrigger.refresh();
       }
 
@@ -186,69 +167,109 @@ export default function HomeFeed({ projects, logoImage }: Props) {
       window.addEventListener('resize', createIndexScrollTrigger);
 
       return () => {
-        document.documentElement.style.overflow = "auto";
         scroller.removeEventListener('scroll', handleScroll);
         window.removeEventListener('resize', createIndexScrollTrigger);
-        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       };
-
     }, containerRef);
 
-    return () => ctx.revert();
-  }, [projects]);
+    return () => {
+      document.documentElement.style.overflow = "auto";
+      ctx.revert();
+    };
+  }, [projects, isReducedMotion]);
 
   return (
     <div ref={containerRef} className="page-wrapper">
       <div ref={scrollerRef} className="page home home-scroll">
         <div className="presentation-spacer"></div>
         
+        {/* Presentación (Logo inicial) común a ambas versiones */}
         <section ref={presentationSectionRef} className="section presentation">
-          <div className="container mx-auto px-4 max-w-[1600px]">
+          <div className="container mx-auto px-4 max-w-400">
             <div ref={logoContainerRef} className="logo w-full flex justify-center">
-              <img src={logoImage} alt="Logo" className="w-full h-auto block max-w-[1200px]" />
+              <img src={logoImage} alt="Logo" className="w-full h-auto block max-w-300" />
             </div>
           </div>
         </section>
 
-        <section className="section projects pt-0">
-          <div className="container mx-auto px-4 max-w-[1600px]">
-            <div className="home__feed">
-              {projects.map((project, index) => {
+        {isReducedMotion ? (
+          /* VERSIÓN A: MODO REDUCIR MOVIMIENTO (Galería Estática Compacta) */
+          <section className="w-full bg-white pt-10 pb-40">
+            <div className="w-full">
+              {projects.map((project) => {
                 const isVideo = project.image.toLowerCase().endsWith('.mp4') || project.image.toLowerCase().endsWith('.webm');
-                return (
-                  <Link 
-                    href={`/projects/${project.slug}`}
-                    key={project.slug}
-                    className="home__feed__item"
-                    ref={(el) => { itemsRef.current[index] = el; }}
-                  >
-                    <div className="home__feed__item__img relative overflow-hidden">
+                return (  
+                  <div key={project.slug} className="home-reduced-item-wrapper mb-24">
+                    <Link 
+                      href={`/projects/${project.slug}`} 
+                      className="group block w-full"
+                    >
+                      <p className="text-[clamp(14px,0.25vw+0.9rem,17px)] text-(--color-text) mt-4">
+                        {project.title}
+                      </p>
                       {isVideo ? (
                         <video
-                          ref={(el) => { videoRefs.current[index] = el; }}
                           src={project.image}
+                          autoPlay
                           muted
                           loop
                           playsInline
-                          preload="auto"
-                          className="w-auto max-w-full h-full block object-cover z-10"
+                          className="home-reduced-img"
                         />
                       ) : (
-                        <img src={project.image} alt={project.title} loading={index < 3 ? "eager" : "lazy"} className="relative z-10" />
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="home-reduced-img"
+                        />
                       )}
-                    </div>
-
-                    <div className="home__feed__item__label">
-                      <p>{project.title}</p>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 );
               })}
             </div>
-          </div>
-          {/* Spacer final para permitir el escalado completo en móvil */}
-          <div className="h-[20vh] md:hidden"></div>
-        </section>
+          </section>
+        ) : (
+          /* VERSIÓN B: MODO NORMAL (GSAP / Animado) */
+          <section className="section projects pt-0">
+            <div className="container mx-auto px-4 max-w-400">
+              <div className="home__feed">
+                {projects.map((project, index) => {
+                  const isVideo = project.image.toLowerCase().endsWith('.mp4') || project.image.toLowerCase().endsWith('.webm');
+                  return (
+                    <Link 
+                      href={`/projects/${project.slug}`}
+                      key={project.slug}
+                      className="home__feed__item"
+                      ref={(el) => { itemsRef.current[index] = el; }}
+                    >
+                      <div className="home__feed__item__img relative overflow-hidden">
+                        {isVideo ? (
+                          <video
+                            ref={(el) => { videoRefs.current[index] = el; }}
+                            src={project.image}
+                            muted
+                            loop
+                            playsInline
+                            preload="auto"
+                            className="w-auto max-w-full h-full block object-cover z-10"
+                          />
+                        ) : (
+                          <img src={project.image} alt={project.title} loading={index < 3 ? "eager" : "lazy"} className="relative z-10" />
+                        )}
+                      </div>
+
+                      <div className="home__feed__item__label">
+                        <p>{project.title}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="h-[20vh] md:hidden"></div>
+          </section>
+        )}
       </div>
     </div>
   );
