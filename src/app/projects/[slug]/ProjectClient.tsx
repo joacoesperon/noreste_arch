@@ -110,7 +110,7 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       </section>
 
       {/* Gallery */}
-      <section className="pt-0 pb-[30px] md:pb-[60px]">
+      <section className="pt-0 pb-[0px] md:pb-[0px]">
         <div className="mx-auto px-4 md:px-8 max-w-[1600px]">
           {/* Masonry Container */}
           <div ref={masonryGridRef} className="w-full">
@@ -163,13 +163,13 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       </section>
 
       {/* Nav Projects */}
-      <div className="mx-auto px-4 md:px-8 max-w-[1600px] flex justify-between py-12 text-[var(--color-text)]">
+      <div className="mx-auto px-4 md:px-8 max-w-[1600px] flex justify-between pb-12 text-[var(--color-text)]">
         <div className="text-left">
           {prevProject && (
             <Link href={`/projects/${prevProject.slug}`} className="group">
-              <span className="text-sm md:text-base group-hover:text-[var(--color-text-hover)] transition-colors">{prevProject.title}</span>
+              <span className="text-sm md:text-base group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">{prevProject.title}</span>
               <br />
-              <span className="text-xl md:text-2xl group-hover:text-[var(--color-text-hover)] transition-colors">&lt;</span>
+              <span className="text-xl md:text-2xl group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">&lt;</span>
             </Link>
           )}
         </div>
@@ -177,9 +177,9 @@ export default function ProjectClient({ project, media, prevProject, nextProject
         <div className="text-right">
           {nextProject && (
             <Link href={`/projects/${nextProject.slug}`} className="group">
-              <span className="text-sm md:text-base group-hover:text-[var(--color-text-hover)] transition-colors">{nextProject.title}</span>
+              <span className="text-sm md:text-base group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">{nextProject.title}</span>
               <br />
-              <span className="text-xl md:text-2xl group-hover:text-[var(--color-text-hover)] transition-colors">&gt;</span>
+              <span className="text-xl md:text-2xl group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">&gt;</span>
             </Link>
           )}
         </div>

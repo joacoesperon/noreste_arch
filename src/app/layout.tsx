@@ -19,6 +19,10 @@ const lexend = Lexend({
 export const metadata: Metadata = {
   title: "noreste arq - Estudio de arquitectura y diseño",
   description: "Estudio de arquitectura y diseño con base en Buenos Aires.",
+  icons: {
+    icon: "/images/favicon.png",
+    apple: "/images/favicon.png",
+  },
 };
 
 export default function RootLayout({
