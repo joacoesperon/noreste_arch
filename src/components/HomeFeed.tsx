@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -200,6 +201,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
         <section ref={presentationSectionRef} className="section presentation">
           <div className="container mx-auto px-4 max-w-400">
             <div ref={logoContainerRef} className="logo w-full flex justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logoImage} alt="Logo" className="w-full h-auto block max-w-300" />
             </div>
           </div>
@@ -230,9 +232,12 @@ export default function HomeFeed({ projects, logoImage }: Props) {
                           className="home-reduced-img"
                         />
                       ) : (
-                        <img
+                        <Image
                           src={project.image}
                           alt={project.title}
+                          width={1200}
+                          height={800}
+                          style={{ width: '100%', height: 'auto' }}
                           className="home-reduced-img"
                         />
                       )}
@@ -268,6 +273,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
                             className="w-auto max-w-full h-full block object-cover z-10"
                           />
                         ) : (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img src={project.image} alt={project.title} loading={index < 3 ? "eager" : "lazy"} className="relative z-10" />
                         )}
                       </div>

@@ -1,5 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Image from "next/image";
 
 type SortableImageProps = {
   id: string;
@@ -36,10 +37,12 @@ export function SortableImage({ id, url, isCover, onSetCover, onDelete }: Sortab
         isCover ? "border-black ring-2 ring-black/10" : "border-text/20"
       }`}
     >
-      <img
+      <Image
         src={url}
         alt={id}
-        className="w-full h-full object-cover pointer-events-none select-none"
+        fill
+        sizes="200px"
+        className="object-cover pointer-events-none select-none"
       />
       
       {/* Overlay de acciones */}

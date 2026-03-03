@@ -5,6 +5,7 @@ import type { Project } from "@/lib/projects";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import Link from "next/link";
+import Image from "next/image";
 
 type ProjectMedia = {
   src: string;
@@ -135,11 +136,14 @@ export default function ProjectClient({ project, media, prevProject, nextProject
                       data-fancybox="gallery" 
                       className="block relative w-full h-auto"
                     >
-                      <img
+                      <Image
                         src={item.src}
                         alt={`${project.title} - ${index + 1}`}
-                        className="w-full h-auto block"
-                        loading={index < 4 ? "eager" : "lazy"}
+                        width={1200}
+                        height={1200}
+                        style={{ width: '100%', height: 'auto' }}
+                        className="block"
+                        priority={index < 4}
                       />
                     </a>
                   ) : (
