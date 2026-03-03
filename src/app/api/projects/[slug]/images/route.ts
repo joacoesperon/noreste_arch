@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { uploadToCloudinary, deleteFromCloudinary } from '@/lib/cloudinary';
+import type { Project } from '@/lib/projects';
 
 type RouteParams = { params: Promise<{ slug: string }> };
 
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const formData = await request.formData();
     const uploadedUrls: string[] = [];
     
-    for (const [key, value] of formData.entries()) {
+    for (const [_key, value] of formData.entries()) {
       if (value instanceof File) {
         // Convertir File a base64 para subir a Cloudinary
         const arrayBuffer = await value.arrayBuffer();
@@ -36,9 +37,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     if (fetchError || !project) throw new Error('Proyecto no encontrado');
 
+    const typedProject = project as Project;
+
     // 2. Actualizar el array correspondiente (imágenes o videos)
     const field = type === 'videos' ? 'videos' : 'images';
-    const existingFiles = project[field] || [];
+    const existingFiles = typedProject[field] || [];
     const updatedFiles = [...existingFiles, ...uploadedUrls];
 
     const { error: updateError } = await supabase
@@ -49,9 +52,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (updateError) throw updateError;
     
     return NextResponse.json({ success: true, files: uploadedUrls });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error uploading files:', error);
-    return NextResponse.json({ error: error.message || 'Error al subir archivos' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Error al subir archivos';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -83,13 +87,14 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       .single();
 
     if (project) {
+      const typedProject = project as Project;
       const field = type === 'videos' ? 'videos' : 'images';
-      const updatedFiles = (project[field] || []).filter((f: string) => f !== fileUrl);
+      const updatedFiles = (typedProject[field] || []).filter((f: string) => f !== fileUrl);
       
-      const updateData: any = { [field]: updatedFiles };
+      const updateData: Partial<Project> = { [field]: updatedFiles };
       
       // Si era la portada, resetear
-      if (project.cover === fileUrl) {
+      if (typedProject.cover === fileUrl) {
         updateData.cover = updatedFiles[0] || '';
       }
       
@@ -97,8 +102,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error deleting file:', error);
+  } catch (_error) {
+    console.error('Error deleting file:', _error);
     return NextResponse.json({ error: 'Error al eliminar archivo' }, { status: 500 });
   }
 }

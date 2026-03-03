@@ -54,11 +54,11 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
 
         <div className="flex flex-col">
           <span className={`text-base lowercase tracking-wide transition-colors ${
-            (project as any).visible === false 
+            project.visible === false 
               ? 'text-text line-through opacity-50' 
               : 'text-text-hover font-medium'
           }`}>
-            {project.title} {(project as any).visible === false && '(oculto)'}
+            {project.title} {project.visible === false && '(oculto)'}
           </span>
           <div className="flex gap-4 mt-1 text-[10px] text-text uppercase tracking-widest">
             <span>{project.year}</span>

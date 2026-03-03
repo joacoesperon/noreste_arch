@@ -139,8 +139,9 @@ export default function HomeFeed({ projects, logoImage }: Props) {
             tablet: "(max-aspect-ratio: 1068/798)",
             mobile: "(max-aspect-ratio: 695/924)"
         }, context => {
-            const { desktop: isDesktop, tablet: isTablet, mobile: isMobile } = context.conditions || {};
-            let scale = 0.15, yPercentVal = 31.75, animDuration = 0.185, startPos = "0% 100%", endPos = "100% 0%", scrubValue: boolean | number = true;
+            const { desktop: _isDesktop, tablet: isTablet, mobile: isMobile } = context.conditions || {};
+            const scale = 0.15;
+            let yPercentVal = 31.75, animDuration = 0.185, startPos = "0% 100%", endPos = "100% 0%", scrubValue: boolean | number = true;
             if (isTablet) { yPercentVal = 41; animDuration = 0.24; scrubValue = feedScrub / 1000; }
             if (isMobile) { yPercentVal = 56.5; animDuration = 0.3334; startPos = "0% 125%"; endPos = "100% -25%"; scrubValue = feedScrub / 1000; }
 

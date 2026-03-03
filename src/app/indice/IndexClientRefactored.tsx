@@ -138,7 +138,7 @@ export default function IndexClientRefactored({ projects }: Props) {
       container.removeEventListener("touchstart", handleTouchStart, { capture: true });
       container.removeEventListener("touchend", handleTouchEnd, { capture: true });
     };
-  }, [interactionMode]); // solo se re-registra si cambia el modo
+  }, [interactionMode, router]); // solo se re-registra si cambia el modo o router
 
   const updateMedia = (imageUrl: string, slug: string) => {
     if (activeSlug === slug && activeImage === imageUrl) return;

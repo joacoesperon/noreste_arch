@@ -18,19 +18,25 @@ type Props = {
   nextProject: Project | null;
 };
 
+// Definimos una interfaz mínima para Masonry para evitar errores de tipo
+interface MasonryInstance {
+  layout(): void;
+  destroy(): void;
+}
+
 export default function ProjectClient({ project, media, prevProject, nextProject }: Props) {
   const [showCredits, setShowCredits] = useState(false);
   const masonryGridRef = useRef<HTMLDivElement>(null);
-  const masonryInstance = useRef<any>(null);
+  const masonryInstance = useRef<MasonryInstance | null>(null);
 
   // Initialize Fancybox and Masonry
   useEffect(() => {
     Fancybox.bind('[data-fancybox="gallery"]', {
-      Hash: false,
-      Thumbs: {
+      hash: false,
+      thumbs: {
         autoStart: false,
       },
-    } as any);
+    } as never);
 
     // Initialize Masonry only on client-side
     const initMasonry = async () => {
@@ -44,7 +50,7 @@ export default function ProjectClient({ project, media, prevProject, nextProject
           percentPosition: true,
           gutter: 0, // Gutters handled via padding in items
           transitionDuration: "0.4s",
-        });
+        }) as unknown as MasonryInstance;
 
         // Layout again after each image loads to prevent overlapping/imbalance
         imagesLoaded(masonryGridRef.current).on("progress", () => {

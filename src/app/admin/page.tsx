@@ -151,7 +151,7 @@ export default function AdminPage() {
         if (res.ok) {
           setIsAuthenticated(true);
         }
-      } catch (e) {}
+      } catch (_e) {}
     };
     checkSession();
   }, []);
@@ -167,8 +167,8 @@ export default function AdminPage() {
       const res = await fetch("/api/projects");
       const data = await res.json();
       setProjects(data.projects || []);
-    } catch (e) {
-      console.error("Error loading projects:", e);
+    } catch (_e) {
+      console.error("Error loading projects:", _e);
     }
   };
 
@@ -194,7 +194,7 @@ export default function AdminPage() {
       } else {
         setError(data.error || "Contraseña incorrecta");
       }
-    } catch (e) {
+    } catch (_e) {
       setError("Error de conexión");
     } finally {
       setLoading(false);
@@ -238,7 +238,7 @@ export default function AdminPage() {
       status: project.status,
       year: project.year,
       location: project.location,
-      visible: (project as any).visible !== false,
+      visible: project.visible !== false,
       cover: project.cover || "",
       credits: {
         proyecto: project.credits?.proyecto || "",
@@ -273,7 +273,7 @@ export default function AdminPage() {
         }
         loadProjects();
       }
-    } catch (e) {
+    } catch (_e) {
       setError("Error al eliminar archivo");
     }
   };
@@ -287,7 +287,7 @@ export default function AdminPage() {
         setSuccess("Proyecto eliminado correctamente");
         loadProjects();
       }
-    } catch (e) { setError("Error de conexión"); }
+    } catch (_e) { setError("Error de conexión"); }
     setLoading(false);
   };
 
@@ -444,7 +444,7 @@ export default function AdminPage() {
 
               <div className="space-y-1">
                 <label className="text-[9px] text-(--color-text) uppercase tracking-widest">estado</label>
-                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })} className="w-full py-2 border-b border-(--color-text)/30 bg-transparent text-black focus:outline-none focus:border-(--color-text-hover) cursor-pointer transition-colors">
+                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as ProjectForm["status"] })} className="w-full py-2 border-b border-(--color-text)/30 bg-transparent text-black focus:outline-none focus:border-(--color-text-hover) cursor-pointer transition-colors">
                   <option value="Proyecto">Proyecto</option>
                   <option value="Construido">Construido</option>
                   <option value="En obra">En obra</option>
@@ -470,10 +470,10 @@ export default function AdminPage() {
             <section className="pt-8 border-t border-(--color-text)/10">
               <h2 className="text-black text-[11px] font-semibold uppercase tracking-[0.2em] mb-8 border-b border-(--color-text)/10 pb-2">créditos</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-10">
-                {Object.keys(emptyForm.credits).map((key) => (
+                {(Object.keys(emptyForm.credits) as Array<keyof ProjectCredits>).map((key) => (
                   <div key={key} className="space-y-1">
                     <label className="text-[9px] text-(--color-text) uppercase tracking-widest">{key}</label>
-                    <input type="text" value={(form.credits as any)[key] || ""} onChange={(e) => handleCreditChange(key as any, e.target.value)} className="w-full py-2 border-b border-(--color-text)/30 bg-transparent text-black focus:outline-none focus:border-(--color-text-hover) transition-colors" />
+                    <input type="text" value={form.credits[key] || ""} onChange={(e) => handleCreditChange(key, e.target.value)} className="w-full py-2 border-b border-(--color-text)/30 bg-transparent text-black focus:outline-none focus:border-(--color-text-hover) transition-colors" />
                   </div>
                 ))}
               </div>
