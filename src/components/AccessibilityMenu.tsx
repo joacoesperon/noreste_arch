@@ -133,9 +133,9 @@ export default function AccessibilityMenu() {
           flex items-center justify-center
           rounded-full
           bg-(--background)
-          text-(--color-text)
+          text-text
           shadow-[0_2px_10px_rgba(0,0,0,0.1)]
-          border border-(--color-text)/10
+          border border-text/10
           transition-all duration-300
           hover:scale-110 hover:shadow-[0_4px_15px_rgba(0,0,0,0.15)]
           active:scale-95
@@ -159,15 +159,15 @@ export default function AccessibilityMenu() {
               fixed bottom-20 left-6 z-1000
               w-[320px] max-h-[80vh] overflow-y-auto
               bg-(--background)
-              border border-(--color-text)/20
+              border border-text/20
               shadow-[0_10px_30px_rgba(0,0,0,0.1)]
               p-6
               flex flex-col gap-6
               animate-in fade-in slide-in-from-bottom-4 duration-300
             "
           >
-            <div className="flex items-center justify-between flex-wrap gap-y-2 border-b border-(--color-text)/10 pb-4">
-              <h2 className="text-xxs uppercase tracking-[0.15em] font-medium text-(--color-text)/60">
+            <div className="flex items-center justify-between flex-wrap gap-y-2 border-b border-text/10 pb-4">
+              <h2 className="text-xxs uppercase tracking-[0.15em] font-medium text-text/60">
                 Accesibilidad
               </h2>
               <button onClick={reset} className="text-xxs uppercase tracking-wider hover:underline opacity-40 hover:opacity-100 py-1 px-2 -mr-2">
@@ -178,7 +178,7 @@ export default function AccessibilityMenu() {
             {/* Tamaño de Texto */}
             <div className="space-y-3">
               <span className="text-xs font-medium">Tamaño de fuente</span>
-              <div className="flex gap-1 bg-(--color-text)/5 p-1 rounded-sm">
+              <div className="flex gap-1 bg-text/5 p-1 rounded-sm">
                 {(["normal", "large", "xlarge"] as const).map((size) => (
                   <button
                     key={size}
@@ -186,8 +186,8 @@ export default function AccessibilityMenu() {
                     className={`
                       flex-1 py-1.5 text-xxs uppercase transition-all
                       ${state.fontSize === size 
-                        ? "bg-(--background) shadow-sm text-(--color-text)" 
-                        : "text-(--color-text)/40 hover:text-(--color-text)"}
+                        ? "bg-(--background) shadow-sm text-text" 
+                        : "text-text/40 hover:text-text"}
                     `}
                   >
                     {size === "normal" ? "A" : size === "large" ? "A+" : "A++"}
@@ -227,7 +227,7 @@ export default function AccessibilityMenu() {
               )}
             </div>
             
-            <p className="text-xxs text-(--color-text)/30 text-center mt-2 italic">
+            <p className="text-xxs text-text/30 text-center mt-2 italic">
               Ajustes guardados automáticamente
             </p>
           </div>
@@ -240,14 +240,14 @@ export default function AccessibilityMenu() {
 function A11yToggle({ label, active, onToggle }: { label: string; active: boolean; onToggle: () => void }) {
   return (
     <div className="flex items-center justify-between group cursor-pointer" onClick={onToggle}>
-      <span className="text-xs text-(--color-text)/80 group-hover:text-(--color-text) transition-colors">{label}</span>
+      <span className="text-xs text-text/80 group-hover:text-text transition-colors">{label}</span>
       <div className={`
         relative w-8 h-4 rounded-full transition-all duration-300 border
-        ${active ? "bg-black border-black" : "bg-transparent border-(--color-text)/20"}
+        ${active ? "bg-black border-black" : "bg-transparent border-text/20"}
       `}>
         <div className={`
           absolute top-0.5 w-2.5 h-2.5 rounded-full transition-all duration-300
-          ${active ? "translate-x-4 bg-white" : "translate-x-0 bg-(--color-text)/20"}
+          ${active ? "translate-x-4 bg-white" : "translate-x-0 bg-text/20"}
         `} 
         style={{ left: '2px' }}
         />
