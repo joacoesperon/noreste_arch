@@ -23,32 +23,32 @@ export default function InfoPage() {
               {/* Sección Contacto */}
               <article>
                 <div className="mb-4">
-                  <h1 className="text-(--color-text) text-base uppercase tracking-[0.2em] font-medium m-0 opacity-50">
+                  <h1 className="text-text text-base uppercase tracking-[0.2em] font-medium m-0 opacity-50">
                     Contacto
                   </h1>
                 </div>
-                <div className="text-(--color-text) text-base leading-[1.8]">
+                <div className="text-text text-base leading-[1.8]">
                   <ul className="list-none p-0 m-0 space-y-1 md:space-y-3">
                     <li className="pb-2 md:pb-4 font-medium text-base">
                       Arq. Juan Esperon <br />
                       Arq. Josefina Gardey
                     </li>
                     <li>
-                      <a href="mailto:info@norestearq.com" className="underline underline-offset-2 hover:text-(--color-text-hover) transition-colors">
+                      <a href="mailto:info@norestearq.com" className="underline underline-offset-2 hover:text-text-hover transition-colors">
                         info@norestearq.com
                       </a>
                     </li>
                     <li className="flex flex-col space-y-0">
-                      <a href="https://wa.me/5491150511959" target="_blank" className="underline underline-offset-2 hover:text-(--color-text-hover) transition-colors">
+                      <a href="https://wa.me/5491150511959" target="_blank" className="underline underline-offset-2 hover:text-text-hover transition-colors">
                         +54 911 5051-1959
                       </a>
-                      <a href="https://wa.me/+5492478511254" target="_blank" className="underline underline-offset-2 hover:text-(--color-text-hover) transition-colors">
+                      <a href="https://wa.me/+5492478511254" target="_blank" className="underline underline-offset-2 hover:text-text-hover transition-colors">
                         +54 924 7851-1254
                       </a>
                     </li>
                     <li>Buenos Aires, Argentina.</li>
                     <li>
-                      <a href="https://www.instagram.com/noreste_arq/" target="_blank" className="underline underline-offset-2 hover:text-(--color-text-hover) transition-colors">
+                      <a href="https://www.instagram.com/noreste_arq/" target="_blank" className="underline underline-offset-2 hover:text-text-hover transition-colors">
                         @noreste_arq
                       </a>
                     </li>
@@ -59,11 +59,11 @@ export default function InfoPage() {
               {/* Sección Nosotros */}
               <article>
                 <div className="mb-4">
-                  <h3 className="text-(--color-text) text-base uppercase tracking-[0.2em] font-medium m-0 opacity-50">
+                  <h3 className="text-text text-base uppercase tracking-[0.2em] font-medium m-0 opacity-50">
                     Nosotros
                   </h3>
                 </div>
-                <div className="text-(--color-text) text-base leading-[1.8] max-w-125">
+                <div className="text-text text-base leading-[1.8] max-w-125">
                   <p className="mb-4">
                     Estudio de arquitectura y diseño dedicado al desarrollo de proyectos de distintas escalas y programas, con foco en el diseño de espacios y la experiencia de habitar.
                   </p>

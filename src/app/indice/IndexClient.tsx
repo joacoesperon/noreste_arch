@@ -59,17 +59,17 @@ export default function IndexClient({ projects }: Props) {
                 onMouseEnter={() => handleMouseEnter(project.image)}
               >
                 {/* Título: Toma todo el espacio disponible */}
-                <div className="flex-1 text-(--color-text) group-hover:text-(--color-text-hover) transition-colors pr-4">
+                <div className="flex-1 text-text group-hover:text-text-hover transition-colors pr-4">
                   {project.title}
                 </div>
                 
                 {/* Estado: Ancho estable para que no se pise, usando em para escalar con la fuente */}
-                <div className="w-[7em] md:w-[8em] text-center whitespace-nowrap text-(--color-text) group-hover:text-(--color-text-hover) transition-colors px-2">
+                <div className="w-[7em] md:w-[8em] text-center whitespace-nowrap text-text group-hover:text-text-hover transition-colors px-2">
                   {project.status}
                 </div>
                 
                 {/* Año: Pegado a la derecha, usando em para escalar con la fuente */}
-                <div className="w-[3.5em] md:w-[4em] text-right whitespace-nowrap text-(--color-text) group-hover:text-(--color-text-hover) transition-colors">
+                <div className="w-[3.5em] md:w-[4em] text-right whitespace-nowrap text-text group-hover:text-text-hover transition-colors">
                   {project.year}
                 </div>
               </Link>
