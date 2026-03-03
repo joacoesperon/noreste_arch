@@ -78,10 +78,10 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       <section className="mt-17.5 py-7.5 md:py-15">
         <div className="mx-auto px-4 md:px-8 max-w-400">
           <div className="text-center">
-            <h1 className="text-[clamp(16px,0.278vw+0.938rem,19px)] font-medium mb-0 text-text">
+            <h1 className="text-lg font-medium mb-0 text-text">
               {project.title}, {project.m2}M2 , {project.year}
             </h1>
-            <p className="text-[clamp(16px,0.278vw+0.938rem,19px)] text-text">
+            <p className="text-lg text-text">
               {project.location}.
             </p>
 
@@ -102,7 +102,7 @@ export default function ProjectClient({ project, media, prevProject, nextProject
                     {Object.entries(project.credits).map(([key, value]) => {
                       if (!value) return null;
                       return (
-                        <div key={key} className="mb-4 text-[clamp(14px,0.2vw+0.8rem,16px)]">
+                        <div key={key} className="mb-4 text-base">
                           <p className="m-0 capitalize font-medium">{key.charAt(0).toUpperCase() + key.slice(1)}:</p>
                           <p className="m-0">{value}</p>
                         </div>

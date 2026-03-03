@@ -86,8 +86,8 @@ export default function AccessibilityMenu() {
         if (touch) merged.readingGuide = false; // ← limpia aquí, antes de aplicar
         setState(merged);
         applyToDOM(merged);
-      } catch (e) {
-        console.error("Error loading a11y settings", e);
+      } catch (_e) {
+        console.error("Error loading a11y settings", _e);
       }
     } else if (systemReducedMotion) {
       const initial = { ...DEFAULTS, reducedMotion: true };
@@ -167,24 +167,24 @@ export default function AccessibilityMenu() {
             "
           >
             <div className="flex items-center justify-between flex-wrap gap-y-2 border-b border-(--color-text)/10 pb-4">
-              <h2 className="text-[0.625rem] uppercase tracking-[0.15em] font-medium text-(--color-text)/60">
+              <h2 className="text-xxs uppercase tracking-[0.15em] font-medium text-(--color-text)/60">
                 Accesibilidad
               </h2>
-              <button onClick={reset} className="text-[0.56rem] uppercase tracking-wider hover:underline opacity-40 hover:opacity-100 py-1 px-2 -mr-2">
+              <button onClick={reset} className="text-xxs uppercase tracking-wider hover:underline opacity-40 hover:opacity-100 py-1 px-2 -mr-2">
                 Reset
               </button>
             </div>
 
             {/* Tamaño de Texto */}
             <div className="space-y-3">
-              <span className="text-[0.75rem] font-medium">Tamaño de fuente</span>
+              <span className="text-xs font-medium">Tamaño de fuente</span>
               <div className="flex gap-1 bg-(--color-text)/5 p-1 rounded-sm">
                 {(["normal", "large", "xlarge"] as const).map((size) => (
                   <button
                     key={size}
                     onClick={() => update("fontSize", size)}
                     className={`
-                      flex-1 py-1.5 text-[0.625rem] uppercase transition-all
+                      flex-1 py-1.5 text-xxs uppercase transition-all
                       ${state.fontSize === size 
                         ? "bg-(--background) shadow-sm text-(--color-text)" 
                         : "text-(--color-text)/40 hover:text-(--color-text)"}
@@ -227,7 +227,7 @@ export default function AccessibilityMenu() {
               )}
             </div>
             
-            <p className="text-[0.56rem] text-(--color-text)/30 text-center mt-2 italic">
+            <p className="text-xxs text-(--color-text)/30 text-center mt-2 italic">
               Ajustes guardados automáticamente
             </p>
           </div>
@@ -240,7 +240,7 @@ export default function AccessibilityMenu() {
 function A11yToggle({ label, active, onToggle }: { label: string; active: boolean; onToggle: () => void }) {
   return (
     <div className="flex items-center justify-between group cursor-pointer" onClick={onToggle}>
-      <span className="text-[0.75rem] text-(--color-text)/80 group-hover:text-(--color-text) transition-colors">{label}</span>
+      <span className="text-xs text-(--color-text)/80 group-hover:text-(--color-text) transition-colors">{label}</span>
       <div className={`
         relative w-8 h-4 rounded-full transition-all duration-300 border
         ${active ? "bg-black border-black" : "bg-transparent border-(--color-text)/20"}

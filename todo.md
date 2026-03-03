@@ -1,1 +1,0 @@
-1.  mejorar readme.md. tipico de una pagina web, que tengo lo que se suele poner para un proyecto de este estilo

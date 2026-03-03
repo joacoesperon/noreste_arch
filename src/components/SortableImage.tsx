@@ -54,7 +54,7 @@ export function SortableImage({ id, url, isCover, onSetCover, onDelete }: Sortab
           // Aquí usamos onPointerDown stopPropagation para evitar iniciar el drag al hacer click.
           onPointerDown={(e) => e.stopPropagation()}
           onClick={onSetCover}
-          className={`text-[9px] uppercase tracking-tighter px-2 py-1 border transition-colors ${
+          className={`text-xxs uppercase tracking-tighter px-2 py-1 border transition-colors ${
             isCover
               ? "bg-white text-text-hover border-white"
               : "text-white border-white/40 hover:border-white"
@@ -66,14 +66,14 @@ export function SortableImage({ id, url, isCover, onSetCover, onDelete }: Sortab
           type="button"
           onPointerDown={(e) => e.stopPropagation()}
           onClick={onDelete}
-          className="text-[9px] text-red-400 hover:text-red-300 uppercase tracking-tighter hover:underline"
+          className="text-xxs text-red-400 hover:text-red-300 uppercase tracking-tighter hover:underline"
         >
           Eliminar
         </button>
       </div>
 
       {isCover && (
-        <div className="absolute top-1 right-1 bg-black text-white text-[8px] px-1.5 py-0.5 uppercase font-bold tracking-tighter shadow-sm">
+        <div className="absolute top-1 right-1 bg-black text-white text-xxs px-1.5 py-0.5 uppercase font-bold tracking-tighter shadow-sm">
           Cover
         </div>
       )}

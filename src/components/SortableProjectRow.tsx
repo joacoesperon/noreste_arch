@@ -32,7 +32,7 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex flex-col md:flex-row md:items-center justify-between py-8 gap-4 group bg-white border-b border-text/10 last:border-0 ${isDragging ? 'shadow-lg relative' : ''}`}
+      className={`flex flex-col md:flex-row md:items-center justify-between py-6 gap-4 group bg-white border-b border-text/10 last:border-0 ${isDragging ? 'shadow-lg relative' : ''}`}
     >
       <div className="flex items-center gap-6 flex-1">
         {/* Drag Handle - Los puntitos */}
@@ -53,14 +53,14 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
         </div>
 
         <div className="flex flex-col">
-          <span className={`text-base lowercase tracking-wide transition-colors ${
+          <span className={`text-2xl capitalize tracking-wide transition-colors ${
             project.visible === false 
               ? 'text-text line-through opacity-50' 
               : 'text-text-hover font-medium'
           }`}>
             {project.title} {project.visible === false && '(oculto)'}
           </span>
-          <div className="flex gap-4 mt-1 text-[10px] text-text uppercase tracking-widest">
+          <div className="flex gap-4 mt-1 text-xs text-text">
             <span>{project.year}</span>
             <span>{project.status}</span>
           </div>
@@ -68,9 +68,9 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
       </div>
 
       <div className="flex items-center gap-8 pl-14 md:pl-0">
-        <button onClick={() => onEdit(project)} className="text-[10px] text-text hover:text-text-hover transition-colors uppercase tracking-widest">editar</button>
-        <button onClick={() => onDelete(project.slug)} disabled={loading} className="text-[10px] text-red-300 hover:text-red-500 transition-colors uppercase tracking-widest disabled:opacity-30">eliminar</button>
-        <a href={`/projects/${project.slug}`} target="_blank" className="text-[10px] text-text hover:text-text-hover transition-colors uppercase tracking-widest">ver →</a>
+        <button onClick={() => onEdit(project)} className="text-xxs text-text hover:text-text-hover transition-colors uppercase font-medium">editar</button>
+        <button onClick={() => onDelete(project.slug)} disabled={loading} className="text-xxs text-red-400 hover:text-red-600 transition-colors uppercase font-medium disabled:opacity-30">eliminar</button>
+        <a href={`/projects/${project.slug}`} target="_blank" className="text-xxs text-text hover:text-text-hover transition-colors uppercase font-medium">ver →</a>
       </div>
     </div>
   );
