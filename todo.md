@@ -1,12 +1,4 @@
-reducir movimiento de accesibilidad que en la pagina principal deje las imagenes en su escala maxima, una debajo de otra, sin el efecto de escalado, simplemente las imagenes en su escala maxima una atras de otra
-
-que hace guia de lectura?
-
-que el boton guardar nuevo orden te aparezca fijo(flotando como ahora) en la pantalla, que no haya que scrollear
-
-se puede hacer que cuando estas editndo un proyecto funcione igual? si no editaste nada que no aparezca nada, pero en cuanto cambias algo que aparezca el boton "guardar cambios" o "actualizar proyecto" flotando abajo de la patanlla
-
-y como podemos hacer para que el aviso "PROYECTO ACTUALIZADO CORRECTAMENTE" se desaparezca cuando haces una nueva accion o cada cierto tiempo? porque tipo si estas haciendo muchos cambios y actualizando muchas veces te mareas porque como siempre se queda ahi no sabes si ya actualizaste el ultimo cambio o si el mensaje salio por algo que actualizaste antes.
+arreglar las fuentes, deben ser consistenes en todo el proyecto, hay fuentes que aumentan de tamanio mas que otras, siempre usamos funciones disntintas, hay que sistematizar todo eso y hacer por ejemplo 3 fuentes distintas, unas para titulos otra para texto y otra mas(o si necesitamos mas hacemos mas, segun como lo veas), entonces la idea es que sean unas variables en global.css y si quiero modificar algo lo puedo modificar direecto de ahi y no tengo que ir cambiando la fuente especifica de cada texto
 
 1. comentar todo el codigo, explicarme , etc
 2.  verificar que no estamos cargadno librerias que no usamos

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect} from "react";
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
 type A11yState = {
@@ -62,10 +62,15 @@ export default function AccessibilityMenu() {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<A11yState>(DEFAULTS);
   const [mounted, setMounted] = useState(false);
+  const [isTouch, setIsTouch] = useState<boolean | null>(null);
 
   // Cargar preferencias guardadas + detectar prefers-reduced-motion
   useEffect(() => {
     setMounted(true);
+
+    const touch = window.matchMedia("(pointer: coarse)").matches;
+    setIsTouch(touch);
+
     const saved = localStorage.getItem(STORAGE_KEY);
     const systemReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -78,6 +83,7 @@ export default function AccessibilityMenu() {
         const merged = { ...DEFAULTS, ...parsed };
         // Si el sistema prefiere reducir movimiento, lo respetamos
         if (systemReducedMotion) merged.reducedMotion = true;
+        if (touch) merged.readingGuide = false; // ← limpia aquí, antes de aplicar
         setState(merged);
         applyToDOM(merged);
       } catch (e) {
@@ -171,7 +177,7 @@ export default function AccessibilityMenu() {
 
             {/* Tamaño de Texto */}
             <div className="space-y-3">
-              <span className="text-[0.75rem] font-medium">Tamaño de interfaz</span>
+              <span className="text-[0.75rem] font-medium">Tamaño de fuente</span>
               <div className="flex gap-1 bg-(--color-text)/5 p-1 rounded-sm">
                 {(["normal", "large", "xlarge"] as const).map((size) => (
                   <button
@@ -203,20 +209,22 @@ export default function AccessibilityMenu() {
                 onToggle={() => update("dyslexicFont", !state.dyslexicFont)} 
               />
               <A11yToggle 
-                label="Reducir Movimiento" 
-                active={state.reducedMotion} 
-                onToggle={() => update("reducedMotion", !state.reducedMotion)} 
-              />
-              <A11yToggle 
                 label="Mayor Espaciado" 
                 active={state.letterSpacing} 
                 onToggle={() => update("letterSpacing", !state.letterSpacing)} 
               />
               <A11yToggle 
-                label="Guía de Lectura" 
-                active={state.readingGuide} 
-                onToggle={() => update("readingGuide", !state.readingGuide)} 
+                label="Reducir Movimiento" 
+                active={state.reducedMotion} 
+                onToggle={() => update("reducedMotion", !state.reducedMotion)} 
               />
+              {!isTouch && (
+                <A11yToggle
+                  label="Guía de Lectura"
+                  active={state.readingGuide}
+                  onToggle={() => update("readingGuide", !state.readingGuide)}
+                />
+              )}
             </div>
             
             <p className="text-[0.56rem] text-(--color-text)/30 text-center mt-2 italic">

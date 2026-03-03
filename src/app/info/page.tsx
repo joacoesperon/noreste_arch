@@ -8,12 +8,12 @@ export default function InfoPage() {
       {/* 
         main: 
         - Por defecto (Mobile/Portrait): relative, alto automático y scroll habilitado.
-        - lg:landscape: Solo en pantallas grandes HORIZONTALES se bloquea a pantalla completa.
+        - lg:landscape: Solo en pantallas grandes HORIZONTALES se habilita el scroll si el contenido excede el alto.
       */}
-      <main className="relative h-auto overflow-y-auto pt-15 lg:landscape:absolute lg:landscape:inset-0 lg:landscape:top-19.5 lg:landscape:overflow-hidden lg:landscape:pt-0 lg:landscape:pb-10">
+      <main className="relative h-auto overflow-y-auto pt-15 lg:landscape:absolute lg:landscape:inset-0 lg:landscape:top-19.5 lg:landscape:overflow-y-auto lg:landscape:pt-0 lg:landscape:pb-10">
         
         {/* section: Una sola columna por defecto, dos columnas solo en LG + Landscape */}
-        <section className="min-h-full lg:landscape:h-full grid grid-cols-1 lg:landscape:grid-cols-2">
+        <section className="min-h-full lg:landscape:min-h-full grid grid-cols-1 lg:landscape:grid-cols-2">
 
           {/* Columna Izquierda: Textos centrados */}
           <div className="flex flex-col justify-center p-6 md:p-12 lg:landscape:px-20 xl:landscape:px-24">

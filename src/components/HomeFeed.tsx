@@ -58,32 +58,10 @@ export default function HomeFeed({ projects, logoImage }: Props) {
 
       if (!scroller) return;
 
-      // Animación de Presentación (Logo) - COMÚN A AMBAS VERSIONES
-      if (presentationSection) {
-        gsap.to(presentationSection, { 
-          opacity: 0, 
-          scrollTrigger: { 
-            trigger: ".presentation-spacer", 
-            start: "top top", 
-            end: "center top", 
-            scrub: 0.5, 
-            scroller: scroller 
-          } 
-        });
-      }
-
-      // Si es movimiento reducido, abortamos la lógica de los proyectos individuales
-      if (isReducedMotion) {
-        ScrollTrigger.refresh();
-        return;
-      }
-
-      const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
-      if (feedItems.length === 0) return;
-
-      const feedScrub = 1000;
-
+      // --- LÓGICA DE VIDEOS (Solo modo normal) ---
       const checkAndPlayVideos = () => {
+        if (isReducedMotion) return;
+        const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
         feedItems.forEach((item, index) => {
           const video = videoRefs.current[index];
           if (!video) return;
@@ -98,29 +76,62 @@ export default function HomeFeed({ projects, logoImage }: Props) {
         });
       };
 
+      // --- MANEJADOR DE SCROLL (Común a ambos modos para el Logo) ---
       const handleScroll = () => {
-        videoRefs.current.forEach(v => v?.pause());
         const scrollTop = scroller.scrollTop;
+        
+        // Control de visibilidad del Logo
         if (logoContainer) {
           if (scrollTop > 200) logoContainer.classList.add('scroll');
           else logoContainer.classList.remove('scroll');
         }
-        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-        scrollTimeoutRef.current = setTimeout(() => {
-          checkAndPlayVideos();
-        }, 500);
+
+        // Lógica de videos (Solo si no es movimiento reducido)
+        if (!isReducedMotion) {
+          videoRefs.current.forEach(v => v?.pause());
+          if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+          scrollTimeoutRef.current = setTimeout(() => {
+            checkAndPlayVideos();
+          }, 500);
+        }
       };
 
       scroller.addEventListener('scroll', handleScroll);
 
-      function createIndexScrollTrigger() {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        
-        // Re-crear animación de presentación
-        if (presentationSection) {
-          gsap.to(presentationSection, { opacity: 0, scrollTrigger: { trigger: ".presentation-spacer", start: "top top", end: "center top", scrub: 0.5, scroller: scroller } });
-        }
+      // Animación de Presentación (Logo) - COMÚN A AMBAS VERSIONES
+      if (presentationSection) {
+        gsap.to(presentationSection, { 
+          opacity: 0, 
+          scrollTrigger: { 
+            trigger: ".presentation-spacer", 
+            start: "top top", 
+            end: "center top", 
+            scrub: 0.5, 
+            scroller: scroller 
+          } 
+        });
+      }
 
+      // Si es movimiento reducido, abortamos la lógica de los proyectos individuales animadps
+      if (isReducedMotion) {
+        ScrollTrigger.refresh();
+        // Devolvemos el cleanup del listener de scroll para el modo reducido
+        return () => scroller.removeEventListener('scroll', handleScroll);
+      }
+
+      const feedItems = itemsRef.current.filter((item): item is HTMLAnchorElement => item !== null);
+      if (feedItems.length === 0) return;
+
+      const feedScrub = 1000;
+
+      function createIndexScrollTrigger() {
+        ScrollTrigger.getAll().forEach(trigger => {
+            // No matar el trigger de la presentación
+            if (trigger.vars.trigger !== ".presentation-spacer") {
+                trigger.kill();
+            }
+        });
+        
         ScrollTrigger.defaults({ scroller: scroller });
 
         gsap.matchMedia().add({
@@ -177,6 +188,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
       ctx.revert();
     };
   }, [projects, isReducedMotion]);
+
 
   return (
     <div ref={containerRef} className="page-wrapper">
