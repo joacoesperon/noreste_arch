@@ -32,14 +32,14 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex flex-col md:flex-row md:items-center justify-between py-8 gap-4 group bg-white border-b border-[var(--color-text)]/10 last:border-0 ${isDragging ? 'shadow-lg relative' : ''}`}
+      className={`flex flex-col md:flex-row md:items-center justify-between py-8 gap-4 group bg-white border-b border-text/10 last:border-0 ${isDragging ? 'shadow-lg relative' : ''}`}
     >
       <div className="flex items-center gap-6 flex-1">
         {/* Drag Handle - Los puntitos */}
         <div 
           {...attributes} 
           {...listeners} 
-          className="cursor-grab active:cursor-grabbing p-2 text-[var(--color-text)]/40 hover:text-[var(--color-text)] transition-colors"
+          className="cursor-grab active:cursor-grabbing p-2 text-text/40 hover:text-text transition-colors"
           title="Arrastrar para reordenar"
         >
           <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor">
@@ -55,12 +55,12 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
         <div className="flex flex-col">
           <span className={`text-base lowercase tracking-wide transition-colors ${
             (project as any).visible === false 
-              ? 'text-[var(--color-text)] line-through opacity-50' 
-              : 'text-black group-hover:text-[var(--color-text-hover)]'
+              ? 'text-text line-through opacity-50' 
+              : 'text-text-hover font-medium'
           }`}>
             {project.title} {(project as any).visible === false && '(oculto)'}
           </span>
-          <div className="flex gap-4 mt-1 text-[10px] text-[var(--color-text)] uppercase tracking-widest">
+          <div className="flex gap-4 mt-1 text-[10px] text-text uppercase tracking-widest">
             <span>{project.year}</span>
             <span>{project.status}</span>
           </div>
@@ -68,9 +68,9 @@ export function SortableProjectRow({ project, onEdit, onDelete, loading }: Props
       </div>
 
       <div className="flex items-center gap-8 pl-14 md:pl-0">
-        <button onClick={() => onEdit(project)} className="text-[10px] text-[var(--color-text)] hover:text-black transition-colors uppercase tracking-widest">editar</button>
+        <button onClick={() => onEdit(project)} className="text-[10px] text-text hover:text-text-hover transition-colors uppercase tracking-widest">editar</button>
         <button onClick={() => onDelete(project.slug)} disabled={loading} className="text-[10px] text-red-300 hover:text-red-500 transition-colors uppercase tracking-widest disabled:opacity-30">eliminar</button>
-        <a href={`/projects/${project.slug}`} target="_blank" className="text-[10px] text-[var(--color-text)] hover:text-black transition-colors uppercase tracking-widest">ver →</a>
+        <a href={`/projects/${project.slug}`} target="_blank" className="text-[10px] text-text hover:text-text-hover transition-colors uppercase tracking-widest">ver →</a>
       </div>
     </div>
   );

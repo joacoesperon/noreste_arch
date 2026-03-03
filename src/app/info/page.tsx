@@ -23,13 +23,13 @@ export default function InfoPage() {
               {/* Sección Contacto */}
               <article>
                 <div className="mb-4">
-                  <h1 className="text-(--color-text) text-[clamp(14px,0.2rem+0.8rem,16px)] uppercase tracking-[0.2em] font-medium m-0 opacity-50">
+                  <h1 className="text-(--color-text) text-base uppercase tracking-[0.2em] font-medium m-0 opacity-50">
                     Contacto
                   </h1>
                 </div>
-                <div className="text-(--color-text) text-[clamp(13px,1vw,15px)] leading-[1.8]">
+                <div className="text-(--color-text) text-base leading-[1.8]">
                   <ul className="list-none p-0 m-0 space-y-1 md:space-y-3">
-                    <li className="pb-2 md:pb-4 font-medium text-[clamp(14px,1.1vw,16px)]">
+                    <li className="pb-2 md:pb-4 font-medium text-base">
                       Arq. Juan Esperon <br />
                       Arq. Josefina Gardey
                     </li>
@@ -59,11 +59,11 @@ export default function InfoPage() {
               {/* Sección Nosotros */}
               <article>
                 <div className="mb-4">
-                  <h3 className="text-(--color-text) text-[clamp(14px,0.2rem+0.8rem,16px)] uppercase tracking-[0.2em] font-medium m-0 opacity-50">
+                  <h3 className="text-(--color-text) text-base uppercase tracking-[0.2em] font-medium m-0 opacity-50">
                     Nosotros
                   </h3>
                 </div>
-                <div className="text-(--color-text) text-[clamp(13px,1vw,15px)] leading-[1.8] max-w-125">
+                <div className="text-(--color-text) text-base leading-[1.8] max-w-125">
                   <p className="mb-4">
                     Estudio de arquitectura y diseño dedicado al desarrollo de proyectos de distintas escalas y programas, con foco en el diseño de espacios y la experiencia de habitar.
                   </p>

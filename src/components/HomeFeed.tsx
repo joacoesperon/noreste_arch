@@ -216,7 +216,7 @@ export default function HomeFeed({ projects, logoImage }: Props) {
                       href={`/projects/${project.slug}`} 
                       className="group block w-full"
                     >
-                      <p className="text-[clamp(14px,0.25vw+0.9rem,17px)] text-(--color-text) mt-4">
+                      <p className="text-base text-(--color-text) mt-4">
                         {project.title}
                       </p>
                       {isVideo ? (

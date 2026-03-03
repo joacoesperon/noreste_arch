@@ -163,10 +163,10 @@ export default function IndexClientRefactored({ projects }: Props) {
 
   const wheelOptions: WheelPickerOption[] = projects.map((p) => ({
     label: (
-      <div className="flex w-full h-full items-center px-4 text-[clamp(13px,0.278vw+0.7rem,16px)]">
+      <div className="flex w-full h-full items-center px-4 text-base">
         <span className="flex-1 text-left truncate pr-2">{p.title}</span>
-        <span className="w-[6em] text-center opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.status}</span>
-        <span className="w-[3em] text-right opacity-60 text-[clamp(10px,0.23vw+0.5rem,13px)]">{p.year}</span>
+        <span className="w-[6em] text-center opacity-60 text-sm">{p.status}</span>
+        <span className="w-[3em] text-right opacity-60 text-sm">{p.year}</span>
       </div>
     ),
     value: p.slug,
@@ -217,9 +217,9 @@ export default function IndexClientRefactored({ projects }: Props) {
                 optionItemHeight={pickerItemHeight} /* ← AJUSTAR altura de cada fila */
                 visibleCount={PICKER_VISIBLE_COUNT * 4} /* ← AJUSTAR cuántas filas se ven */
                 classNames={{
-                  optionItem: "text-[var(--color-text)] transition-colors duration-300",
+                  optionItem: "text-(--color-text) transition-colors duration-300",
                   highlightWrapper: "bg-white border-y border-gray-100 h-[60px] z-10",
-                  highlightItem: "text-[var(--color-text-hover)] font-semibold text-lg z-20 [&_span]:opacity-100",
+                  highlightItem: "text-(--color-text-hover) font-semibold text-lg z-20 [&_span]:opacity-100",
                 }}
               />
             </WheelPickerWrapper>
@@ -269,7 +269,7 @@ export default function IndexClientRefactored({ projects }: Props) {
 
       {/* Lista de proyectos con hover */}
       <div className="w-1/2 h-full flex items-start justify-start bg-white z-10 overflow-y-auto custom-scrollbar">
-        <div className="w-full text-[clamp(15px,0.278vw+0.938rem,19px)] pr-8 flex flex-col">
+        <div className="w-full text-title pr-8 flex flex-col">
           {projects.map((project) => (
             <Link
               key={project.slug}
@@ -277,10 +277,10 @@ export default function IndexClientRefactored({ projects }: Props) {
               className={`
                 flex items-baseline py-1.25 transition-colors duration-200
                 ${activeSlug === project.slug
-                  ? "text-(--color-text-hover) font-medium"
-                  : "text-gray-400"
+                  ? "text-text-hover font-medium"
+                  : "text-text/40"
                 }
-                hover:text-(--color-text-hover)
+                hover:text-text-hover
               `}
               onMouseEnter={() => handleMouseEnter(project.image, project.slug)}
             >

@@ -21,7 +21,7 @@ export default function Hero() {
         className="fixed inset-0 flex items-center justify-center pointer-events-none z-10"
         style={{ opacity }}
       >
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-light tracking-tight text-carbon text-center leading-tight">
+        <h1 className="text-display font-light tracking-tight text-text text-center leading-tight">
           noreste
           <br />
           arquitectura

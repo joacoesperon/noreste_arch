@@ -33,7 +33,7 @@ export function SortableImage({ id, url, isCover, onSetCover, onDelete }: Sortab
       {...attributes}
       {...listeners}
       className={`relative group aspect-square border overflow-hidden bg-gray-50 touch-none ${
-        isCover ? "border-black ring-2 ring-black/10" : "border-[var(--color-text)]/20"
+        isCover ? "border-black ring-2 ring-black/10" : "border-text/20"
       }`}
     >
       <img
@@ -53,7 +53,7 @@ export function SortableImage({ id, url, isCover, onSetCover, onDelete }: Sortab
           onClick={onSetCover}
           className={`text-[9px] uppercase tracking-tighter px-2 py-1 border transition-colors ${
             isCover
-              ? "bg-white text-black border-white"
+              ? "bg-white text-text-hover border-white"
               : "text-white border-white/40 hover:border-white"
           }`}
         >

@@ -68,13 +68,13 @@ export default function ProjectClient({ project, media, prevProject, nextProject
   return (
     <div className="w-full">
       {/* Content - Info del proyecto */}
-      <section className="mt-[70px] py-[30px] md:py-[60px]">
-        <div className="mx-auto px-4 md:px-8 max-w-[1600px]">
+      <section className="mt-17.5 py-7.5 md:py-15">
+        <div className="mx-auto px-4 md:px-8 max-w-400">
           <div className="text-center">
-            <h1 className="text-[clamp(16px,0.278vw+0.938rem,19px)] font-medium mb-0 text-[var(--color-text)]">
+            <h1 className="text-[clamp(16px,0.278vw+0.938rem,19px)] font-medium mb-0 text-text">
               {project.title}, {project.m2}M2 , {project.year}
             </h1>
-            <p className="text-[clamp(16px,0.278vw+0.938rem,19px)] text-[var(--color-text)]">
+            <p className="text-[clamp(16px,0.278vw+0.938rem,19px)] text-text">
               {project.location}.
             </p>
 
@@ -83,15 +83,15 @@ export default function ProjectClient({ project, media, prevProject, nextProject
               <div className="relative inline-block">
                 <button
                   type="button"
-                  className={`relative w-[30px] h-[30px] bg-transparent border-none cursor-pointer ${showCredits ? "after:content-['-']" : "after:content-['+']"} after:text-[var(--color-text)] after:text-2xl after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:transition-all after:duration-300`}
+                  className={`relative w-7.5 h-7.5 bg-transparent border-none cursor-pointer ${showCredits ? "after:content-['-']" : "after:content-['+']"} after:text-text after:text-2xl after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:transition-all after:duration-300`}
                   onClick={toggleCredits}
                   aria-expanded={showCredits}
                 ></button>
 
                 <div 
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${showCredits ? 'max-h-[3000px] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${showCredits ? 'max-h-750 opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
                 >
-                  <div className="pt-4 pb-5 text-[var(--color-text)]">
+                  <div className="pt-4 pb-5 text-text">
                     {Object.entries(project.credits).map(([key, value]) => {
                       if (!value) return null;
                       return (
@@ -110,8 +110,8 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       </section>
 
       {/* Gallery */}
-      <section className="pt-0 pb-[0px] md:pb-[0px]">
-        <div className="mx-auto px-4 md:px-8 max-w-[1600px]">
+      <section className="pt-0 pb-0 md:pb-0">
+        <div className="mx-auto px-4 md:px-8 max-w-400">
           {/* Masonry Container */}
           <div ref={masonryGridRef} className="w-full">
             {/* Sizer for responsive columns */}
@@ -120,7 +120,7 @@ export default function ProjectClient({ project, media, prevProject, nextProject
             {media.map((item, index) => (
               <div 
                 key={index} 
-                className="masonry-item w-full md:w-1/2 mb-[20px] md:mb-[60px] px-[0px] md:px-[30px] group transition-transform duration-300 hover:scale-[1.01]"
+                className="masonry-item w-full md:w-1/2 mb-5 md:mb-15 px-0 md:px-7.5 group transition-transform duration-300 hover:scale-[1.01]"
               >
                 <div className="w-full h-auto overflow-hidden">
                   {item.type === "image" ? (
@@ -163,13 +163,13 @@ export default function ProjectClient({ project, media, prevProject, nextProject
       </section>
 
       {/* Nav Projects */}
-      <div className="mx-auto px-4 md:px-8 max-w-[1600px] flex justify-between pb-12 text-[var(--color-text)]">
+      <div className="mx-auto px-4 md:px-8 max-w-400 flex justify-between pb-12 text-text">
         <div className="text-left">
           {prevProject && (
             <Link href={`/projects/${prevProject.slug}`} className="group">
-              <span className="text-sm md:text-base group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">{prevProject.title}</span>
+              <span className="text-sm md:text-base group-hover:text-text-hover group-hover:underline transition-colors">{prevProject.title}</span>
               <br />
-              <span className="text-xl md:text-2xl group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">&lt;</span>
+              <span className="text-xl md:text-2xl group-hover:text-text-hover group-hover:underline transition-colors">&lt;</span>
             </Link>
           )}
         </div>
@@ -177,9 +177,9 @@ export default function ProjectClient({ project, media, prevProject, nextProject
         <div className="text-right">
           {nextProject && (
             <Link href={`/projects/${nextProject.slug}`} className="group">
-              <span className="text-sm md:text-base group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">{nextProject.title}</span>
+              <span className="text-sm md:text-base group-hover:text-text-hover group-hover:underline transition-colors">{nextProject.title}</span>
               <br />
-              <span className="text-xl md:text-2xl group-hover:text-[var(--color-text-hover)] group-hover:underline transition-colors">&gt;</span>
+              <span className="text-xl md:text-2xl group-hover:text-text-hover group-hover:underline transition-colors">&gt;</span>
             </Link>
           )}
         </div>

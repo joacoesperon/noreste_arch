@@ -1,27 +1,63 @@
 @import "tailwindcss";
 
-:root {
-    --background: #fff;
-    --foreground: #000;
+@theme {
+    /* Color Palette */
+    --color-background: #fff;
+    --color-foreground: #000;
     --color-text: #4d4d4d;
     --color-text-hover: #2c2c2c;
+
+    /* Fonts */
     --font-sans: var(--font-inter, 'Inter', system-ui, sans-serif);
     --font-dyslexic: var(--font-lexend, 'Lexend', sans-serif);
 
-    /* Configuración de Accesibilidad - Modificá estos valores para ajustar el escalado */
-    --a11y-scale-large: 1.125;  /* 112.5% */
-    --a11y-scale-xlarge: 1.25;  /* 125% */
+    /* Fluid Typography System 
+       Scaling from ~375px to ~1440px 
+       All values are multiplied by --a11y-scale for accessibility
+    */
+    --font-size-xs: calc(clamp(0.75rem, 0.1vw + 0.7rem, 0.875rem) * var(--a11y-scale));
+    --font-size-sm: calc(clamp(0.8125rem, 0.15vw + 0.75rem, 0.9375rem) * var(--a11y-scale));
+    --font-size-base: calc(clamp(0.875rem, 0.2vw + 0.8rem, 1.0625rem) * var(--a11y-scale));
+    --font-size-lg: calc(clamp(1rem, 0.3vw + 0.9rem, 1.25rem) * var(--a11y-scale));
+    --font-size-xl: calc(clamp(1.125rem, 0.4vw + 1rem, 1.5rem) * var(--a11y-scale));
+    --font-size-2xl: calc(clamp(1.5rem, 0.6vw + 1.25rem, 2rem) * var(--a11y-scale));
+    --font-size-display: calc(clamp(2rem, 5vw + 1rem, 5rem) * var(--a11y-scale));
+    
+    /* Semantic aliases */
+    --font-size-body: var(--font-size-base);
+    --font-size-title: var(--font-size-lg);
 }
+
+:root {
+    --a11y-scale: 1;
+    --a11y-scale-large: 1.125;
+    --a11y-scale-xlarge: 1.25;
+}
+
+/* Accessibility scale modifiers */
+[data-a11y-font="large"] { --a11y-scale: var(--a11y-scale-large); }
+[data-a11y-font="xlarge"] { --a11y-scale: var(--a11y-scale-xlarge); }
 
 [data-rwp] {
   height: 100% !important;
 }
 
 body {
-    background: var(--background);
+    background: var(--color-background);
     color: var(--color-text);
     font-family: var(--font-sans);
+    font-size: var(--font-size-base);
     -webkit-font-smoothing: antialiased;
+}
+
+/* Global resets using our typography system */
+h1, h2, h3, h4, h5, h6 {
+    font-size: var(--font-size-title);
+    font-weight: 500;
+}
+
+p, a, li, span, button {
+    font-size: var(--font-size-base);
 }
 
 /* Base Layout for Home Scroll */
@@ -223,41 +259,10 @@ body {
     display: block !important;
 }
 
-/* ── Tamaño de texto ── */
-[data-a11y-font="large"] body {
-  font-size: calc(var(--a11y-scale-large) * 1rem);
-}
-[data-a11y-font="large"] p,
-[data-a11y-font="large"] a,
-[data-a11y-font="large"] span,
-[data-a11y-font="large"] li,
-[data-a11y-font="large"] h1,
-[data-a11y-font="large"] h2,
-[data-a11y-font="large"] h3,
-[data-a11y-font="large"] button,
-[data-a11y-font="large"] legend {
-  font-size: calc(var(--a11y-scale-large) * 1em);
-}
-
-[data-a11y-font="xlarge"] body {
-  font-size: calc(var(--a11y-scale-xlarge) * 1rem);
-}
-[data-a11y-font="xlarge"] p,
-[data-a11y-font="xlarge"] a,
-[data-a11y-font="xlarge"] span,
-[data-a11y-font="xlarge"] li,
-[data-a11y-font="xlarge"] h1,
-[data-a11y-font="xlarge"] h2,
-[data-a11y-font="xlarge"] h3,
-[data-a11y-font="xlarge"] button,
-[data-a11y-font="xlarge"] legend {
-  font-size: calc(var(--a11y-scale-xlarge) * 1em);
-}
-
 /* ── Alto contraste (WCAG AA: ratio mínimo 4.5:1) ── */
 [data-a11y-contrast="high"] {
-  --background: #ffffff;
-  --foreground: #000000;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
   --color-text: #000000;
   --color-text-hover: #000000;
 }
@@ -330,3 +335,4 @@ body {
   mix-blend-mode: difference;
   transition: opacity 0.3s ease;
 }
+

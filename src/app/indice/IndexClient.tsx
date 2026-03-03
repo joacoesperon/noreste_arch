@@ -49,7 +49,7 @@ export default function IndexClient({ projects }: Props) {
     <div className="flex flex-col md:flex-row w-full min-h-[calc(100vh-170px)]">
       {/* Columna Tabla Proyectos: 50% en desktop */}
       <div className="w-full md:w-1/2 pr-0 md:pr-8">
-        <div className="w-full text-[clamp(15px,0.278vw+0.938rem,19px)]">
+        <div className="w-full text-title">
           <div className="flex flex-col">
             {projects.map((project) => (
               <Link

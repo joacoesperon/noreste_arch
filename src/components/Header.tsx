@@ -19,7 +19,7 @@ export default function Header() {
             {!isProd && (
               <Link 
                 href="/indice" 
-                className={`text-(--color-text) hover:text-(--color-text-hover) text-[clamp(14px,0.278vw+0.938rem,19px)] lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-(--color-text) after:h-px after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/indice" ? 'after:scale-x-100' : 'after:scale-x-0'}`}
+                className={`text-(--color-text) hover:text-(--color-text-hover) text-title lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-(--color-text) after:h-px after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/indice" ? 'after:scale-x-100' : 'after:scale-x-0'}`}
               >
                 index
               </Link>
@@ -29,7 +29,7 @@ export default function Header() {
           {/* Header Title - Siempre centrado */}
           <Link 
             href="/" 
-            className="header-title absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center text-(--color-text) text-[clamp(15px,0.278vw+0.938rem,19px)] lowercase tracking-normal font-sans z-22 transition-all duration-350 hover:text-(--color-text-hover) group"
+            className="header-title absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center text-(--color-text) text-title lowercase tracking-normal font-sans z-22 transition-all duration-350 hover:text-(--color-text-hover) group"
           >
             noreste arq
             <span className="block border-b border-(--color-text) h-px w-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-right group-hover:origin-left"></span>
@@ -40,7 +40,7 @@ export default function Header() {
             {!isProd && (
               <Link 
                 href="/info" 
-                className={`text-(--color-text) hover:text-(--color-text-hover) text-[clamp(14px,0.278vw+0.938rem,19px)] lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-(--color-text) after:h-px after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/info" ? 'after:scale-x-100' : 'after:scale-x-0'}`}
+                className={`text-(--color-text) hover:text-(--color-text-hover) text-title lowercase transition-all duration-300 relative py-2 block after:content-[''] after:block after:border-b after:border-(--color-text) after:h-px after:transition-transform after:duration-300 after:origin-left hover:after:scale-x-100 ${pathname === "/info" ? 'after:scale-x-100' : 'after:scale-x-0'}`}
               >
                 info
               </Link>
