@@ -34,8 +34,8 @@ export default function InfoPage() {
                       Arq. Josefina Gardey
                     </li>
                     <li>
-                      <a href="mailto:info@norestearq.com" className="underline underline-offset-2 hover:text-text-hover transition-colors">
-                        info@norestearq.com
+                      <a href="mailto:norestearquitectura@gmail.com" className="underline underline-offset-2 hover:text-text-hover transition-colors">
+                        norestearquitectura@gmail.com
                       </a>
                     </li>
                     <li className="flex flex-col space-y-0">
@@ -48,8 +48,8 @@ export default function InfoPage() {
                     </li>
                     <li>Buenos Aires, Argentina.</li>
                     <li>
-                      <a href="https://www.instagram.com/noreste_arq/" target="_blank" className="underline underline-offset-2 hover:text-text-hover transition-colors">
-                        @noreste_arq
+                      <a href="https://www.instagram.com/noreste.arq/" target="_blank" className="underline underline-offset-2 hover:text-text-hover transition-colors">
+                        @noreste.arq
                       </a>
                     </li>
                   </ul>
@@ -79,7 +79,7 @@ export default function InfoPage() {
           <div className="order-first lg:landscape:order-last aspect-video lg:landscape:aspect-auto lg:landscape:h-full pt-4 lg:landscape:py-4 px-4 lg:landscape:px-4 flex flex-col">
             <div className="relative flex-1 w-full">
               <Image
-                src="https://res.cloudinary.com/dzggtfeue/image/upload/noreste-arq/la-martona/wtzorrga1hcbxbfrgrrn"
+                src="https://res.cloudinary.com/noresta/image/upload/v1773088598/WhatsApp_Image_2026-03-09_at_5.23.30_PM_zxs5ab.webp"
                 alt="Estudio Noreste Arq"
                 fill
                 className="object-contain"
