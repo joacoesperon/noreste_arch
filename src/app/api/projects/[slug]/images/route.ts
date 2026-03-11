@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabase } from '@/lib/supabase';
 import { uploadToCloudinary, deleteFromCloudinary } from '@/lib/cloudinary';
 import type { Project } from '@/lib/projects';
+
+// Deshabilitar caché de rutas API
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+// Aumentar timeout para uploads grandes a Cloudinary (Vercel default es 10s)
+export const maxDuration = 60;
 
 type RouteParams = { params: Promise<{ slug: string }> };
 
@@ -50,7 +57,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       .eq('slug', slug);
 
     if (updateError) throw updateError;
-    
+
+    revalidatePath(`/projects/${slug}`);
+    revalidatePath('/');
+    revalidatePath('/indice');
+
     return NextResponse.json({ success: true, files: uploadedUrls });
   } catch (error) {
     console.error('Error uploading files:', error);
@@ -100,6 +111,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       
       await supabase.from('projects').update(updateData).eq('slug', slug);
     }
+
+    revalidatePath(`/projects/${slug}`);
+    revalidatePath('/');
+    revalidatePath('/indice');
 
     return NextResponse.json({ success: true });
   } catch (_error) {

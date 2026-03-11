@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabase } from '@/lib/supabase';
 import { clearProjectsCache } from '@/lib/projects';
+
+// Deshabilitar caché de rutas API
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET - Obtener todos los proyectos desde Supabase
 export async function GET() {
@@ -12,7 +17,12 @@ export async function GET() {
 
     if (error) throw error;
     
-    return NextResponse.json({ projects: data });
+    const response = NextResponse.json({ projects: data });
+    // Headers para evitar caché en el navegador y CDN
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    return response;
   } catch (error) {
     console.error('Error fetching projects:', error);
     return NextResponse.json({ error: 'Error al leer proyectos' }, { status: 500 });
@@ -60,7 +70,11 @@ export async function POST(request: NextRequest) {
     if (error) throw error;
     
     clearProjectsCache();
-    
+    revalidatePath(`/projects/${data.slug}`);
+    revalidatePath('/');
+    revalidatePath('/indice');
+    revalidatePath('/info');
+
     return NextResponse.json({ success: true, project: data });
   } catch (error) {
     console.error('Error creating project:', error);
@@ -97,6 +111,9 @@ export async function PUT(request: NextRequest) {
     if (error) throw error;
     
     clearProjectsCache();
+    revalidatePath('/');
+    revalidatePath('/indice');
+    revalidatePath('/info');
     console.log("✅ Orden actualizado y cache limpiada.");
     
     return NextResponse.json({ success: true });

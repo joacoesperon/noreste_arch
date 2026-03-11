@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabase } from '@/lib/supabase';
 import { clearProjectsCache } from '@/lib/projects';
+
+// Deshabilitar caché de rutas API
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type RouteParams = { params: Promise<{ slug: string }> };
 
@@ -19,7 +24,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Proyecto no encontrado' }, { status: 404 });
     }
     
-    return NextResponse.json(project);
+    const response = NextResponse.json(project);
+    // Headers para evitar caché en el navegador y CDN
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    return response;
   } catch (_error) {
     return NextResponse.json({ error: 'Error al leer proyecto' }, { status: 500 });
   }
@@ -48,7 +58,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
     
     clearProjectsCache();
-    
+    revalidatePath(`/projects/${slug}`);
+    revalidatePath('/');
+    revalidatePath('/indice');
+    revalidatePath('/info');
+
     return NextResponse.json({ success: true, project: data });
   } catch (error) {
     console.error('Error updating project:', error);
@@ -75,7 +89,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
     
     clearProjectsCache();
-    
+    revalidatePath(`/projects/${slug}`);
+    revalidatePath('/');
+    revalidatePath('/indice');
+    revalidatePath('/info');
+
     return NextResponse.json({ success: true, deleted: data });
   } catch (error) {
     console.error('Error deleting project:', error);

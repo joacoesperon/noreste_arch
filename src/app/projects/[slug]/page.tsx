@@ -1,21 +1,16 @@
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { 
-  getProjects, 
-  getProjectBySlug, 
+import {
+  getProjectBySlug,
   getAdjacentProjects,
-  getProjectImages 
+  getProjectImages
 } from "@/lib/projects";
 import ProjectClient from "./ProjectClient";
 
-// Generar rutas estáticas para todos los proyectos
-export async function generateStaticParams() {
-  const projects = await getProjects();
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
-}
+// Forzar renderizado dinámico - nunca cachear esta página
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type Props = {
   params: Promise<{ slug: string }>;

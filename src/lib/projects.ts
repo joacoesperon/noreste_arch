@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import { supabase } from './supabase';
 
 export type ProjectCredits = {
@@ -31,6 +32,8 @@ export type Project = {
  * Obtener todos los proyectos desde Supabase
  */
 export async function getProjects(): Promise<Project[]> {
+  noStore(); // Deshabilitar caché de Next.js
+  
   const { data, error } = await supabase
     .from('projects')
     .select('*')
@@ -55,6 +58,8 @@ export function clearProjectsCache() {
  * Obtener proyectos visibles (para la web pública)
  */
 export async function getVisibleProjects(): Promise<Project[]> {
+  noStore(); // Deshabilitar caché de Next.js
+  
   const { data, error } = await supabase
     .from('projects')
     .select('*')
@@ -73,6 +78,8 @@ export async function getVisibleProjects(): Promise<Project[]> {
  * Obtener proyectos ordenados por año (solo visibles)
  */
 export async function getProjectsSortedByYear(): Promise<Project[]> {
+  noStore(); // Deshabilitar caché de Next.js
+  
   const { data, error } = await supabase
     .from('projects')
     .select('*')
@@ -118,6 +125,8 @@ export async function getProjectsShuffled(): Promise<Project[]> {
  * Obtener un proyecto por slug
  */
 export async function getProjectBySlug(slug: string): Promise<Project | undefined> {
+  noStore(); // Deshabilitar caché de Next.js
+  
   const { data, error } = await supabase
     .from('projects')
     .select('*')

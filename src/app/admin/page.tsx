@@ -164,7 +164,7 @@ export default function AdminPage() {
 
   const loadProjects = async () => {
     try {
-      const res = await fetch("/api/projects");
+      const res = await fetch("/api/projects", { cache: 'no-store' });
       const data = await res.json();
       setProjects(data.projects || []);
     } catch (_e) {
@@ -262,7 +262,7 @@ export default function AdminPage() {
     if (!editingSlug || !confirm(`¿Eliminar archivo ${filename}?`)) return;
     
     try {
-      const res = await fetch(`/api/projects/${editingSlug}/images?filename=${filename}&type=${type}`, {
+      const res = await fetch(`/api/projects/${editingSlug}/images?filename=${encodeURIComponent(filename)}&type=${type}`, {
         method: 'DELETE'
       });
       if (res.ok) {
@@ -343,7 +343,7 @@ export default function AdminPage() {
         setNewImages([]);
         setNewVideos([]);
       } else {
-        const updatedRes = await fetch(`/api/projects/${editingSlug}`);
+        const updatedRes = await fetch(`/api/projects/${editingSlug}`, { cache: 'no-store' });
         const updatedData = await updatedRes.json();
         setCurrentImages(updatedData.images || []);
         setCurrentVideos(updatedData.videos || []);

@@ -4,6 +4,7 @@ import HomeFeed from "@/components/HomeFeed";
 import { getVisibleProjects, getProjectCoverImage } from "@/lib/projects";
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Home() {
   const projects = await getVisibleProjects();

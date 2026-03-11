@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import { getProjectsSortedByYear, getProjectCoverImage } from "@/lib/projects";
 import IndexClient from "./IndexClient";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function IndexPage() {
   const projects = await getProjectsSortedByYear();
   
